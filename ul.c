@@ -26,9 +26,11 @@ void* robotnica(void* args)
     {
         pthread_mutex_lock(&liczba_pszczol_ul_mutex);
     //moglibysmy zrobic while i contition variable?
-    while()
-    if(obecna_liczba_pszczol_ul < maksymalna_pojemnosc_ula)
+    while(obecna_liczba_pszczol_ul > maksymalna_pojemnosc_ula)
     {
+        pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
+    }
+
         int wejscie = rand() % 2;
 
         if(wejscie == 1)
@@ -76,6 +78,7 @@ void* robotnica(void* args)
         }
         obecna_liczba_pszczol_ul--;
         pszczola->licznik_odwiedzen++;
+        pthread_cond_signal(&cond_dostepne_miejsce);
         pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
         printf("Liczba odwiedzen danej pszczoly: %d\n", pszczola->licznik_odwiedzen);
                 if(pszczola-> licznik_odwiedzen == pszczola->liczba_cykli)
@@ -83,12 +86,6 @@ void* robotnica(void* args)
             printf("Pszczola is dead!\n");
             pthread_exit(NULL);
         }
-    }
-    else
-    {
-        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
-       // printf("Obecnie zbyt duzo pszczol w ulu!\n");
-    }
     }
 
     
@@ -106,9 +103,61 @@ void* robotnica(void* args)
 
 }
 
+void proces_krolowej(int pipe_fd){
+    while(1)
+    {
+        int liczba_zlozonych_jaj = rand() % 5 + 1;
+        write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
+        sleep(3);
+    }
+}
+
+void proces_ula(int pipe_fd)
+{
+    int otrzymana_ilosc_jaj;
+    while(1)
+    {
+        read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
+        printf("Krolowa zniosla %d jaj\n", otrzymana_ilosc_jaj);
+    }
+}
+
 int main()
 {
     srand(time(NULL));
+    int pipe_skladanie_jaj[2];
+        if(pipe(pipe_skladanie_jaj) == -1)
+    {
+        return 2;
+    }
+    int krolowa = fork();
+    int pszczelarz;
+    if(krolowa == 0)
+    {
+        printf("jestem krolowa!\n");
+        close(pipe_skladanie_jaj[0]);  // Zamknięcie odczytu w procesie dziecka
+        proces_krolowej(pipe_skladanie_jaj[1]);
+        close(pipe_skladanie_jaj[1]);
+        return 0;
+    }
+    else
+    {
+        pszczelarz = fork();
+        if(pszczelarz == 0)
+        {
+            printf("Jestem pszelarz!\n");
+            close(pipe_skladanie_jaj[0]);
+            close(pipe_skladanie_jaj[1]);
+            exit(0);
+        }
+        else
+        {
+            printf("jestem wątek glowny!\n");
+        }
+    }
+
+ 
+    close(pipe_skladanie_jaj[1]); 
     int liczba_osobnikow = 3;
     pthread_t robotnice[liczba_osobnikow];
     Pszczola pszczoly[liczba_osobnikow];
@@ -132,36 +181,23 @@ int main()
         }
     }
 
+    proces_ula(pipe_skladanie_jaj[0]);
+    close(pipe_skladanie_jaj[0]);
+
     for(int i=0; i<10; i++)
     {
         if(pthread_join(robotnice[i], NULL) != 0){
             return 2;
         }
     }
-
-    int krolowa = fork();
-    int pszczelarz;
-    if(krolowa == 0)
-    {
-        printf("Jestem krolowa!\n");
-        exit(0); 
-    }
-    else
-    {
-        pszczelarz = fork();
-        if(pszczelarz == 0)
-        {
-            printf("Jestem pszelarz!\n");
-            exit(0);
-        }
-    }
-    
+ 
 
     while(wait(NULL) > 0);
 
     sem_destroy(&wejscie1);
     sem_destroy(&wejscie2);
     pthread_mutex_destroy(&liczba_pszczol_ul_mutex);
-    pthread_cond_destroy(&cond_dostepne_miejsce);
+    pthread_cond_destroy(&cond_dostepne_miejsce);   
+    
     return 0;
 }
