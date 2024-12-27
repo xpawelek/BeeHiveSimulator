@@ -5,8 +5,13 @@
 #include <errno.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <semaphore.h>
 
 int maksymalna_pojemnosc_ula = 5;
+int obecna_liczba_pszczol_ul = 0;
+sem_t wejscie1, wejscie2;
+pthread_mutex_t liczba_pszczol_ul_mutex;
+pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
 
 typedef struct{
     int pszczola_znajduje_sie_w_ulu;
@@ -17,6 +22,75 @@ typedef struct{
 void* robotnica(void* args)
 {
     Pszczola* pszczola = (Pszczola*) args;
+    while(1)
+    {
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+    //moglibysmy zrobic while i contition variable?
+    while()
+    if(obecna_liczba_pszczol_ul < maksymalna_pojemnosc_ula)
+    {
+        int wejscie = rand() % 2;
+
+        if(wejscie == 1)
+        {
+            sem_wait(&wejscie1);
+            //pszczola wchodzik idk przez sekunde i zwaliamy dziurke
+            sleep(1);
+            sem_post(&wejscie1);
+            printf("Pszczola weszla wejsciem 1\n");
+        }
+        else
+        {
+            sem_wait(&wejscie2);
+            //pszczola wchodzik idk przez sekunde i zwaliamy dziurke
+            sleep(1);
+            sem_post(&wejscie2);
+             printf("Pszczola weszla wejsciem 2\n");
+        }
+        obecna_liczba_pszczol_ul++;
+        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+
+        //wykonujemy jakas prace przez jakiś randomowy czas i pszczola opuszcza ul
+
+        //sleep(rand() % 10 + 5);
+        sleep(2);
+
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+        wejscie = rand() % 2;
+
+        if(wejscie == 1)
+        {
+            sem_wait(&wejscie1);
+            //pszczola wchodzik idk przez sekunde i zwaliamy dziurke
+            sleep(1);
+            sem_post(&wejscie1);
+            printf("Pszczola wyszla wejsciem 1\n");
+        }
+        else
+        {
+            sem_wait(&wejscie2);
+            //pszczola wchodzik idk przez sekunde i zwaliamy dziurke
+            sleep(1);
+            sem_post(&wejscie2);
+             printf("Pszczola wyszla wejsciem 2\n");
+        }
+        obecna_liczba_pszczol_ul--;
+        pszczola->licznik_odwiedzen++;
+        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+        printf("Liczba odwiedzen danej pszczoly: %d\n", pszczola->licznik_odwiedzen);
+                if(pszczola-> licznik_odwiedzen == pszczola->liczba_cykli)
+        {
+            printf("Pszczola is dead!\n");
+            pthread_exit(NULL);
+        }
+    }
+    else
+    {
+        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+       // printf("Obecnie zbyt duzo pszczol w ulu!\n");
+    }
+    }
+
     
     //sprawdzenie czy wystarczajaca ilosc miejsca w ulu -> jesli nie, to czkekamy az jakas pszczola wyjdzie lub sygnal do pszczelarza?
 
@@ -28,20 +102,26 @@ void* robotnica(void* args)
 
     //sprawdzenie ile razy pszczola byla w ulu, usuniecie wątku jesli przekroczyl ilosc cykli pthread_exit(null)
 
+    
+
 }
 
 int main()
 {
     srand(time(NULL));
-    int liczba_osobnikow = 10;
+    int liczba_osobnikow = 3;
     pthread_t robotnice[liczba_osobnikow];
     Pszczola pszczoly[liczba_osobnikow];
+    sem_init(&wejscie1, 0, 1);
+    sem_init(&wejscie2, 0, 1);
+    pthread_mutex_init(&liczba_pszczol_ul_mutex, NULL);
     //tworzenie robotnic, krolowej i pszczelarza oraz czekanie na ich zakonczenie
     for(int i=0; i<liczba_osobnikow; i++)
     {
         pszczoly[i].pszczola_znajduje_sie_w_ulu = 0;
         pszczoly[i].licznik_odwiedzen = 0;
-        pszczoly[i].liczba_cykli = rand() % 200 + 100;
+        //pszczoly[i].liczba_cykli = rand() % 200 + 100;
+        pszczoly[i].liczba_cykli = 3;
     }
 
     for(int i=0; i<liczba_osobnikow; i++)
@@ -78,5 +158,10 @@ int main()
     
 
     while(wait(NULL) > 0);
+
+    sem_destroy(&wejscie1);
+    sem_destroy(&wejscie2);
+    pthread_mutex_destroy(&liczba_pszczol_ul_mutex);
+    pthread_cond_destroy(&cond_dostepne_miejsce);
     return 0;
 }
