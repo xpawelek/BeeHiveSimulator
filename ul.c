@@ -14,7 +14,6 @@ pthread_mutex_t liczba_pszczol_ul_mutex;
 pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
 
 typedef struct{
-    int pszczola_znajduje_sie_w_ulu;
     int licznik_odwiedzen;
     int liczba_cykli;
 } Pszczola;
@@ -26,11 +25,12 @@ void* robotnica(void* args)
     {
         pthread_mutex_lock(&liczba_pszczol_ul_mutex);
     //moglibysmy zrobic while i contition variable?
-    while(obecna_liczba_pszczol_ul > maksymalna_pojemnosc_ula)
+    while(obecna_liczba_pszczol_ul >= maksymalna_pojemnosc_ula)
     {
+        printf("Obecna liczba pszczol w ulu czekajac na sygnal: %d\n", obecna_liczba_pszczol_ul);
         pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
     }
-
+        printf("Obecna liczba pszczol w ulu po dostaniu sygnalu: %d\n", obecna_liczba_pszczol_ul);
         int wejscie = rand() % 2;
 
         if(wejscie == 1)
@@ -115,10 +115,27 @@ void proces_krolowej(int pipe_fd){
 void proces_ula(int pipe_fd)
 {
     int otrzymana_ilosc_jaj;
+    pthread_t* wyklute_robotnice;
     while(1)
     {
         read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
         printf("Krolowa zniosla %d jaj\n", otrzymana_ilosc_jaj);
+        wyklute_robotnice = malloc(sizeof(pthread_t) * otrzymana_ilosc_jaj);
+        
+        for(int i=0; i<otrzymana_ilosc_jaj; i++)
+        {
+            Pszczola* pszczola_robotnica_dane = malloc(sizeof(Pszczola));
+            pszczola_robotnica_dane->licznik_odwiedzen = 0;
+            //pszczoly[i].liczba_cykli = rand() % 200 + 100;
+            pszczola_robotnica_dane->liczba_cykli = 3;
+            pthread_create(&wyklute_robotnice[i], NULL, &robotnica, (void*) pszczola_robotnica_dane);
+
+        }
+    }
+
+    for(int i=0; i<otrzymana_ilosc_jaj; i++)
+    {
+        pthread_join(wyklute_robotnice[i], NULL);
     }
 }
 
@@ -165,6 +182,7 @@ int main()
     sem_init(&wejscie2, 0, 1);
     pthread_mutex_init(&liczba_pszczol_ul_mutex, NULL);
     //tworzenie robotnic, krolowej i pszczelarza oraz czekanie na ich zakonczenie
+    /*
     for(int i=0; i<liczba_osobnikow; i++)
     {
         pszczoly[i].pszczola_znajduje_sie_w_ulu = 0;
@@ -172,10 +190,15 @@ int main()
         //pszczoly[i].liczba_cykli = rand() % 200 + 100;
         pszczoly[i].liczba_cykli = 3;
     }
+    */
 
     for(int i=0; i<liczba_osobnikow; i++)
     {
-        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)&pszczoly[i]) != 0){
+        Pszczola* pszczola_robotnica_dane = malloc(sizeof(Pszczola));
+        pszczola_robotnica_dane->licznik_odwiedzen = 0;
+        //pszczoly[i].liczba_cykli = rand() % 200 + 100;
+        pszczola_robotnica_dane->liczba_cykli = 3;
+        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)pszczola_robotnica_dane) != 0){
 
             return 1;
         }
