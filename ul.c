@@ -6,9 +6,14 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <semaphore.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <string.h>
+#include <sys/sem.h>
 
 int maksymalna_pojemnosc_ula = 5;
 int obecna_liczba_pszczol_ul = 0;
+int obecna_liczba_pszczol = 0;
 sem_t wejscie1, wejscie2;
 pthread_mutex_t liczba_pszczol_ul_mutex;
 pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
@@ -84,6 +89,7 @@ void* robotnica(void* args)
                 if(pszczola-> licznik_odwiedzen == pszczola->liczba_cykli)
         {
             printf("Pszczola is dead!\n");
+            obecna_liczba_pszczol--;
             pthread_exit(NULL);
         }
     }
@@ -112,10 +118,12 @@ void proces_krolowej(int pipe_fd){
     }
 }
 
-void proces_ula(int pipe_fd)
+void proces_ula(int pipe_fd, int shm_id, char* wspolna_pamiec_dzielona)
 {
     int otrzymana_ilosc_jaj;
     pthread_t* wyklute_robotnice;
+    struct sembuf lock = {0, -1, 0};
+    struct sembuf unlock = {0, 1, 0};
     while(1)
     {
         read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
@@ -129,8 +137,13 @@ void proces_ula(int pipe_fd)
             //pszczoly[i].liczba_cykli = rand() % 200 + 100;
             pszczola_robotnica_dane->liczba_cykli = 3;
             pthread_create(&wyklute_robotnice[i], NULL, &robotnica, (void*) pszczola_robotnica_dane);
-
+            obecna_liczba_pszczol++;
+            //po każdej dodanej pszczole musimy wysyłac ile jest obecnie pszczol
         }
+        semop(shm_id, &lock, 1);
+        *wspolna_pamiec_dzielona = obecna_liczba_pszczol;
+        printf("Obecna liczba pszczol: %d\n", obecna_liczba_pszczol);
+         semop(shm_id, &unlock, 1);
     }
 
     for(int i=0; i<otrzymana_ilosc_jaj; i++)
@@ -147,8 +160,33 @@ int main()
     {
         return 2;
     }
+
+    key_t klucz = ftok("./unikalny_klucz.txt", 65);
+     printf("Wygenerowany klucz: %d\n", klucz);
+    int shm_id = shmget(klucz, 1024, 0666 | IPC_CREAT);
+    if (shm_id == -1) {
+        perror("shmget");
+        exit(1);
+    }
+    char* wspolna_pamiec = (char*) shmat(shm_id, NULL, 0);
+    if (wspolna_pamiec == (char*) -1) {
+        perror("shmat");
+        exit(1);
+    }
+    
+    
+    //char* message = "hello";
+    //strcpy(wspolna_pamiec, message);
+    //sleep(3);
+
+
+    if(fork() == 0)
+    {
+        printf("\nxd\n");
+        execl("./pszczelarz", "./pszczelarz", NULL);
+        exit(1);
+    }
     int krolowa = fork();
-    int pszczelarz;
     if(krolowa == 0)
     {
         printf("jestem krolowa!\n");
@@ -157,12 +195,18 @@ int main()
         close(pipe_skladanie_jaj[1]);
         return 0;
     }
+    /*
     else
     {
         pszczelarz = fork();
         if(pszczelarz == 0)
         {
-            printf("Jestem pszelarz!\n");
+            while(1)
+            {
+                printf("Jestem pszelarz!\n");
+                printf("pszczelarz zna obecna liczbe pszczol: %d\n", obecna_liczba_pszczol);
+                sleep(5);
+            }
             close(pipe_skladanie_jaj[0]);
             close(pipe_skladanie_jaj[1]);
             exit(0);
@@ -172,7 +216,7 @@ int main()
             printf("jestem wątek glowny!\n");
         }
     }
-
+*/
  
     close(pipe_skladanie_jaj[1]); 
     int liczba_osobnikow = 3;
@@ -204,14 +248,21 @@ int main()
         }
     }
 
-    proces_ula(pipe_skladanie_jaj[0]);
+    proces_ula(pipe_skladanie_jaj[0], shm_id, wspolna_pamiec);
     close(pipe_skladanie_jaj[0]);
+    if (shmdt(wspolna_pamiec) == -1) {
+        perror("shmdt");
+        exit(1);
+    }
+    shmctl(shm_id, IPC_RMID, NULL);
 
     for(int i=0; i<10; i++)
     {
         if(pthread_join(robotnice[i], NULL) != 0){
             return 2;
         }
+        obecna_liczba_pszczol++;
+        printf("Obecna liczba pszczol: %d\n", obecna_liczba_pszczol);
     }
  
 
