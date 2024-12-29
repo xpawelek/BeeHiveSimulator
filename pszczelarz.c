@@ -5,6 +5,12 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 
+typedef struct{
+    int obecna_liczba_pszczol;
+    int obecna_liczba_pszczol_ul;
+} Stan_Ula;
+
+
 int main()
 {
     printf("Jestem pszelarz xaxa!\n");
@@ -16,8 +22,8 @@ int main()
         exit(1);
     }
 
-    char *shm_ptr = (char *)shmat(shm_id, NULL, 0);
-    if (shm_ptr == (char *)-1) {
+    Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
+    if (stan_ula == (void*)-1) {
         perror("shmat");
         return 1;
     }
@@ -27,13 +33,13 @@ int main()
 
     while(1)
     {
+        sleep(2);
         semop(shm_id, &lock, 1);
-        printf("Pszczelarz odczytał: %d\n", *shm_ptr);
+        //printf("Pszczelarz odczytał obecna liczbe pszczol: %d i obecna liczbe pszczol w ulu: %d = \n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
         semop(shm_id, &unlock, 1);
-        sleep(1);
     }
 
-    if (shmdt(shm_ptr) == -1) {
+    if (shmdt(stan_ula) == -1) {
         perror("shmdt");
         return 1;
     }
