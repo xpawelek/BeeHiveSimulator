@@ -4,7 +4,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
-
+#include <signal.h>
 typedef struct{
     int obecna_liczba_pszczol;
     int obecna_liczba_pszczol_ul;
@@ -13,8 +13,10 @@ typedef struct{
 
 int main()
 {
+    //printf("PID: %d i PPID: %d dla pszczelarza\n", getpid(), getppid());
+    sleep(2);
     printf("Jestem pszelarz xaxa!\n");
-    sleep(3);
+    kill(getppid(), SIGUSR1);
     key_t klucz = ftok("./unikalny_klucz.txt", 65);
     int shm_id = shmget(klucz, 1024, 0666);
     if (shm_id == -1) {

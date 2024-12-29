@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 700
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,11 +10,12 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/sem.h>
 
-int maksymalna_pojemnosc_ula = 8;
-//int obecna_liczba_pszczol_ul = 0;
-//int obecna_liczba_pszczol = 0;
+#define POCZATKOWA_ILOSC_PSZCZOL 16
+
+int maksymalna_pojemnosc_ula = POCZATKOWA_ILOSC_PSZCZOL / 2;
 sem_t wejscie1, wejscie2;
 pthread_mutex_t liczba_pszczol_ul_mutex;
 pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
@@ -32,22 +34,20 @@ typedef struct{
 
 Stan_Ula* stan_ula;
 
-
 void* robotnica(void* args)
 {
     Pszczola* pszczola = (Pszczola*) args;
     while(1)
     {
-    pthread_mutex_lock(&liczba_pszczol_ul_mutex);
-    //moglibysmy zrobic while i contition variable?
-    while(stan_ula->obecna_liczba_pszczol_ul >= maksymalna_pojemnosc_ula)
-    {
-        printf("Obecna liczba pszczol w ulu czekajac na sygnal: %d\n", stan_ula->obecna_liczba_pszczol_ul);
-        pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
-    }
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+        //moglibysmy zrobic while i contition variable?
+        while(stan_ula->obecna_liczba_pszczol_ul >= maksymalna_pojemnosc_ula)
+        {
+            printf("Obecna liczba pszczol w ulu czekajac na sygnal: %d\n", stan_ula->obecna_liczba_pszczol_ul);
+            pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
+        }
         printf("Obecna liczba pszczol w ulu po dostaniu sygnalu: %d\n", stan_ula->obecna_liczba_pszczol_ul);
         
-
         if(pszczola->pszczola_jest_w_ulu == 0)
         {
             int wejscie = rand() % 2;
@@ -65,12 +65,16 @@ void* robotnica(void* args)
                 printf("Pszczola weszla wejsciem 1\n");
                 sem_post(&wejscie1);               
             }
+
             pszczola->pszczola_jest_w_ulu = 1;
             stan_ula->obecna_liczba_pszczol_ul++;
         }
         pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
         
-        sleep(2); //praca
+        sleep(2); //praca - instynktowne opuszczenie ula/ moze opuscic wczesniej? / niektore wczesniejn niektore pozniej
+        //wykonujemy jakas prace przez jakiś randomowy czas i pszczola opuszcza ul
+
+        //sleep(rand() % 10 + 5);
 
         pthread_mutex_lock(&liczba_pszczol_ul_mutex);
         if(pszczola->pszczola_jest_w_ulu == 1)
@@ -106,22 +110,6 @@ void* robotnica(void* args)
                 pthread_exit(NULL);
             }
 
-        //wykonujemy jakas prace przez jakiś randomowy czas i pszczola opuszcza ul
-
-        //sleep(rand() % 10 + 5);
-        //sleep(2); //praca
-
-
-        //stan_ula->obecna_liczba_pszczol_ul--;
-        //pszczola->licznik_odwiedzen++;
-      /*  printf("Liczba odwiedzen danej pszczoly: %d\n", pszczola->licznik_odwiedzen);
-                if(pszczola-> licznik_odwiedzen == pszczola->liczba_cykli)
-        {
-            printf("Pszczola is dead!\n");
-            stan_ula->obecna_liczba_pszczol--;
-            pthread_exit(NULL);
-        }
-        */
     }
 
     
@@ -140,7 +128,9 @@ void* robotnica(void* args)
 }
 
 void proces_krolowej(int pipe_fd, int klucz, int shm_id){
-     if (shm_id == -1) {
+
+    if (shm_id == -1) 
+    {
         perror("shmget");
         exit(1);
     }
@@ -152,26 +142,29 @@ void proces_krolowej(int pipe_fd, int klucz, int shm_id){
     while(1)
     {
         semop(shm_id, &lock, 1);
-        //printf("Krolowa zna obecna i obecna w ulu: %d i %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
+        int liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
+        int pojemnosc_ula = stan_ula->pojemnosc_ula;
         semop(shm_id, &unlock, 1);
         int liczba_zlozonych_jaj = rand() % 3 + 1;
-        if(stan_ula->obecna_liczba_pszczol_ul + liczba_zlozonych_jaj <= stan_ula->pojemnosc_ula)
+        if(liczba_pszczol_ul + liczba_zlozonych_jaj <= pojemnosc_ula)
         {
             write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
-            sleep(3);
         }
         else
         {
             liczba_zlozonych_jaj = 0;
             write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
-            sleep(3);
         }
+        sleep(3);
     }
-    if (shmdt(stan_ula) == -1) {
+
+    if (shmdt(stan_ula) == -1) 
+    {
         perror("shmdt");
     }
 
-    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+    if (shmctl(shm_id, IPC_RMID, NULL) == -1) 
+    {
         perror("shmctl");
     }
 }
@@ -196,19 +189,15 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
             pszczola_robotnica_dane->liczba_cykli = 3;
             pszczola_robotnica_dane->pszczola_jest_w_ulu = 1;
             pthread_create(&wyklute_robotnice[i], NULL, &robotnica, (void*) pszczola_robotnica_dane);
-            //obecna_liczba_pszczol++;
             stan_ula->obecna_liczba_pszczol++;
-            //po każdej dodanej pszczole musimy wysyłac ile jest obecnie pszczol
-        }
-        printf("obecna calkowita liczba pszczol - po zniesieniu jaj: %d\n", stan_ula->obecna_liczba_pszczol);
-        semop(shm_id, &lock, 1);
-        stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-        stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-        stan_ula_do_przekazania->pojemnosc_ula = maksymalna_pojemnosc_ula;
-       // printf("Obecna liczba pszczol: %d\n", stan_ula->obecna_liczba_pszczol);
-        semop(shm_id, &unlock, 1);
-    }
 
+            semop(shm_id, &lock, 1);
+            stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
+            stan_ula_do_przekazania->pojemnosc_ula = maksymalna_pojemnosc_ula;
+            semop(shm_id, &unlock, 1);
+        }
+    }
 
     for(int i=0; i<otrzymana_ilosc_jaj; i++)
     {
@@ -216,42 +205,59 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
     }
 }
 
+void obsluga_sygnalu(int sig)
+{
+    printf("\n\nOla amigo muchos gracisas\n\n");
+}
+
 int main()
 {
+    printf("PID: %d i PPID: %d dla ula\n", getpid(), getppid());
     srand(time(NULL));
+    sem_init(&wejscie1, 0, 1);
+    sem_init(&wejscie2, 0, 1);
+    pthread_mutex_init(&liczba_pszczol_ul_mutex, NULL);
+    struct sigaction sa;
+    sa.sa_handler = &obsluga_sygnalu;
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGUSR1, &sa, NULL) == -1) {
+        perror("sigaction error");
+        return 1;
+    }
+
     stan_ula = malloc(sizeof(Stan_Ula));
     stan_ula->obecna_liczba_pszczol = 0;
     stan_ula->obecna_liczba_pszczol_ul = 0;
+    stan_ula->pojemnosc_ula = maksymalna_pojemnosc_ula;
+
     int pipe_skladanie_jaj[2];
-        if(pipe(pipe_skladanie_jaj) == -1)
+    if(pipe(pipe_skladanie_jaj) == -1)
     {
         return 2;
     }
 
     key_t klucz = ftok("./unikalny_klucz.txt", 65);
+
     int shm_id = shmget(klucz, 1024, 0666 | IPC_CREAT);
-    if (shm_id == -1) {
+    if (shm_id == -1) 
+    {
         perror("shmget");
         exit(1);
     }
+
     Stan_Ula* stan_ula_do_przekazania = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    if (stan_ula_do_przekazania == (void*) -1) {
+    if (stan_ula_do_przekazania == (void*) -1) 
+    {
         perror("shmat");
         exit(1);
     }
-    
-    
-    //char* message = "hello";
-    //strcpy(wspolna_pamiec, message);
-    //sleep(3);
-
 
     if(fork() == 0)
     {
-        printf("\nxd\n");
         execl("./pszczelarz", "./pszczelarz", NULL);
         exit(1);
     }
+
     int krolowa = fork();
     if(krolowa == 0)
     {
@@ -283,14 +289,7 @@ int main()
         }
     }
 */
- 
-    close(pipe_skladanie_jaj[1]); 
-    int liczba_osobnikow = 16;
-    pthread_t robotnice[liczba_osobnikow];
-    Pszczola pszczoly[liczba_osobnikow];
-    sem_init(&wejscie1, 0, 1);
-    sem_init(&wejscie2, 0, 1);
-    pthread_mutex_init(&liczba_pszczol_ul_mutex, NULL);
+
     //tworzenie robotnic, krolowej i pszczelarza oraz czekanie na ich zakonczenie
     /*
     for(int i=0; i<liczba_osobnikow; i++)
@@ -302,35 +301,42 @@ int main()
     }
     */
 
-    for(int i=0; i<liczba_osobnikow; i++)
+   pthread_t robotnice[POCZATKOWA_ILOSC_PSZCZOL];
+   Pszczola pszczoly[POCZATKOWA_ILOSC_PSZCZOL];
+
+    for(int i=0; i<POCZATKOWA_ILOSC_PSZCZOL; i++)
     {
         Pszczola* pszczola_robotnica_dane = malloc(sizeof(Pszczola));
         pszczola_robotnica_dane->licznik_odwiedzen = 0;
         //pszczoly[i].liczba_cykli = rand() % 200 + 100;
-        pszczola_robotnica_dane->liczba_cykli = 3;
+        pszczola_robotnica_dane->liczba_cykli = 3; //mozemy dodac ze albo jest albo nie
         pszczola_robotnica_dane->pszczola_jest_w_ulu = 0;
         stan_ula->obecna_liczba_pszczol++;
-        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)pszczola_robotnica_dane) != 0){
 
+        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)pszczola_robotnica_dane) != 0)
+        {
             return 1;
         }
     }
 
+    close(pipe_skladanie_jaj[1]);
     proces_ula(pipe_skladanie_jaj[0], shm_id, stan_ula_do_przekazania);
     close(pipe_skladanie_jaj[0]);
-    if (shmdt(stan_ula_do_przekazania) == -1) {
+
+    if (shmdt(stan_ula_do_przekazania) == -1) 
+    {
         perror("shmdt");
         exit(1);
     }
+    
     shmctl(shm_id, IPC_RMID, NULL);
 
     for(int i=0; i<10; i++)
     {
-        if(pthread_join(robotnice[i], NULL) != 0){
+        if(pthread_join(robotnice[i], NULL) != 0)
+        {
             return 2;
         }
-        //stan_ula->obecna_liczba_pszczol++;
-        //printf("Obecna liczba pszczol: %d\n", stan_ula->obecna_liczba_pszczol);
     }
  
 
