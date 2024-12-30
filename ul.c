@@ -28,8 +28,10 @@ typedef struct{
 
 typedef struct{
     int obecna_liczba_pszczol;
+    int maksymalna_ilosc_osobnikow;
     int obecna_liczba_pszczol_ul;
-    int pojemnosc_ula;
+    int stan_poczatkowy;
+    //int pojemnosc_ula;
 } Stan_Ula;
 
 Stan_Ula* stan_ula;
@@ -41,7 +43,7 @@ void* robotnica(void* args)
     {
         pthread_mutex_lock(&liczba_pszczol_ul_mutex);
         //moglibysmy zrobic while i contition variable?
-        while(stan_ula->obecna_liczba_pszczol_ul >= maksymalna_pojemnosc_ula)
+        while(stan_ula->obecna_liczba_pszczol_ul >= stan_ula->maksymalna_ilosc_osobnikow/2)
         {
             printf("Obecna liczba pszczol w ulu czekajac na sygnal: %d\n", stan_ula->obecna_liczba_pszczol_ul);
             pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
@@ -140,13 +142,15 @@ void proces_krolowej(int pipe_fd, int klucz, int shm_id){
     struct sembuf unlock = {0, 1, 0};
 
     while(1)
-    {
+    {   
+        sleep(0.5);
         semop(shm_id, &lock, 1);
         int liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-        int pojemnosc_ula = stan_ula->pojemnosc_ula;
+        int obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+        int maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
         semop(shm_id, &unlock, 1);
         int liczba_zlozonych_jaj = rand() % 3 + 1;
-        if(liczba_pszczol_ul + liczba_zlozonych_jaj <= pojemnosc_ula)
+        if( (liczba_pszczol_ul + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow/2) && (obecna_liczba_pszczol + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow) )
         {
             write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
         }
@@ -179,6 +183,7 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
     {
         read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
         printf("Krolowa zniosla %d jaj\n", otrzymana_ilosc_jaj);
+        printf("Jest tyle pszczol: %d, a moze byc maks tyle %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->maksymalna_ilosc_osobnikow);
         wyklute_robotnice = malloc(sizeof(pthread_t) * otrzymana_ilosc_jaj);
         sleep(1);
         for(int i=0; i<otrzymana_ilosc_jaj; i++)
@@ -193,10 +198,15 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
 
             semop(shm_id, &lock, 1);
             stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            stan_ula_do_przekazania->pojemnosc_ula = maksymalna_pojemnosc_ula;
             semop(shm_id, &unlock, 1);
         }
+            semop(shm_id, &lock, 1);
+            stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
+            stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
+            printf("Przeslano %d jako maksymalna l.osobnikow\n", stan_ula_do_przekazania->maksymalna_ilosc_osobnikow);
+            stan_ula_do_przekazania->stan_poczatkowy = stan_ula->stan_poczatkowy;
+            semop(shm_id, &unlock, 1);
     }
 
     for(int i=0; i<otrzymana_ilosc_jaj; i++)
@@ -207,7 +217,17 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
 
 void obsluga_sygnalu(int sig)
 {
-    printf("\n\nOla amigo muchos gracisas\n\n");
+    if(sig == SIGUSR1)
+    {
+        printf("\n\nsigusr1 - zwieksz\n\n");
+        stan_ula->maksymalna_ilosc_osobnikow += (stan_ula->stan_poczatkowy / 5);
+        printf("Teraz maksymalna liczba osobnikow: %d\n", stan_ula->maksymalna_ilosc_osobnikow);
+    }
+
+    if(sig == SIGUSR2)
+    {
+        printf("\n\nOla amigo muchos gracisas from sigusr2\n\n");
+    }
 }
 
 int main()
@@ -225,10 +245,18 @@ int main()
         return 1;
     }
 
+    if (sigaction(SIGUSR2, &sa, NULL) == -1) {
+        perror("sigaction error");
+        return 1;
+    }
+    struct sembuf lock = {0, -1, 0};
+    struct sembuf unlock = {0, 1, 0};
+
     stan_ula = malloc(sizeof(Stan_Ula));
     stan_ula->obecna_liczba_pszczol = 0;
     stan_ula->obecna_liczba_pszczol_ul = 0;
-    stan_ula->pojemnosc_ula = maksymalna_pojemnosc_ula;
+    stan_ula->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL; // poddzielone na dwa = pojemnosc ula
+    stan_ula->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
 
     int pipe_skladanie_jaj[2];
     if(pipe(pipe_skladanie_jaj) == -1)
@@ -252,21 +280,6 @@ int main()
         exit(1);
     }
 
-    if(fork() == 0)
-    {
-        execl("./pszczelarz", "./pszczelarz", NULL);
-        exit(1);
-    }
-
-    int krolowa = fork();
-    if(krolowa == 0)
-    {
-        printf("jestem krolowa!\n");
-        close(pipe_skladanie_jaj[0]);  // Zamknięcie odczytu w procesie dziecka
-        proces_krolowej(pipe_skladanie_jaj[1], klucz, shm_id);
-        close(pipe_skladanie_jaj[1]);
-        return 0;
-    }
     /*
     else
     {
@@ -319,7 +332,31 @@ int main()
         }
     }
 
+    semop(shm_id, &lock, 1);
+    stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+    stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
+    stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
+    stan_ula_do_przekazania->stan_poczatkowy = stan_ula->stan_poczatkowy;
+    semop(shm_id, &unlock, 1);
+
     close(pipe_skladanie_jaj[1]);
+
+        if(fork() == 0)
+    {
+        execl("./pszczelarz", "./pszczelarz", NULL);
+        exit(1);
+    }
+
+    int krolowa = fork();
+    if(krolowa == 0)
+    {
+        printf("jestem krolowa!\n");
+        close(pipe_skladanie_jaj[0]);  // Zamknięcie odczytu w procesie dziecka
+        proces_krolowej(pipe_skladanie_jaj[1], klucz, shm_id);
+        close(pipe_skladanie_jaj[1]);
+        return 0;
+    }
+
     proces_ula(pipe_skladanie_jaj[0], shm_id, stan_ula_do_przekazania);
     close(pipe_skladanie_jaj[0]);
 
