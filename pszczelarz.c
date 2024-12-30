@@ -22,7 +22,8 @@ int main()
     //sleep(2);
     //kill(getppid(), SIGUSR2);
     sleep(0.5);
-    int ilosc_ramek = 5;
+    int ilosc_ramek = 1;
+    //int maksymalna_ilosc_ramek = 5;
     key_t klucz = ftok("./unikalny_klucz.txt", 65);
     int shm_id = shmget(klucz, 1024, 0666);
     if (shm_id == -1) {
@@ -43,21 +44,39 @@ int main()
     semop(shm_id, &lock, 1);
     stan_poczatkowy = stan_ula->stan_poczatkowy;
     semop(shm_id, &unlock, 1);
-
+    int skok = 0;
+    //sint reszta = stan_poczatkowy % maksymalna_ilosc_ramek;
+    int obecna_liczba_pszczol;
+    int maksymalna_ilosc_osobnikow;
+    int liczba_w_ulu;
     while(1)
     {
         semop(shm_id, &lock, 1);
-        //stan poczatkowy
+        obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+        //maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
+        //liczba_w_ulu = stan_ula->obecna_liczba_pszczol_ul;
+        semop(shm_id, &unlock, 1);
+        printf("Pszczelarz po odczytaniu danych - obecna liczba pszczol: %d, maksymalna l.osobnikow: %d, ilosc osobnikow w ulu: %d\n",
+        obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu);
         //obecnie ile jest
        // printf("Pszczelarz: Jest tyle pszczol: %d, a moze byc maks tyle %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->maksymalna_ilosc_osobnikow);
-        if(stan_ula->obecna_liczba_pszczol == stan_ula->maksymalna_ilosc_osobnikow && ilosc_ramek != 0)
+        
+        if(obecna_liczba_pszczol == stan_poczatkowy)
         {
             kill(getppid(), SIGUSR1);
-            printf("signal sigusr1 sent - ilosc ramek: %d!\n", ilosc_ramek);
-            ilosc_ramek--;
+            //printf("signal sigusr1 sent - ilosc ramek: %d!\n", ilosc_ramek);
+            ilosc_ramek++; 
+            //skok += (stan_ula->stan_poczatkowy / maksymalna_ilosc_ramek); 
+        }
+
+        //pierwotna wersja - usuwa gdy juz zostaly wykorzystane wsyskie ramki albo raz na jakis czas
+        if(obecna_liczba_pszczol == 2 * stan_poczatkowy)
+        {
+            kill(getppid(), SIGUSR2);
+            ilosc_ramek--; 
         }
         //printf("Pszczelarz odczytał obecna liczbe pszczol: %d i obecna liczbe pszczol w ulu: %d = \n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
-        semop(shm_id, &unlock, 1);
+        sleep(3);
     }
 
     if (shmdt(stan_ula) == -1) {
