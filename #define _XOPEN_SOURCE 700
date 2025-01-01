@@ -52,12 +52,11 @@ Stan_Ula* stan_ula;
 void* robotnica(void* args)
 {
     Argumenty_Watku* argumenty_watku = (Argumenty_Watku*)args;
-    Pszczola* pszczola = argumenty_watku->pszczola;
+    Pszczola* pszczola = (Pszczola*) argumenty_watku->pszczola;
     int shm_id = argumenty_watku->shm_id;
     Stan_Ula* stan_ula_do_przekazania = argumenty_watku->stan_ula_do_przekazania;
     struct sembuf lock = {0, -1, 0};
     struct sembuf unlock = {0, 1, 0};
-    //Pszczola* pszczola = (Pszczola*) args;
     while(1)
     {
         pthread_mutex_lock(&liczba_pszczol_ul_mutex);
@@ -93,7 +92,6 @@ void* robotnica(void* args)
             printf("%s\n", info);
             semop(shm_id, &lock, 1);
             stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            printf("Do pamieci dzielonej przekazano: %d\n", stan_ula->obecna_liczba_pszczol_ul);
             semop(shm_id, &unlock, 1);
             //uaktualnienie pamieci dzielonej
         }
@@ -129,26 +127,15 @@ void* robotnica(void* args)
             printf("%s\n", info);
             semop(shm_id, &lock, 1);
             stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            printf("Do pamieci dzielonej przekazano: %d\n", stan_ula->obecna_liczba_pszczol_ul);
             semop(shm_id, &unlock, 1);
             pszczola->licznik_odwiedzen++;
             printf("Odwiedzono %d razy: \n", pszczola->licznik_odwiedzen);
+
            // printf("Pszczola odwiedzila ul %d razy: \n", pszczola->licznik_odwiedzen);
             pthread_cond_signal(&cond_dostepne_miejsce);
         }
 
         pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
-
-        if(pszczola->licznik_odwiedzen == pszczola->liczba_cykli)
-            {
-                printf("Pszczola is dead!\n");
-                stan_ula->obecna_liczba_pszczol--;
-                semop(shm_id, &lock, 1);
-                stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-                printf("Do pamieci dzielonej przekazano obecna l.pszczol: %d\n", stan_ula->obecna_liczba_pszczol);
-                semop(shm_id, &unlock, 1);
-                pthread_exit(NULL);
-            }
 
     }
 
@@ -244,13 +231,11 @@ void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
                 //pszczoly[i].liczba_cykli = rand() % 200 + 100;
                 pszczola_robotnica_dane->liczba_cykli = 3;
                 pszczola_robotnica_dane->pszczola_jest_w_ulu = 1;
-                Argumenty_Watku* args = malloc(sizeof(Argumenty_Watku));
-                args->pszczola = pszczola_robotnica_dane;
-                //Argumenty_Watku args;
-                //args->pszczola = pszczola_robotnica_dane;
-                args->shm_id = shm_id;
-                args->stan_ula_do_przekazania = stan_ula_do_przekazania;
-                pthread_create(&wyklute_robotnice[i], NULL, &robotnica, (void*) args);
+                Argumenty_Watku args;
+                args.pszczola = pszczola_robotnica_dane;
+                args.shm_id = shm_id;
+                args.stan_ula_do_przekazania = stan_ula_do_przekazania;
+                pthread_create(&wyklute_robotnice[i], NULL, &robotnica, &args);
                 semop(shm_id, &lock, 1); 
                 stan_ula->obecna_liczba_pszczol++;
                 stan_ula->obecna_liczba_pszczol_ul++;
@@ -401,12 +386,12 @@ int main()
         pszczola_robotnica_dane->pszczola_jest_w_ulu = 0;
         stan_ula->obecna_liczba_pszczol++;
 
-        Argumenty_Watku* args = malloc(sizeof(Argumenty_Watku));
-        args->pszczola = pszczola_robotnica_dane;
-        args->shm_id = shm_id;
-        args->stan_ula_do_przekazania = stan_ula_do_przekazania;
+        Argumenty_Watku args;
+        args.pszczola = pszczola_robotnica_dane;
+        args.shm_id = shm_id;
+        args.stan_ula_do_przekazania = stan_ula_do_przekazania;
 
-        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)args) != 0)
+        if(pthread_create(&robotnice[i], NULL, *robotnica, &args) != 0)
         {
             return 1;
         }

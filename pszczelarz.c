@@ -54,13 +54,13 @@ int main()
         semop(shm_id, &lock, 1);
         obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
         //maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-        //liczba_w_ulu = stan_ula->obecna_liczba_pszczol_ul;
+        liczba_w_ulu = stan_ula->obecna_liczba_pszczol_ul;
         semop(shm_id, &unlock, 1);
         printf("Pszczelarz po odczytaniu danych - obecna liczba pszczol: %d, maksymalna l.osobnikow: %d, ilosc osobnikow w ulu: %d\n",
         obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu);
         //obecnie ile jest
        // printf("Pszczelarz: Jest tyle pszczol: %d, a moze byc maks tyle %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->maksymalna_ilosc_osobnikow);
-        
+        /*
         if(obecna_liczba_pszczol == stan_poczatkowy)
         {
             kill(getppid(), SIGUSR1);
@@ -75,6 +75,7 @@ int main()
             kill(getppid(), SIGUSR2);
             ilosc_ramek--; 
         }
+        */  
         //printf("Pszczelarz odczytał obecna liczbe pszczol: %d i obecna liczbe pszczol w ulu: %d = \n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
         sleep(3);
     }
