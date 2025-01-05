@@ -1,471 +1,483 @@
-#define _XOPEN_SOURCE 700
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <time.h>
-#include <semaphore.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <string.h>
-#include <signal.h>
-#include <sys/sem.h>
+#include "common.h"
 
-#define POCZATKOWA_ILOSC_PSZCZOL 16
+static sem_t wejscie1, wejscie2;
+static pthread_mutex_t liczba_pszczol_ul_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
+//static pthread_cond_t cond_wejscie_otwarte = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t wejscie_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t blokada_ula = PTHREAD_MUTEX_INITIALIZER;
 
-int maksymalna_pojemnosc_ula = POCZATKOWA_ILOSC_PSZCZOL / 2;
-sem_t wejscie1, wejscie2;
-sem_t* sem_dostep_ul; 
-pthread_mutex_t liczba_pszczol_ul_mutex;
-pthread_mutex_t blokada_ula = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond_dostepne_miejsce = PTHREAD_COND_INITIALIZER;
-pthread_cond_t cond_wejscie_otwarte = PTHREAD_COND_INITIALIZER;
-int wejscie_otwarte = 1;
-pthread_mutex_t wejscie_mutex = PTHREAD_MUTEX_INITIALIZER;
+//static int wejscie_otwarte = 1;
+static Stan_Ula* stan_ula_local = NULL; // wskaznik na lokalną kopie stanu ula (ten proc)
 
-
-typedef struct{
-    int licznik_odwiedzen;
-    int liczba_cykli;
-    int pszczola_jest_w_ulu;
-} Pszczola;
-
-typedef struct{
-    int obecna_liczba_pszczol;
-    int maksymalna_ilosc_osobnikow;
-    int obecna_liczba_pszczol_ul;
-    int stan_poczatkowy;
-    //int pojemnosc_ula;
-} Stan_Ula;
-
-typedef struct{
-    Pszczola* pszczola;
-    int shm_id;
-    Stan_Ula* stan_ula_do_przekazania;
-    
-} Argumenty_Watku;
-
-Stan_Ula* stan_ula;
-
-void* robotnica(void* args)
+void* robotnica(void* arg)
 {
-    Argumenty_Watku* argumenty_watku = (Argumenty_Watku*)args;
+    Argumenty_Watku* argumenty_watku = (Argumenty_Watku*) arg;
+    if (!argumenty_watku) {
+        fprintf(stderr, "[ROBOTNICA] Błąd: argumenty wątku są NULL.\n");
+        pthread_exit(NULL);
+    }
+
     Pszczola* pszczola = argumenty_watku->pszczola;
-    int shm_id = argumenty_watku->shm_id;
-    Stan_Ula* stan_ula_do_przekazania = argumenty_watku->stan_ula_do_przekazania;
-    struct sembuf lock = {0, -1, 0};
-    struct sembuf unlock = {0, 1, 0};
-    //Pszczola* pszczola = (Pszczola*) args;
-    while(1)
-    {
-        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
-        //moglibysmy zrobic while i contition variable?
-       // printf("Od teraz tyle moze wejsc do ula: %d\n", stan_ula->maksymalna_ilosc_osobnikow/2);
-        //while(stan_ula->obecna_liczba_pszczol_ul >= stan_ula->maksymalna_ilosc_osobnikow/2)
-        while (stan_ula->obecna_liczba_pszczol_ul >= POCZATKOWA_ILOSC_PSZCZOL / 2 || wejscie_otwarte == 0) {
-            pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
-        }
-        //printf("Obecna liczba pszczol w ulu po dostaniu sygnalu: %d\n", stan_ula->obecna_liczba_pszczol_ul);
-        
+    Stan_Ula* stan_ula_dzielony = argumenty_watku->stan_ula_do_przekazania;
+    int sem_id = argumenty_watku -> sem_id;
+
+    struct sembuf lock   = {0, -1, 0};
+    struct sembuf unlock = {0,  1, 0};
+
+    while (1) {
+
         if(pszczola->pszczola_jest_w_ulu == 0)
         {
-            char* info;
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+        while (stan_ula_local->obecna_liczba_pszczol_ul >= (POCZATKOWA_ILOSC_PSZCZOL / 2)) 
+        {
+            pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
+        }
+        stan_ula_local->obecna_liczba_pszczol_ul++;
+        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+        char* info;
             int wejscie = rand() % 2;
-            if(wejscie == 1)
-            {
+            if (wejscie == 1) {
                 sem_wait(&wejscie1);
                 sleep(1);
-                info = "Pszczola weszla wejsciem 1";
+                info = "[ROBOTNICA] Pszczoła weszła wejsciem 1";
                 sem_post(&wejscie1);
-            }
-            else
-            {
+            } else {
                 sem_wait(&wejscie2);
                 sleep(1);
-                info = "Pszczola weszla wejsciem 2";
-                sem_post(&wejscie2);               
+                info = "[ROBOTNICA] Pszczoła weszła wejsciem 2";
+                sem_post(&wejscie2);
             }
 
             pszczola->pszczola_jest_w_ulu = 1;
-            stan_ula->obecna_liczba_pszczol_ul++;
-            printf("%s\n", info);
-            semop(shm_id, &lock, 1);
-            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            printf("Do pamieci dzielonej przekazano: %d\n", stan_ula->obecna_liczba_pszczol_ul);
-            semop(shm_id, &unlock, 1);
-            //uaktualnienie pamieci dzielonej
+            printf("%s oraz id: %lu\n", info, (unsigned long)pthread_self());
+            printf("Obecna liczba pszczol w ulu: %d\n",  stan_ula_local->obecna_liczba_pszczol_ul);
+
+            // Zapis do pamięci dzielonej
+            if (semop(sem_id, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (wejscie)");
+            }
+            stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+            if (semop(sem_id, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (wejscie)");
+            }
+            pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+
+            //praca w ulu
+            sleep(rand() % 5 + 2);
         }
-        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
-        
-        sleep(2); //praca - instynktowne opuszczenie ula/ moze opuscic wczesniej? / niektore wczesniejn niektore pozniej
-        //wykonujemy jakas prace przez jakiś randomowy czas i pszczola opuszcza ul
-
-        //sleep(rand() % 10 + 5);
-
-
-        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
         if(pszczola->pszczola_jest_w_ulu == 1)
         {
             char* info;
+            int wyjscie = rand() % 2;
+            if (wyjscie == 1) {
+                sem_wait(&wejscie1);
+                info = "[ROBOTNICA] Pszczola wyszla wejsciem 1";
+                sem_post(&wejscie1);
+            } else {
+                sem_wait(&wejscie2);
+                info = "[ROBOTNICA] Pszczola wyszla wejsciem 2";
+                sem_post(&wejscie2);
+            }
+
+            pszczola->pszczola_jest_w_ulu = 0;
+            pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+            stan_ula_local->obecna_liczba_pszczol_ul--;
+            pthread_cond_signal(&cond_dostepne_miejsce);
+            pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+            printf("%s oraz id: %lu\n", info, (unsigned long)pthread_self());
+            printf("Obecna liczba pszczol w ulu: %d\n", stan_ula_local->obecna_liczba_pszczol_ul);
+
+            //zapis do pam.dzielonej - upd
+            if (semop(sem_id, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (wyjście)");
+            }
+            stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+            if (semop(sem_id, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (wyjście)");
+            }
+
+            pszczola->licznik_odwiedzen++;
+            printf("[ROBOTNICA] Pszczoła %lu odwiedziła ul %d razy.\n", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen);
+                if (pszczola->licznik_odwiedzen >= pszczola->liczba_cykli) {
+            printf("[ROBOTNICA] Pszczoła %lu umiera (liczba odwiedzin %d).\n", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen);
+
+            if (semop(sem_id, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (śmierć)");
+            }
+            stan_ula_local->obecna_liczba_pszczol--;
+            stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_local->obecna_liczba_pszczol;
+            if (semop(sem_id, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (śmierć)");
+            }
+
+            free(pszczola);
+            free(argumenty_watku);
+
+            pthread_exit(NULL);
+        }
+        sleep(rand() % 3 + 2); //praca poza ulem
+        }
+
+        }
+
+        /*
+        // 
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+        while (stan_ula_local->obecna_liczba_pszczol_ul >= (POCZATKOWA_ILOSC_PSZCZOL / 2)) 
+        {
+            pthread_cond_wait(&cond_dostepne_miejsce, &liczba_pszczol_ul_mutex);
+        }
+
+        if (pszczola->pszczola_jest_w_ulu == 0) {
+            char* info;
             int wejscie = rand() % 2;
-            if(wejscie == 1)
-            {
+            if (wejscie == 1) {
                 sem_wait(&wejscie1);
                 sleep(1);
-                info = "Pszczola wyszla wejsciem 1";
+                info = "[ROBOTNICA] Pszczoła weszła wejściem 1";
                 sem_post(&wejscie1);
-            }
-            else
-            {
+            } else {
                 sem_wait(&wejscie2);
                 sleep(1);
-                info = "Pszczola wyszla wejsciem 2";
-                sem_post(&wejscie2);                
+                info = "[ROBOTNICA] Pszczoła weszła wejściem 2";
+                sem_post(&wejscie2);
             }
-            pszczola->pszczola_jest_w_ulu = 0;
-            stan_ula->obecna_liczba_pszczol_ul--;
+
+            pszczola->pszczola_jest_w_ulu = 1;
+            stan_ula_local->obecna_liczba_pszczol_ul++;
             printf("%s\n", info);
-            semop(shm_id, &lock, 1);
-            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            printf("Do pamieci dzielonej przekazano: %d\n", stan_ula->obecna_liczba_pszczol_ul);
-            semop(shm_id, &unlock, 1);
+
+            // Zapis do pamięci dzielonej
+            if (semop(sem_id_global, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (wejście)");
+            }
+            stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+            if (semop(sem_id_global, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (wejście)");
+            }
+        }
+
+        if(pszczola->pszczola_jest_w_ulu == 1)
+        {
+        sleep(rand() % 5 + 2);
+        }
+        pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+        if (pszczola->pszczola_jest_w_ulu == 1) {
+            char* info;
+            int wyjscie = rand() % 2;
+            if (wyjscie == 1) {
+                sem_wait(&wejscie1);
+                sleep(1);
+                info = "[ROBOTNICA] Pszczoła wyszła wejściem 1";
+                sem_post(&wejscie1);
+            } else {
+                sem_wait(&wejscie2);
+                sleep(1);
+                info = "[ROBOTNICA] Pszczoła wyszła wejściem 2";
+                sem_post(&wejscie2);
+            }
+
+            pszczola->pszczola_jest_w_ulu = 0;
+            stan_ula_local->obecna_liczba_pszczol_ul--;
+            printf("%s\n", info);
+
+            // Zapis do pamięci dzielonej
+            if (semop(sem_id_global, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (wyjście)");
+            }
+            stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+            if (semop(sem_id_global, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (wyjście)");
+            }
+
             pszczola->licznik_odwiedzen++;
-            printf("Odwiedzono %d razy: \n", pszczola->licznik_odwiedzen);
-           // printf("Pszczola odwiedzila ul %d razy: \n", pszczola->licznik_odwiedzen);
+            printf("[ROBOTNICA] Pszczoła odwiedziła ul %d razy.\n", pszczola->licznik_odwiedzen);
             pthread_cond_signal(&cond_dostepne_miejsce);
         }
-
         pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
-        if(pszczola->licznik_odwiedzen == pszczola->liczba_cykli)
-            {
-                printf("Pszczola is dead!\n");
-                stan_ula->obecna_liczba_pszczol--;
-                semop(shm_id, &lock, 1);
-                stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-                printf("Do pamieci dzielonej przekazano obecna l.pszczol: %d\n", stan_ula->obecna_liczba_pszczol);
-                semop(shm_id, &unlock, 1);
-                pthread_exit(NULL);
+        if (pszczola->licznik_odwiedzen >= pszczola->liczba_cykli) {
+            printf("[ROBOTNICA] Pszczoła umiera (liczba odwiedzin %d).\n", pszczola->licznik_odwiedzen);
+
+            if (semop(sem_id_global, &lock, 1) == -1) {
+                perror("[ROBOTNICA] semop lock (śmierć)");
+            }
+            stan_ula_local->obecna_liczba_pszczol--;
+            stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_local->obecna_liczba_pszczol;
+            if (semop(sem_id_global, &unlock, 1) == -1) {
+                perror("[ROBOTNICA] semop unlock (śmierć)");
             }
 
-    }
+            free(pszczola);
+            free(argumenty_watku);
 
-    
-    //sprawdzenie czy wystarczajaca ilosc miejsca w ulu -> jesli nie, to czkekamy az jakas pszczola wyjdzie lub sygnal do pszczelarza?
-
-    //wejscie -> dwa wejscia, pszczola losuje ktore? - sprawdzamy czy nie jest zajete (dwa mutexy na wejscia?) / semafory?
-
-    //obsluga bycia w ulu przez jakis czas // sleep
-
-    //opuszczenie ula, inkrementacja liczby odwiedzin, zwolnienie miejsca w ulu -> 
-
-    //sprawdzenie ile razy pszczola byla w ulu, usuniecie wątku jesli przekroczyl ilosc cykli pthread_exit(null)
-
-    
-
-}
-
-void proces_krolowej(int pipe_fd, int klucz, int shm_id){
-    //sleep(0.5);
-    if (shm_id == -1) 
-    {
-        perror("shmget");
-        exit(1);
-    }
-
-    Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    struct sembuf lock = {0, -1, 0};
-    struct sembuf unlock = {0, 1, 0};
-
-    while(1)
-    {   
-        semop(shm_id, &lock, 1);
-        int liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-        int obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-        int maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-        semop(shm_id, &unlock, 1);
-        printf("Krolowa po odczytaniu po odczytaniu danych - obecna liczba pszczol: %d, maksymalna l.osobnikow: %d, ilosc osobnikow w ulu: %d\n",
-        obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_pszczol_ul);
-        int liczba_zlozonych_jaj = rand() % 3 + 1;
-        printf("DEBUG: liczba_pszczol_ul=%d, obecna_liczba_pszczol=%d, liczba_zlozonych_jaj=%d, maksymalna_ilosc_osobnikow=%d\n",
-           liczba_pszczol_ul, obecna_liczba_pszczol, liczba_zlozonych_jaj, maksymalna_ilosc_osobnikow);
-        if ((liczba_pszczol_ul + liczba_zlozonych_jaj <= POCZATKOWA_ILOSC_PSZCZOL / 2) && 
-    (obecna_liczba_pszczol + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow)) {
-    if (liczba_pszczol_ul + liczba_zlozonych_jaj == POCZATKOWA_ILOSC_PSZCZOL / 2) {
-        pthread_mutex_lock(&wejscie_mutex);
-        wejscie_otwarte = 0; // Zamykamy wejście
-        pthread_mutex_unlock(&wejscie_mutex);
-    }
-    write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
-}
-        else
-        {
-            liczba_zlozonych_jaj = 0;
-            write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int));
+            pthread_exit(NULL);
         }
-
-        sleep(3);
     }
-
-    if (shmdt(stan_ula) == -1) 
-    {
-        perror("shmdt");
-    }
-
-    if (shmctl(shm_id, IPC_RMID, NULL) == -1) 
-    {
-        perror("shmctl");
-    }
+    */
+    pthread_exit(NULL);
 }
 
-void proces_ula(int pipe_fd, int shm_id, Stan_Ula* stan_ula_do_przekazania)
-{
-    int otrzymana_ilosc_jaj;
-    pthread_t* wyklute_robotnice;
-    struct sembuf lock = {0, -1, 0};
-    struct sembuf unlock = {0, 1, 0};
-
-    while(1)
-    {
-        read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
-        printf("Krolowa zniosla %d jaj\n", otrzymana_ilosc_jaj);
-        printf("Jest tyle pszczol: %d, a moze byc maks tyle %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->maksymalna_ilosc_osobnikow);
-        
-        if (otrzymana_ilosc_jaj > 0)
-        {
-            wyklute_robotnice = malloc(sizeof(pthread_t) * otrzymana_ilosc_jaj);
-            sleep(1);
-            for(int i=0; i<otrzymana_ilosc_jaj; i++)
-            {
-                Pszczola* pszczola_robotnica_dane = malloc(sizeof(Pszczola));
-                pszczola_robotnica_dane->licznik_odwiedzen = 0;
-                //pszczoly[i].liczba_cykli = rand() % 200 + 100;
-                pszczola_robotnica_dane->liczba_cykli = 3;
-                pszczola_robotnica_dane->pszczola_jest_w_ulu = 1;
-                Argumenty_Watku* args = malloc(sizeof(Argumenty_Watku));
-                args->pszczola = pszczola_robotnica_dane;
-                //Argumenty_Watku args;
-                //args->pszczola = pszczola_robotnica_dane;
-                args->shm_id = shm_id;
-                args->stan_ula_do_przekazania = stan_ula_do_przekazania;
-                pthread_create(&wyklute_robotnice[i], NULL, &robotnica, (void*) args);
-                semop(shm_id, &lock, 1); 
-                stan_ula->obecna_liczba_pszczol++;
-                stan_ula->obecna_liczba_pszczol_ul++;
-                printf("Obecna l.pszczol: %d i obecna l.pszczol w ulu: %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
-                semop(shm_id, &unlock, 1);
-
-                semop(shm_id, &lock, 1);
-                stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-                stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-                semop(shm_id, &unlock, 1);
-            }
-            pthread_mutex_lock(&wejscie_mutex);
-            wejscie_otwarte = 1; // Otwieramy wejście
-            pthread_cond_broadcast(&cond_dostepne_miejsce); // Powiadamiamy wszystkie pszczoły
-            pthread_mutex_unlock(&wejscie_mutex);
-        }
-            semop(shm_id, &lock, 1);
-            stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-            stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-            stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-            //printf("Przeslano %d jako maksymalna l.osobnikow\n", stan_ula_do_przekazania->maksymalna_ilosc_osobnikow);
-            //printf("Na początku wysyłam stan poczatkowy: %d, max l. osobnikow: %d, obecna l.os: %d i obecna l.os. w ulu: %d\n",
-            //stan_ula->stan_poczatkowy, stan_ula->maksymalna_ilosc_osobnikow, stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
-            semop(shm_id, &unlock, 1);
-
-        printf("Ul - proces glowny wysyla po zapisaniu danych - obecna liczba pszczol: %d, maksymalna l.osobnikow: %d, ilosc osobnikow w ulu: %d\n",
-         stan_ula_do_przekazania->obecna_liczba_pszczol, stan_ula_do_przekazania->maksymalna_ilosc_osobnikow, stan_ula_do_przekazania->obecna_liczba_pszczol_ul);
-    }
-
-    for(int i=0; i<otrzymana_ilosc_jaj; i++)
-    {
-        pthread_join(wyklute_robotnice[i], NULL);
-    }
-}
 
 void obsluga_sygnalu(int sig)
 {
-    if(sig == SIGUSR1)
-    {
-        printf("\n\nsigusr1 - zwieksz\n\n");
-        //stan_ula->maksymalna_ilosc_osobnikow += (stan_ula->stan_poczatkowy / 5);
-        stan_ula->maksymalna_ilosc_osobnikow *= 2;
-        printf("Teraz maksymalna liczba osobnikow: %d\n", stan_ula->maksymalna_ilosc_osobnikow);
-    }
+    if (!stan_ula_local) return;
 
-    if(sig == SIGUSR2)
-    {
-        printf("\n\nsigusr1 - zmniejsz\n\n");
-        stan_ula->maksymalna_ilosc_osobnikow /= 2;
-        printf("Teraz maksymalna liczba osobnikow: %d\n", stan_ula->maksymalna_ilosc_osobnikow);
+    if (sig == SIGUSR1) {
+        printf("\n[UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!\n");
+        stan_ula_local->maksymalna_ilosc_osobnikow *= 2;
+        printf("[UL] Nowa maksymalna liczba osobnikow: %d\n", 
+               stan_ula_local->maksymalna_ilosc_osobnikow);
+    }
+    else if (sig == SIGUSR2) {
+        /*
+        printf("\n[UL] Otrzymano SIGUSR2 -> zmniejszamy populacje!\n");
+        stan_ula_local->obecna_liczba_pszczol /= 2;
+        stan_ula_local->maksymalna_ilosc_osobnikow = 16;
+        printf("[UL] Nowa maksymalna liczba osobników: %d\n", 
+               stan_ula_local->maksymalna_ilosc_osobnikow);
+        */
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-   // printf("PID: %d i PPID: %d dla ula\n", getpid(), getppid());
-    srand(time(NULL));
-    sem_init(&wejscie1, 0, 1);
-    sem_init(&wejscie2, 0, 1);
-    pthread_mutex_init(&liczba_pszczol_ul_mutex, NULL);
+    if (argc < 4) {
+        fprintf(stderr, "[UL] Sposób użycia: %s <fd_pipe> <shm_id> <sem_id>\n", argv[0]);
+        return 1;
+    }
+
+
+    int pipe_fd = atoi(argv[1]);
+    int shm_id  = atoi(argv[2]);
+    int sem_id = atoi(argv[3]); 
+
+    sleep(1); //pszelarz musi byc pierwszy
+
+    //fifo do wyslania pidu ula pszczelarzowi
+    if (mkfifo(FIFO_PATH, 0666) == -1) {
+        if (errno != EEXIST) {
+            perror("Nie mozna utworzyc fifo.");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    int fifo_fd = open(FIFO_PATH, O_WRONLY);
+    if (fifo_fd == -1) {
+        perror("open FIFO for writing");
+        exit(EXIT_FAILURE);
+    }
+    int pid = (int)getpid();
+    char pid_str[20];
+    snprintf(pid_str, sizeof(pid_str), "%d", pid);
+    printf("pid: %s\n", pid_str);
+    //const char *msg = "Hello, FIFO!";
+    //int ul_pid = 2;
     
-    struct sigaction sa;
-    sa.sa_handler = &obsluga_sygnalu;
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGUSR1, &sa, NULL) == -1) {
-        perror("sigaction error");
-        return 1;
+    write(fifo_fd, pid_str, strlen(pid_str) + 1); 
+    close(fifo_fd);
+    printf("Pid ul: %s\n\n", pid_str);
+
+    srand(time(NULL));
+
+    // dolaczenie do pma.dzielonej
+    Stan_Ula* stan_ula_dzielony = (Stan_Ula*) shmat(shm_id, NULL, 0);
+    if (stan_ula_dzielony == (void*)-1) {
+        perror("[UL] shmat");
+        exit(EXIT_FAILURE);
     }
 
-    if (sigaction(SIGUSR2, &sa, NULL) == -1) {
-        perror("sigaction error");
-        return 1;
-    }
-
-    stan_ula = malloc(sizeof(Stan_Ula));
-    stan_ula->obecna_liczba_pszczol = 0;
-    stan_ula->obecna_liczba_pszczol_ul = 0;
-    stan_ula->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL; // poddzielone na dwa = pojemnosc ula
-    stan_ula->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
-
-    int pipe_skladanie_jaj[2];
-    if(pipe(pipe_skladanie_jaj) == -1)
-    {
-        return 2;
-    }
-
-    key_t klucz = ftok("./unikalny_klucz.txt", 65);
-
-    int shm_id = shmget(klucz, 1024, 0666 | IPC_CREAT);
-    if (shm_id == -1) 
-    {
-        perror("shmget");
-        exit(1);
-    }
-
-    Stan_Ula* stan_ula_do_przekazania = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    if (stan_ula_do_przekazania == (void*) -1) 
-    { 
-        perror("shmat");
-        exit(1);
+    stan_ula_local = (Stan_Ula*) malloc(sizeof(Stan_Ula));
+    if (!stan_ula_local) {
+        fprintf(stderr, "[UL] Błąd alokacji stan_ula_local.\n");
+        exit(EXIT_FAILURE);
     }
 
     struct sembuf lock = {0, -1, 0};
     struct sembuf unlock = {0, 1, 0};
-    /*
-    else
-    {
-        pszczelarz = fork();
-        if(pszczelarz == 0)
-        {
-            while(1)
-            {
-                printf("Jestem pszelarz!\n");
-                printf("pszczelarz zna obecna liczbe pszczol: %d\n", obecna_liczba_pszczol);
-                sleep(5);
+
+    stan_ula_local->obecna_liczba_pszczol = 0;
+    stan_ula_local->obecna_liczba_pszczol_ul = 0;
+    stan_ula_local->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
+    stan_ula_local->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
+
+    if (semop(sem_id, &lock, 1) == -1) {
+        perror("[UL] semop lock (init)");
+    }
+    stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_local->obecna_liczba_pszczol;
+    stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+    stan_ula_dzielony->maksymalna_ilosc_osobnikow = stan_ula_local->maksymalna_ilosc_osobnikow;
+    stan_ula_dzielony->stan_poczatkowy = stan_ula_local->stan_poczatkowy;
+    if (semop(sem_id, &unlock, 1) == -1) {
+        perror("[UL] semop unlock (init)");
+    }
+    
+    //init semaforow dla wejsc
+    if (sem_init(&wejscie1, 0, 1) == -1) {
+        perror("[UL] sem_init wejscie1");
+        exit(EXIT_FAILURE);
+    }
+    if (sem_init(&wejscie2, 0, 1) == -1) {
+        perror("[UL] sem_init wejscie2");
+        exit(EXIT_FAILURE);
+    }
+
+    // sygnaly od pszczelarza
+    struct sigaction sa;
+    sa.sa_handler = obsluga_sygnalu;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
+
+    printf("[UL] Start, stan początkowy: %d, max: %d, obecne pszczoły: %d\n",
+           stan_ula_local->stan_poczatkowy,
+           stan_ula_local->maksymalna_ilosc_osobnikow,
+           stan_ula_local->obecna_liczba_pszczol);
+
+    //tworzymy kilka statycznych robotnic
+    int liczba_poczatek = POCZATKOWA_ILOSC_PSZCZOL;
+    pthread_t* robotnice_tab = (pthread_t*) calloc(liczba_poczatek, sizeof(pthread_t));
+    if (!robotnice_tab) {
+        fprintf(stderr, "[UL] Błąd alokacji robotnice_tab.\n");
+        free(stan_ula_local);
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < liczba_poczatek; i++) {
+        Pszczola* p = (Pszczola*) malloc(sizeof(Pszczola));
+        if (!p) {
+            fprintf(stderr, "[UL] Błąd alokacji pszczoły.\n");
+            continue;
+        }
+        p->licznik_odwiedzen    = 0;
+        p->liczba_cykli         = 2;
+        p->pszczola_jest_w_ulu  = 0;
+
+        stan_ula_local->obecna_liczba_pszczol++;
+        if (semop(sem_id, &lock, 1) == -1) {
+            perror("[UL] semop lock (tworzenie robotnic)");
+        }
+        stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_local->obecna_liczba_pszczol;
+        if (semop(sem_id, &unlock, 1) == -1) {
+            perror("[UL] semop unlock (tworzenie robotnic)");
+        }
+
+        // arguemnty dla watkow
+        Argumenty_Watku* args = (Argumenty_Watku*) malloc(sizeof(Argumenty_Watku));
+        if (!args) {
+            fprintf(stderr, "[UL] Błąd alokacji Argumenty_Watku.\n");
+            free(p);
+            continue;
+        }
+        args->pszczola                  = p;
+        args->sem_id                    = sem_id;
+        args->stan_ula_do_przekazania   = stan_ula_dzielony;
+
+        pthread_create(&robotnice_tab[i], NULL, robotnica, (void*) args);
+        //sleep(1);
+    }
+    printf("Dopiero teraz zaczynamy petle!\n");
+    // petla dzialania ula
+    int otrzymana_ilosc_jaj = 0;
+    while (1) {
+        ssize_t count = read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
+        if (count <= 0) {
+            perror("[UL] read (potok krolowej)");
+            break;
+        }
+       // printf("[UL] Królowa zniosła %d jaj\n", otrzymana_ilosc_jaj);
+
+        // tworzenie nowych robotnic
+        if (stan_ula_local->obecna_liczba_pszczol + otrzymana_ilosc_jaj <= stan_ula_local->maksymalna_ilosc_osobnikow 
+             && stan_ula_local->obecna_liczba_pszczol_ul + otrzymana_ilosc_jaj <= stan_ula_local->stan_poczatkowy / 2) {
+            printf("Krolowa zniosla %d jaj\n", otrzymana_ilosc_jaj);
+            pthread_t* nowe_robotnice = (pthread_t*) calloc(otrzymana_ilosc_jaj, sizeof(pthread_t));
+            if (!nowe_robotnice) {
+                fprintf(stderr, "[UL] Błąd alokacji dla nowych robotnic.\n");
+                continue;
             }
-            close(pipe_skladanie_jaj[0]);
-            close(pipe_skladanie_jaj[1]);
-            exit(0);
+
+            if (semop(sem_id, &lock, 1) == -1) {
+                perror("[UL] semop lock (nowe robotnice)");
+            }
+                stan_ula_local->obecna_liczba_pszczol += otrzymana_ilosc_jaj;
+                stan_ula_local->obecna_liczba_pszczol_ul += otrzymana_ilosc_jaj;
+                stan_ula_dzielony->obecna_liczba_pszczol    = stan_ula_local->obecna_liczba_pszczol;
+                stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+
+            if (semop(sem_id, &unlock, 1) == -1) {
+                    perror("[UL] semop unlock (nowe robotnice)");
+                
+                }
+            printf("Laczenie z jajkami jest: %d osobikow\n", stan_ula_local->obecna_liczba_pszczol);
+            for (int i = 0; i < otrzymana_ilosc_jaj; i++) {
+                Pszczola* p = (Pszczola*) malloc(sizeof(Pszczola));
+                if (!p) {
+                    fprintf(stderr, "[UL] Błąd alokacji pszczoły.\n");
+                    continue;
+                }
+                p->licznik_odwiedzen   = 0;
+                p->liczba_cykli        = 2;
+                p->pszczola_jest_w_ulu = 1; // od razu w ulu?
+
+                Argumenty_Watku* args = (Argumenty_Watku*) malloc(sizeof(Argumenty_Watku));
+                if (!args) {
+                    fprintf(stderr, "[UL] Błąd alokacji Argumenty_Watku.\n");
+                    free(p);
+                    continue;
+                }
+                args->pszczola                  = p;
+                args->sem_id                    = sem_id;
+                args->stan_ula_do_przekazania   = stan_ula_dzielony;
+
+                pthread_create(&nowe_robotnice[i], NULL, robotnica, (void*)args);
+            }
+            //pthread_mutex_lock(&wejscie_mutex);
+            //wejscie_otwarte = 1;
+           // pthread_cond_broadcast(&cond_dostepne_miejsce);
+           // pthread_mutex_unlock(&wejscie_mutex);
+
+            free(nowe_robotnice);
         }
         else
         {
-            printf("jestem wątek glowny!\n");
-        }
-    }
-*/
-
-    //tworzenie robotnic, krolowej i pszczelarza oraz czekanie na ich zakonczenie
-    /*
-    for(int i=0; i<liczba_osobnikow; i++)
-    {
-        pszczoly[i].pszczola_znajduje_sie_w_ulu = 0;
-        pszczoly[i].licznik_odwiedzen = 0;
-        //pszczoly[i].liczba_cykli = rand() % 200 + 100;
-        pszczoly[i].liczba_cykli = 3;
-    }
-    */
-
-   pthread_t robotnice[POCZATKOWA_ILOSC_PSZCZOL];
-   Pszczola pszczoly[POCZATKOWA_ILOSC_PSZCZOL];
-
-    for(int i=0; i<POCZATKOWA_ILOSC_PSZCZOL; i++)
-    {
-        Pszczola* pszczola_robotnica_dane = malloc(sizeof(Pszczola));
-        pszczola_robotnica_dane->licznik_odwiedzen = 0;
-        //pszczoly[i].liczba_cykli = rand() % 200 + 100;
-        pszczola_robotnica_dane->liczba_cykli = 3; //mozemy dodac ze albo jest albo nie
-        pszczola_robotnica_dane->pszczola_jest_w_ulu = 0;
-        stan_ula->obecna_liczba_pszczol++;
-
-        Argumenty_Watku* args = malloc(sizeof(Argumenty_Watku));
-        args->pszczola = pszczola_robotnica_dane;
-        args->shm_id = shm_id;
-        args->stan_ula_do_przekazania = stan_ula_do_przekazania;
-
-        if(pthread_create(&robotnice[i], NULL, *robotnica, (void*)args) != 0)
-        {
-            return 1;
+            if (semop(sem_id, &lock, 1) == -1) {
+                    perror("[UL] semoop lock (Aktualizacja danych error)");
+                }
+                stan_ula_dzielony->obecna_liczba_pszczol    = stan_ula_local->obecna_liczba_pszczol;
+                stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+                if (semop(sem_id, &unlock, 1) == -1) {
+                    perror("[UL] semoop unlock (Aktualizacja danych error)");
+                }
+                printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",
+               stan_ula_local->obecna_liczba_pszczol,
+               stan_ula_local->obecna_liczba_pszczol_ul,
+               stan_ula_local->maksymalna_ilosc_osobnikow);
         }
     }
 
-    semop(shm_id, &lock, 1);
-    stan_ula_do_przekazania->obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-    stan_ula_do_przekazania->obecna_liczba_pszczol_ul = stan_ula->obecna_liczba_pszczol_ul;
-    stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-    stan_ula_do_przekazania->stan_poczatkowy = stan_ula->stan_poczatkowy;
-    semop(shm_id, &unlock, 1);
-    printf("Na początku wysyłam stan poczatkowy: %d, max l. osobnikow: %d, obecna l.os: %d i obecna l.os. w ulu: %d\n",
-            stan_ula->stan_poczatkowy, stan_ula->maksymalna_ilosc_osobnikow, stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
-
-    if(fork() == 0)
-    {
-        execl("./pszczelarz", "./pszczelarz", NULL);
-        exit(1);
+    for (int i = 0; i < liczba_poczatek; i++) {
+        pthread_join(robotnice_tab[i], NULL);
     }
+    free(robotnice_tab);
 
-    sleep(1);
-
-    int krolowa = fork();
-    if(krolowa == 0)
-    {
-        printf("jestem krolowa!\n");
-        close(pipe_skladanie_jaj[0]);  // Zamknięcie odczytu w procesie dziecka
-        proces_krolowej(pipe_skladanie_jaj[1], klucz, shm_id);
-        close(pipe_skladanie_jaj[1]);
-        return 0;
+    // sprzatenie
+    if (shmdt(stan_ula_dzielony) == -1) {
+        perror("[UL] shmdt");
     }
-
-    close(pipe_skladanie_jaj[1]);
-    proces_ula(pipe_skladanie_jaj[0], shm_id, stan_ula_do_przekazania);
-    close(pipe_skladanie_jaj[0]);
-
-    if (shmdt(stan_ula_do_przekazania) == -1) 
-    {
-        perror("shmdt");
-        exit(1);
-    }
-    
-    shmctl(shm_id, IPC_RMID, NULL);
-
-    for(int i=0; i<10; i++)
-    {
-        if(pthread_join(robotnice[i], NULL) != 0)
-        {
-            return 2;
-        }
-    }
- 
-
-    while(wait(NULL) > 0);
+    free(stan_ula_local);
 
     sem_destroy(&wejscie1);
     sem_destroy(&wejscie2);
     pthread_mutex_destroy(&liczba_pszczol_ul_mutex);
-    pthread_cond_destroy(&cond_dostepne_miejsce);   
-    
+    pthread_cond_destroy(&cond_dostepne_miejsce);
+    //pthread_cond_destroy(&cond_wejscie_otwarte);
+    pthread_mutex_destroy(&wejscie_mutex);
+    pthread_mutex_destroy(&blokada_ula);
+
+    printf("[UL] Koncze proces ula.\n");
     return 0;
 }

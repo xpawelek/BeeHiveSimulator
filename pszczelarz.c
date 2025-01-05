@@ -1,3 +1,4 @@
+#include "common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,89 +6,95 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <signal.h>
-typedef struct{
-    int obecna_liczba_pszczol;
-    int maksymalna_ilosc_osobnikow;
-    int obecna_liczba_pszczol_ul;
-    int stan_poczatkowy;
-    //int pojemnosc_ula;
-} Stan_Ula;
+#include <time.h>
 
-int main()
+int main(int argc, char* argv[])
 {
-    //printf("PID: %d i PPID: %d dla pszczelarza\n", getpid(), getppid());
-    //sleep(2);
-    //printf("Jestem pszelarz xaxa!\n");
-    //kill(getppid(), SIGUSR1);
-    //sleep(2);
-    //kill(getppid(), SIGUSR2);
-    sleep(0.5);
-    int ilosc_ramek = 1;
-    //int maksymalna_ilosc_ramek = 5;
-    key_t klucz = ftok("./unikalny_klucz.txt", 65);
-    int shm_id = shmget(klucz, 1024, 0666);
-    if (shm_id == -1) {
-        perror("shmget");
-        exit(1);
+    if (argc < 3) {
+        fprintf(stderr, "[PSZCZELARZ] Sposób użycia: %s <sem_id> <shm_id> \n", argv[0]);
+        return 1;
     }
 
+    int sem_id = atoi(argv[1]);
+    int shm_id = atoi(argv[2]);
+    //pid_t ul_pid;
+    srand(time(NULL));
+
+    int fd = open(FIFO_PATH, O_RDONLY);
+    if (fd == -1) {
+        perror("open FIFO for reading");
+        exit(EXIT_FAILURE);
+    }
+
+    //int ul_pid;
+
+    char buffer[100];
+    read(fd, buffer, sizeof(buffer));
+    close(fd);
+    printf("Received PID: %s\n", buffer);
+    int pid_ul = atoi(buffer);
+    printf("pid ul : %d\n", pid_ul);
+
+
+    // dolaczenie do pam. dzielonej
     Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
     if (stan_ula == (void*)-1) {
-        perror("shmat");
+        perror("[PSZCZELARZ] shmat");
         return 1;
     }
 
-    struct sembuf lock = {0, -1, 0};
-    struct sembuf unlock = {0, 1, 0};
-    
-    int stan_poczatkowy;
-    semop(shm_id, &lock, 1);
-    stan_poczatkowy = stan_ula->stan_poczatkowy;
-    semop(shm_id, &unlock, 1);
-    int skok = 0;
-    //sint reszta = stan_poczatkowy % maksymalna_ilosc_ramek;
+    struct sembuf lock   = {0, -1, 0}; //do blokowania
+    struct sembuf unlock = {0,  1, 0}; //do odblokowywania
+
+    if (semop(sem_id, &lock, 1) == -1) {
+        perror("[PSZCZELARZ] semop lock (początek)");
+    }
+    int stan_poczatkowy = stan_ula->stan_poczatkowy;
+    if (semop(sem_id, &unlock, 1) == -1) {
+        perror("[PSZCZELARZ] semop unlock (początek)");
+    }
+
     int obecna_liczba_pszczol;
-    int maksymalna_ilosc_osobnikow;
-    int liczba_w_ulu;
-    while(1)
+    //int maksymalna_ilosc_osobnikow;
+    //int liczba_w_ulu;
+    int ramka = 1;
+
+    while (1)
     {
-        semop(shm_id, &lock, 1);
-        obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
+        if (semop(sem_id, &lock, 1) == -1) {
+            perror("[PSZCZELARZ] semop lock (odczyt)");
+            break;
+        }
+        obecna_liczba_pszczol      = stan_ula->obecna_liczba_pszczol;
         //maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-        liczba_w_ulu = stan_ula->obecna_liczba_pszczol_ul;
-        semop(shm_id, &unlock, 1);
-        printf("Pszczelarz po odczytaniu danych - obecna liczba pszczol: %d, maksymalna l.osobnikow: %d, ilosc osobnikow w ulu: %d\n",
-        obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu);
-        //obecnie ile jest
-       // printf("Pszczelarz: Jest tyle pszczol: %d, a moze byc maks tyle %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->maksymalna_ilosc_osobnikow);
-        /*
-        if(obecna_liczba_pszczol == stan_poczatkowy)
-        {
-            kill(getppid(), SIGUSR1);
-            //printf("signal sigusr1 sent - ilosc ramek: %d!\n", ilosc_ramek);
-            ilosc_ramek++; 
-            //skok += (stan_ula->stan_poczatkowy / maksymalna_ilosc_ramek); 
+        //liczba_w_ulu               = stan_ula->obecna_liczba_pszczol_ul;
+        if (semop(sem_id, &unlock, 1) == -1) {
+            perror("[PSZCZELARZ] semop unlock (odczyt)");
+            break;
         }
 
-        //pierwotna wersja - usuwa gdy juz zostaly wykorzystane wsyskie ramki albo raz na jakis czas
-        if(obecna_liczba_pszczol == 2 * stan_poczatkowy)
+        if(ramka < 4 && obecna_liczba_pszczol == stan_poczatkowy * ramka)
         {
-            kill(getppid(), SIGUSR2);
-            ilosc_ramek--; 
+            ramka++;
+            kill(pid_ul, SIGUSR1);
         }
-        */  
-        //printf("Pszczelarz odczytał obecna liczbe pszczol: %d i obecna liczbe pszczol w ulu: %d = \n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul);
-        sleep(3);
+
+        //if(ramka > 1 && )
+        //printf("[PSZCZELARZ] Odczyt - obecna liczba pszczol: %d, maksymalna: %d, w ulu: %d\n",
+               //obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu)
+
+        //sleep(1);
     }
-
+    //sprzatanie
     if (shmdt(stan_ula) == -1) {
-        perror("shmdt");
+        perror("[PSZCZELARZ] shmdt");
         return 1;
     }
 
-    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
-        perror("shmctl");
-        return 1;
-    }
+    // if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+    //     perror("[PSZCZELARZ] shmctl");
+    //     return 1;
+    // }
+
     return 0;
 }
