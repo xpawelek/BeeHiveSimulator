@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     //int maksymalna_ilosc_osobnikow;
     //int liczba_w_ulu;
     int ramka = 1;
-
+    int maksymalna_ilosc_ramek = 2;
     while (1)
     {
         if (semop(sem_id, &lock, 1) == -1) {
@@ -73,12 +73,17 @@ int main(int argc, char* argv[])
             break;
         }
 
-        if(ramka < 4 && obecna_liczba_pszczol == stan_poczatkowy * ramka)
+        if(ramka < maksymalna_ilosc_ramek && obecna_liczba_pszczol == stan_poczatkowy * ramka)
         {
+            printf("Stan poczatkowy: %d i obecna liczba pszczol: %d\n", stan_poczatkowy, obecna_liczba_pszczol);
             ramka++;
             kill(pid_ul, SIGUSR1);
         }
-
+        if(ramka == maksymalna_ilosc_ramek && obecna_liczba_pszczol == stan_poczatkowy * ramka)
+        {
+            ramka--;
+            kill(pid_ul, SIGUSR2);
+        }
         //if(ramka > 1 && )
         //printf("[PSZCZELARZ] Odczyt - obecna liczba pszczol: %d, maksymalna: %d, w ulu: %d\n",
                //obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu)

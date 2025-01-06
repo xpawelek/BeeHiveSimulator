@@ -17,6 +17,8 @@
 #include <sys/sem.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <stdbool.h>
+
 
 #define POCZATKOWA_ILOSC_PSZCZOL 16
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
