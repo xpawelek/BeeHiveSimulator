@@ -83,12 +83,17 @@ int main(int argc, char* argv[])
         {
             ramka--;
             kill(pid_ul, SIGUSR2);
-        }
-        //if(ramka > 1 && )
-        //printf("[PSZCZELARZ] Odczyt - obecna liczba pszczol: %d, maksymalna: %d, w ulu: %d\n",
-               //obecna_liczba_pszczol, maksymalna_ilosc_osobnikow, liczba_w_ulu)
 
-        //sleep(1);
+        }
+        /*
+        sleep(20);
+        int depopulacja_sezonowa = 1;
+        if(depopulacja_sezonowa == 1)
+        {
+            printf("wylosowano: %d\n", depopulacja_sezonowa);
+            kill(pid_ul, SIGUSR2);
+        }
+        */
     }
     //sprzatanie
     if (shmdt(stan_ula) == -1) {
