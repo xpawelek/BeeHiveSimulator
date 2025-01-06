@@ -19,11 +19,12 @@ int main(int argc, char* argv[])
     int sem_id = atoi(argv[1]);
     int pipe_fd = atoi(argv[2]);  
     int shm_id = atoi(argv[3]);
+    int pojemnosc_poczatkowa;
     printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
     srand(time(NULL));
-    sleep(0.5);
+    sleep(3);
 
-    /*
+    
     Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
     if (stan_ula == (void*) -1) {
         perror("[KRÓLOWA] shmat");
@@ -33,15 +34,25 @@ int main(int argc, char* argv[])
     struct sembuf lock   = {0, -1, 0};
     struct sembuf unlock = {0,  1, 0};
 
-    printf("[KRÓLOWA] Start (PID=%d). Będę składać jaja!\n", getpid());
+    if (semop(sem_id, &lock, 1) == -1)
+    {
+        perror("[Krolowa] semop lock (odczyt)");
+    }
+    pojemnosc_poczatkowa = stan_ula->stan_poczatkowy / 2;
+    if (semop(sem_id, &unlock, 1) == -1) 
+    {
+        perror("[Krolowa] semop unlock (odczyt)");
+    }
+
+   // printf("[KRÓLOWA] Start (PID=%d). Będę składać jaja!\n", getpid());
     int obecna_liczba_pszczol;
     int maksymalna_ilosc_osobnikow;
     int liczba_w_ulu;
-    */
+    
 
     while (1) {
         // Odczytujemy stan ula
-        /*
+        
         if (semop(sem_id, &lock, 1) == -1) {
             perror("[Krolowa] semop lock (odczyt)");
             break;
@@ -54,12 +65,24 @@ int main(int argc, char* argv[])
             break;
         }
 
-        printf("[KRÓLOWA] Odczyt: obecna=%d, w_ulu=%d, max=%d\n",
-               obecna_liczba_pszczol, liczba_w_ulu, maksymalna_ilosc_osobnikow);
-               */
+       // printf("[KRÓLOWA] Odczyt: obecna=%d, w_ulu=%d, max=%d\n",
+               //obecna_liczba_pszczol, liczba_w_ulu, maksymalna_ilosc_osobnikow);
+        
+
 
         // proces wysylania jaj do ula - potencjalych do zlozenia
-        int liczba_zlozonych_jaj = rand() % 3 + 1;
+        printf("[KROLOWA] liczba w ulu: %d, maksymalna l.osobnikow: %d, obecna l.pszczol: %d\n",liczba_w_ulu, maksymalna_ilosc_osobnikow, obecna_liczba_pszczol);
+        int liczba_zlozonych_jaj;
+        int potencjalny_limit_jaj_1 = pojemnosc_poczatkowa - liczba_w_ulu;
+        int potencjalny_limit_jaj_2 = maksymalna_ilosc_osobnikow - obecna_liczba_pszczol;
+
+        if (potencjalny_limit_jaj_1 > 0 && potencjalny_limit_jaj_1 < potencjalny_limit_jaj_2) {
+            liczba_zlozonych_jaj = rand() % potencjalny_limit_jaj_1 + 1;
+        } else if (potencjalny_limit_jaj_2 < potencjalny_limit_jaj_1) {
+            liczba_zlozonych_jaj = rand() % potencjalny_limit_jaj_2 + 1;
+        } else {
+            liczba_zlozonych_jaj = rand() % 10; // Brak miejsca na jaja
+        }
 
         if (write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int)) == -1) {
                 perror("[KROLOWA] zapisuje - pipe error");
@@ -90,7 +113,7 @@ int main(int argc, char* argv[])
             printf("[KRÓLOWA] Nie mogę już znieść jaj (ograniczenia ula)\n");
         }
     */
-        sleep(1);
+        sleep(3);
     }
 
     /*

@@ -84,19 +84,17 @@ void* robotnica(void* arg)
             int wejscie = rand() % 2;
             if (wejscie == 1) {
                 sem_wait(&wejscie1);
-                sleep(1);
                 info = "[ROBOTNICA] Pszczoła weszła wejsciem 1";
                 sem_post(&wejscie1);
             } else {
                 sem_wait(&wejscie2);
-                sleep(1);
                 info = "[ROBOTNICA] Pszczoła weszła wejsciem 2";
                 sem_post(&wejscie2);
             }
 
             pthread_mutex_lock(&liczba_pszczol_ul_mutex);
             liczba_pszczol_ul_kolejnosc++; //nowy mutex do tego?
-            printf("%d/8, %s, id: %lu\n", liczba_pszczol_ul_kolejnosc, info, (unsigned long)pthread_self());
+            printf("%d/%d, %s, id: %lu\n", liczba_pszczol_ul_kolejnosc, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self());
             pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
             //pthread_mutex_lock(&print_mutex);
@@ -110,7 +108,7 @@ void* robotnica(void* arg)
             //pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
             //praca w ulu
-            sleep(rand() % 5 + 2);
+            sleep(rand() % 10 + 5);
         }
         if(pszczola->pszczola_jest_w_ulu == 1)
         {
@@ -129,7 +127,7 @@ void* robotnica(void* arg)
             pthread_mutex_lock(&liczba_pszczol_ul_mutex);
             liczba_pszczol_ul_kolejnosc--;
            // printf("%d/8\n", liczba_pszczol_ul_kolejnosc);
-            printf("%d/8, %s, id: %lu\n", liczba_pszczol_ul_kolejnosc, info, (unsigned long)pthread_self());
+            printf("%d/%d, %s, id: %lu\n", liczba_pszczol_ul_kolejnosc, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self());
             pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
             pszczola->pszczola_jest_w_ulu = 0;
@@ -163,13 +161,14 @@ void* robotnica(void* arg)
             if (semop(sem_id, &unlock, 1) == -1) {
                 perror("[ROBOTNICA] semop unlock (śmierć)");
             }
-
             free(pszczola);
             free(argumenty_watku);
 
             pthread_exit(NULL);
         }
-        sleep(rand() % 3 + 2); //praca poza ulem
+
+            int praca_poza_ulem = rand() % 10 + 5;
+            sleep(praca_poza_ulem); //praca poza ulem
         }
 
         }
@@ -216,7 +215,7 @@ int main(int argc, char* argv[])
     sleep(1); //pszelarz musi byc pierwszy
 
     //fifo do wyslania pidu ula pszczelarzowi
-    if (mkfifo(FIFO_PATH, 0666) == -1) {
+    if (mkfifo(FIFO_PATH, 0600) == -1) {
         if (errno != EEXIST) {
             perror("Nie mozna utworzyc fifo.");
             exit(EXIT_FAILURE);
@@ -305,14 +304,14 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < 2* liczba_poczatek; i++) {
+    for (int i = 0; i < liczba_poczatek; i++) {
         Pszczola* p = (Pszczola*) malloc(sizeof(Pszczola));
         if (!p) {
             fprintf(stderr, "[UL] Błąd alokacji pszczoły.\n");
             continue;
         }
         p->licznik_odwiedzen    = 0;
-        p->liczba_cykli         = 2;
+        p->liczba_cykli         = LICZBA_CYKLI_ZYCIA;
         p->pszczola_jest_w_ulu  = 0;
 
         stan_ula_local->obecna_liczba_pszczol++;
@@ -348,6 +347,7 @@ int main(int argc, char* argv[])
             perror("[UL] read (potok krolowej)");
             break;
         }
+        
        // printf("[UL] Królowa zniosła %d jaj\n", otrzymana_ilosc_jaj);
 
         // tworzenie nowych robotnic
@@ -366,6 +366,7 @@ int main(int argc, char* argv[])
             }
                 stan_ula_local->obecna_liczba_pszczol += otrzymana_ilosc_jaj;
                 stan_ula_local->obecna_liczba_pszczol_ul += otrzymana_ilosc_jaj;
+                stan_ula_dzielony->maksymalna_ilosc_osobnikow = stan_ula_local->maksymalna_ilosc_osobnikow;
                 stan_ula_dzielony->obecna_liczba_pszczol    = stan_ula_local->obecna_liczba_pszczol;
                 stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
 
@@ -381,7 +382,7 @@ int main(int argc, char* argv[])
                     continue;
                 }
                 p->licznik_odwiedzen   = 0;
-                p->liczba_cykli        = 2;
+                p->liczba_cykli        = LICZBA_CYKLI_ZYCIA;
                 p->pszczola_jest_w_ulu = 1; // od razu w ulu?
 
                 Argumenty_Watku* args = (Argumenty_Watku*) malloc(sizeof(Argumenty_Watku));
@@ -399,21 +400,17 @@ int main(int argc, char* argv[])
 
             free(nowe_robotnice);
         }
-        else
-        {
-            if (semop(sem_id, &lock, 1) == -1) {
-                    perror("[UL] semoop lock (Aktualizacja danych error)");
-                }
-                stan_ula_dzielony->obecna_liczba_pszczol    = stan_ula_local->obecna_liczba_pszczol;
-                stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
-                if (semop(sem_id, &unlock, 1) == -1) {
-                    perror("[UL] semoop unlock (Aktualizacja danych error)");
-                }
-                printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",
-               stan_ula_local->obecna_liczba_pszczol,
-               stan_ula_local->obecna_liczba_pszczol_ul,
-               stan_ula_local->maksymalna_ilosc_osobnikow);
-        }
+        if (semop(sem_id, &lock, 1) == -1) {
+                perror("[UL] semoop lock (Aktualizacja danych error)");
+            }
+            stan_ula_dzielony->obecna_liczba_pszczol    = stan_ula_local->obecna_liczba_pszczol;
+            stan_ula_dzielony->obecna_liczba_pszczol_ul = stan_ula_local->obecna_liczba_pszczol_ul;
+            stan_ula_dzielony->maksymalna_ilosc_osobnikow = stan_ula_local->maksymalna_ilosc_osobnikow;
+            if (semop(sem_id, &unlock, 1) == -1) {
+                perror("[UL] semoop unlock (Aktualizacja danych error)");
+            }
+            printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_local->obecna_liczba_pszczol,stan_ula_local->obecna_liczba_pszczol_ul,stan_ula_local->maksymalna_ilosc_osobnikow);
+
     }
 
     for (int i = 0; i < liczba_poczatek; i++) {

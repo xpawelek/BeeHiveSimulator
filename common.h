@@ -20,7 +20,8 @@
 #include <stdbool.h>
 
 
-#define POCZATKOWA_ILOSC_PSZCZOL 16
+#define POCZATKOWA_ILOSC_PSZCZOL 100
+#define LICZBA_CYKLI_ZYCIA 4
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
 
 typedef struct {
