@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define _DEFAULT_SOURCE
 #define _XOPEN_SOURCE 700
 #include <pthread.h>
 #include <stdio.h>
@@ -21,7 +22,6 @@
 
 
 #define POCZATKOWA_ILOSC_PSZCZOL 100
-#define LICZBA_CYKLI_ZYCIA 4
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
 
 typedef struct {

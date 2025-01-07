@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     }
 
     // uruchamiamy pszelarza
-    printf("[MAIN] Uruchamiam proces pszczelarz...\n");
+    printf("\033[1;45m[MAIN] Uruchamiam proces pszczelarz...\033[0m\n");
     pid_t pid_pszczelarz = fork();
     if (pid_pszczelarz == -1) {
         perror("[MAIN] fork pszczelarz");
@@ -68,7 +68,8 @@ int main(int argc, char* argv[])
     }
 
     // uruchamiamy proces ul
-    printf("[MAIN] Uruchamiam proces ul...\n");
+    usleep(500000);
+    printf("\033[1;46m[MAIN] Uruchamiam proces ul...\033[0m\n");
     pid_t pid_ul = fork();
     if (pid_ul == -1) 
     {
@@ -89,8 +90,9 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
+    usleep(500000);
     // uruchamiamy proces krolowa
-    printf("[MAIN] Uruchamiam proces krolowa...\n");
+    printf("\033[1;43m[MAIN] Uruchamiam proces krolowa...\033[0m\n");
     pid_t pid_krolowa = fork();
     if (pid_krolowa == -1)
     {

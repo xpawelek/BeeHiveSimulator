@@ -33,8 +33,19 @@ int main(int argc, char* argv[])
 
     //odbieranie pidu ula
     char buffer[100];
-    read(fd, buffer, sizeof(buffer));
-    close(fd);
+    memset(buffer, 0, sizeof(buffer));
+
+    if (read(fd, buffer, sizeof(buffer)) == -1) {
+        perror("Blad odczytu z FIFO");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    if (close(fd) == -1) {
+        perror("Blad zamykania FIFO");
+        exit(EXIT_FAILURE);
+    }
+
     printf("Received PID: %s\n", buffer);
     int pid_ul = atoi(buffer);
     printf("pid ul : %d\n", pid_ul);
@@ -81,7 +92,7 @@ int main(int argc, char* argv[])
 
         if(obecna_ilosc_ramek < MAKSYMALNA_ILOSC_RAMEK && obecna_liczba_pszczol == stan_poczatkowy * obecna_ilosc_ramek)
         {
-            printf("Stan poczatkowy: %d i obecna liczba pszczol: %d\n", stan_poczatkowy, obecna_liczba_pszczol);
+            //printf("Stan poczatkowy: %d i obecna liczba pszczol: %d\n", stan_poczatkowy, obecna_liczba_pszczol);
             obecna_ilosc_ramek++;
             kill(pid_ul, SIGUSR1);
         }

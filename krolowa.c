@@ -22,11 +22,8 @@ int main(int argc, char* argv[])
     int shm_id = atoi(argv[3]);
     int pojemnosc_poczatkowa;
 
-    printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
+    //printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
     srand(time(NULL));
-
-    sleep(3);
-
     
     Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
     if (stan_ula == (void*) -1) {
@@ -91,7 +88,7 @@ int main(int argc, char* argv[])
         }
         
         //printf("[KROLOWA] Probuje zniesc %d jaj\n", liczba_zlozonych_jaj);
-        sleep(3);
+        sleep(rand() % 2 + 2);
     }
 
     
