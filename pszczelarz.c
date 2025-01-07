@@ -8,26 +8,30 @@
 #include <signal.h>
 #include <time.h>
 
+#define MAKSYMALNA_ILOSC_RAMEK 2
+
+static int licznik = 0;
+
 int main(int argc, char* argv[])
 {
-    if (argc < 3) {
+    if (argc < 3) 
+    {
         fprintf(stderr, "[PSZCZELARZ] Sposób użycia: %s <sem_id> <shm_id> \n", argv[0]);
         return 1;
     }
+    srand(time(NULL));
 
     int sem_id = atoi(argv[1]);
     int shm_id = atoi(argv[2]);
-    //pid_t ul_pid;
-    srand(time(NULL));
 
     int fd = open(FIFO_PATH, O_RDONLY);
-    if (fd == -1) {
+    if (fd == -1) 
+    {
         perror("open FIFO for reading");
         exit(EXIT_FAILURE);
     }
 
-    //int ul_pid;
-
+    //odbieranie pidu ula
     char buffer[100];
     read(fd, buffer, sizeof(buffer));
     close(fd);
@@ -49,62 +53,63 @@ int main(int argc, char* argv[])
     if (semop(sem_id, &lock, 1) == -1) {
         perror("[PSZCZELARZ] semop lock (początek)");
     }
+
     int stan_poczatkowy = stan_ula->stan_poczatkowy;
+
     if (semop(sem_id, &unlock, 1) == -1) {
         perror("[PSZCZELARZ] semop unlock (początek)");
     }
 
     int obecna_liczba_pszczol;
-    //int maksymalna_ilosc_osobnikow;
-    //int liczba_w_ulu;
-    int ramka = 1;
-    int maksymalna_ilosc_ramek = 2;
+    int obecna_ilosc_ramek = 1;
+
     while (1)
     {
         if (semop(sem_id, &lock, 1) == -1) {
             perror("[PSZCZELARZ] semop lock (odczyt)");
             break;
         }
-        obecna_liczba_pszczol      = stan_ula->obecna_liczba_pszczol;
+
+        obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
         //maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
         //liczba_w_ulu               = stan_ula->obecna_liczba_pszczol_ul;
+
         if (semop(sem_id, &unlock, 1) == -1) {
             perror("[PSZCZELARZ] semop unlock (odczyt)");
             break;
         }
 
-        if(ramka < maksymalna_ilosc_ramek && obecna_liczba_pszczol == stan_poczatkowy * ramka)
+        if(obecna_ilosc_ramek < MAKSYMALNA_ILOSC_RAMEK && obecna_liczba_pszczol == stan_poczatkowy * obecna_ilosc_ramek)
         {
             printf("Stan poczatkowy: %d i obecna liczba pszczol: %d\n", stan_poczatkowy, obecna_liczba_pszczol);
-            ramka++;
+            obecna_ilosc_ramek++;
             kill(pid_ul, SIGUSR1);
         }
-        if(ramka == maksymalna_ilosc_ramek && obecna_liczba_pszczol == stan_poczatkowy * ramka)
-        {
-            ramka--;
-            kill(pid_ul, SIGUSR2);
 
-        }
-        /*
-        sleep(20);
-        int depopulacja_sezonowa = 1;
-        if(depopulacja_sezonowa == 1)
+        if(obecna_ilosc_ramek == MAKSYMALNA_ILOSC_RAMEK&& obecna_liczba_pszczol == stan_poczatkowy * obecna_ilosc_ramek)
         {
-            printf("wylosowano: %d\n", depopulacja_sezonowa);
+            obecna_ilosc_ramek--;
             kill(pid_ul, SIGUSR2);
         }
-        */
+
+        licznik++;
+
+        if(licznik % 2000000 == 0)
+        {
+            kill(pid_ul, SIGUSR2); 
+        }
     }
+
     //sprzatanie
     if (shmdt(stan_ula) == -1) {
         perror("[PSZCZELARZ] shmdt");
         return 1;
     }
 
-    // if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
-    //     perror("[PSZCZELARZ] shmctl");
-    //     return 1;
-    // }
+    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+        perror("[PSZCZELARZ] shmctl");
+        return 1;
+    }
 
     return 0;
 }

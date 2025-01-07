@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
         perror("[MAIN] shmat");
         exit(EXIT_FAILURE);
     }
+
     stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
     stan_ula_do_przekazania->obecna_liczba_pszczol_ul = 0;
     stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
@@ -40,6 +41,7 @@ int main(int argc, char* argv[])
         perror("[MAIN] semget");
         exit(EXIT_FAILURE);
     }
+
     if (semctl(sem_id, 0, SETVAL, 1) == -1) {
         perror("[MAIN] semctl SETVAL");
         exit(EXIT_FAILURE);
@@ -52,7 +54,9 @@ int main(int argc, char* argv[])
         perror("[MAIN] fork pszczelarz");
         exit(EXIT_FAILURE);
     }
-    if (pid_pszczelarz == 0) {
+
+    if (pid_pszczelarz == 0) 
+    {
         char sem_buf[16];
         char shm_buf[16];
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
@@ -66,47 +70,43 @@ int main(int argc, char* argv[])
     // uruchamiamy proces ul
     printf("[MAIN] Uruchamiam proces ul...\n");
     pid_t pid_ul = fork();
-    if (pid_ul == -1) {
+    if (pid_ul == -1) 
+    {
         perror("[MAIN] fork ul");
         exit(EXIT_FAILURE);
     }
-    if (pid_ul == 0) {
+
+    if (pid_ul == 0) 
+    {
         close(pipe_skladanie_jaj[1]);
         char fd_buf[16], shm_buf[16], sem_buf[16];
         snprintf(fd_buf,  sizeof(fd_buf),  "%d", pipe_skladanie_jaj[0]); // fd do odczytu
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
 
-        execl("./ul", "./ul",
-        fd_buf,   
-        shm_buf,     
-        sem_buf,   
-        (char*)NULL
-        );
-            perror("[MAIN] execl ul");
-            exit(EXIT_FAILURE);
+        execl("./ul", "./ul", fd_buf, shm_buf, sem_buf,(char*)NULL);
+        perror("[MAIN] execl ul");
+        exit(EXIT_FAILURE);
     }
 
     // uruchamiamy proces krolowa
     printf("[MAIN] Uruchamiam proces krolowa...\n");
     pid_t pid_krolowa = fork();
-    if (pid_krolowa == -1) {
+    if (pid_krolowa == -1)
+    {
         perror("[MAIN] fork krolowa");
         exit(EXIT_FAILURE);
     }
-    if (pid_krolowa == 0) {
+
+    if (pid_krolowa == 0) 
+    {
         close(pipe_skladanie_jaj[0]);
         char sem_buf[16], fd_buf2[16], shm_buf[16];
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
         snprintf(fd_buf2,  sizeof(fd_buf2),  "%d", pipe_skladanie_jaj[1]); 
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
 
-        execl("./krolowa", "./krolowa",
-            sem_buf,     // <fd_pipe>
-            fd_buf2,
-            shm_buf,
-            (char*)NULL
-        );
+        execl("./krolowa", "./krolowa", sem_buf, fd_buf2, shm_buf, (char*)NULL);
         perror("[MAIN] execl krolowa");
         exit(EXIT_FAILURE);
     }
@@ -114,7 +114,6 @@ int main(int argc, char* argv[])
     close(pipe_skladanie_jaj[0]);
     close(pipe_skladanie_jaj[1]);
 
-    //czaekamy na zakoczenie
     while(wait(NULL) > 0);
 
     // sprzatamy pamiec dzielona
