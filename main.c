@@ -30,10 +30,7 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
-    stan_ula_do_przekazania->obecna_liczba_pszczol_ul = 0;
-    stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
-    stan_ula_do_przekazania->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
+    memset(stan_ula_do_przekazania, 0, 1024);
 
     // zestaw semforow V, ustawiamy a 1
     int sem_id = semget(klucz, 1, IPC_CREAT | 0666);
@@ -41,6 +38,14 @@ int main(int argc, char* argv[])
         perror("[MAIN] semget");
         exit(EXIT_FAILURE);
     }
+
+
+    semop(sem_id, &lock, 1);
+    stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
+    stan_ula_do_przekazania->obecna_liczba_pszczol_ul = 0;
+    stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
+    stan_ula_do_przekazania->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
+    semop(sem_id, &unlock, 1);
 
     if (semctl(sem_id, 0, SETVAL, 1) == -1) {
         perror("[MAIN] semctl SETVAL");

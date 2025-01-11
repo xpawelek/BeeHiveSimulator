@@ -7,8 +7,6 @@
 #include <sys/sem.h>
 #include <time.h>
 
-
-
 int main(int argc, char* argv[])
 {
     if (argc < 4) 
@@ -22,17 +20,15 @@ int main(int argc, char* argv[])
     int shm_id = atoi(argv[3]);
     int pojemnosc_poczatkowa;
 
-    //printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
-    srand(time(NULL));
-    
+
     Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
     if (stan_ula == (void*) -1) {
         perror("[KRÓLOWA] shmat");
         return 1;
     }
 
-    struct sembuf lock   = {0, -1, 0};
-    struct sembuf unlock = {0,  1, 0};
+    //printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
+    srand(time(NULL));
 
     if (semop(sem_id, &lock, 1) == -1){
         perror("[Krolowa] semop lock (odczyt)");
@@ -63,32 +59,52 @@ int main(int argc, char* argv[])
             break;
         }
 
-        //printf("[KROLOWA] liczba w ulu: %d, maksymalna l.osobnikow: %d, obecna l.pszczol: %d\n",obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow, obecna_liczba_pszczol);
-        //wysylamy potencjalna ilosc jaj do zlozenia
-        int liczba_zlozonych_jaj;
-        int potencjalny_limit_jaj_1 = pojemnosc_poczatkowa - obecna_liczba_osobnikow_ul;
-        int potencjalny_limit_jaj_2 = maksymalna_ilosc_osobnikow - obecna_liczba_pszczol;
+        int liczba_zlozonych_jaj = rand() % 10 + 3;
+        /*
+        int ograniczenie_ula = pojemnosc_poczatkowa - obecna_liczba_osobnikow_ul;
+        int ograniczenie_populacji = maksymalna_ilosc_osobnikow - obecna_liczba_pszczol;
+        //printf("\033[1;37m[KROLOWA]  obecna l.pszczol - %d\n, liczba w ulu - %d\n maks pojemnosc ula : %d\033[0m\n Potencjalny limit 1 - %d\noraz 2 - %d\n",obecna_liczba_pszczol, obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow, potencjalny_limit_jaj_1, potencjalny_limit_jaj_2);
 
-        if (potencjalny_limit_jaj_1 > 0 && potencjalny_limit_jaj_1 < potencjalny_limit_jaj_2) 
+
+        if (ograniczenie_ula < ograniczenie_populacji) 
         {
-            liczba_zlozonych_jaj = rand() % potencjalny_limit_jaj_1 + 1;
+            liczba_zlozonych_jaj = rand() % ograniczenie_ula + 1;
         } 
-        else if (potencjalny_limit_jaj_2 < potencjalny_limit_jaj_1) 
+        else if (ograniczenie_populacji < ograniczenie_ula)
         {
-            liczba_zlozonych_jaj = rand() % potencjalny_limit_jaj_2 + 1;
+            liczba_zlozonych_jaj = rand() % ograniczenie_populacji + 1;
         } 
         else 
         {
-            liczba_zlozonych_jaj = rand() % 10; // Brak miejsca na jaja
+            liczba_zlozonych_jaj = rand() % 3 + 1; // Brak miejsca na jaja
         }
+        */
+        //printf("\033[5;34mPszczola wyliczyla potencjalnie %d\033[0m\n", liczba_zlozonych_jaj);
+       // printf("[KROLOWA]  obecna l.pszczol - %d\n, liczba w ulu - %d\n maks pojemnosc ula : %d\n",obecna_liczba_pszczol, obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow);
 
-        if (write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int)) == -1) {
-                perror("[KROLOWA] zapisuje - pipe error");
-                break;
+         if (obecna_liczba_pszczol + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow 
+             && obecna_liczba_osobnikow_ul + liczba_zlozonych_jaj <= pojemnosc_poczatkowa) 
+        {
+            printf("[Krolowa] Zniesie jaja -  %d\n", liczba_zlozonych_jaj);
+            if (semop(sem_id, &lock, 1) == -1) {
+            perror("[Krolowa] semop lock (odczyt)");
+            break;
+        }
+            stan_ula->obecna_liczba_pszczol_ul += liczba_zlozonych_jaj;
+            stan_ula->obecna_liczba_pszczol += liczba_zlozonych_jaj;
+            if (semop(sem_id, &unlock, 1) == -1) {
+            perror("[Krolowa] semop lock (odczyt)");
+            break;
+        }
+            if (write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int)) == -1) {
+                    perror("[KROLOWA] zapisuje - pipe error");
+                    break;
+            }
         }
         
         //printf("[KROLOWA] Probuje zniesc %d jaj\n", liczba_zlozonych_jaj);
-        sleep(rand() % 2 + 2);
+        //sleep(rand() % 2 + 2);
+        usleep(50000);
     }
 
     

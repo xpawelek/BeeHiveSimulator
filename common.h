@@ -43,6 +43,9 @@ typedef struct {
     Stan_Ula* stan_ula_do_przekazania;
 } Argumenty_Watku;
 
+struct sembuf lock   = {0, -1, 0};
+struct sembuf unlock = {0,  1, 0};
+
 
 void obsluga_sygnalu(int sig);
 

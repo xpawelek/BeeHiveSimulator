@@ -58,9 +58,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    struct sembuf lock   = {0, -1, 0}; //do blokowania
-    struct sembuf unlock = {0,  1, 0}; //do odblokowywania
-
     if (semop(sem_id, &lock, 1) == -1) {
         perror("[PSZCZELARZ] semop lock (początek)");
     }
@@ -112,6 +109,7 @@ int main(int argc, char* argv[])
     }
 
     //sprzatanie
+    /*
     if (shmdt(stan_ula) == -1) {
         perror("[PSZCZELARZ] shmdt");
         return 1;
@@ -121,6 +119,7 @@ int main(int argc, char* argv[])
         perror("[PSZCZELARZ] shmctl");
         return 1;
     }
+    */
 
     return 0;
 }
