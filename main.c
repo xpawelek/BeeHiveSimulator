@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
     stan_ula_do_przekazania->obecna_liczba_pszczol_ul = 0;
     stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
     stan_ula_do_przekazania->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
+    stan_ula_do_przekazania->depopulacja_flaga = 0;
     semop(sem_id, &unlock, 1);
 
     if (semctl(sem_id, 0, SETVAL, 1) == -1) {

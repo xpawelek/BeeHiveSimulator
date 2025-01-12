@@ -10,12 +10,9 @@
 
 #define MAKSYMALNA_ILOSC_RAMEK 2
 
-static int licznik = 0;
 
-int main(int argc, char* argv[])
-{
-    if (argc < 3) 
-    {
+int main(int argc, char* argv[]) {
+    if (argc < 3) {
         fprintf(stderr, "[PSZCZELARZ] Sposób użycia: %s <sem_id> <shm_id> \n", argv[0]);
         return 1;
     }
@@ -24,102 +21,86 @@ int main(int argc, char* argv[])
     int sem_id = atoi(argv[1]);
     int shm_id = atoi(argv[2]);
 
+    // Odbieranie PID ula
     int fd = open(FIFO_PATH, O_RDONLY);
-    if (fd == -1) 
-    {
+    if (fd == -1) {
         perror("open FIFO for reading");
         exit(EXIT_FAILURE);
     }
 
-    //odbieranie pidu ula
-    char buffer[100];
-    memset(buffer, 0, sizeof(buffer));
-
+    char buffer[100] = {0};
     if (read(fd, buffer, sizeof(buffer)) == -1) {
         perror("Blad odczytu z FIFO");
         close(fd);
         exit(EXIT_FAILURE);
     }
+    close(fd);
 
-    if (close(fd) == -1) {
-        perror("Blad zamykania FIFO");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("Received PID: %s\n", buffer);
     int pid_ul = atoi(buffer);
-    printf("pid ul : %d\n", pid_ul);
+    printf("[PSZCZELARZ] Odebrano PID ula: %d\n", pid_ul);
 
-
-    // dolaczenie do pam. dzielonej
+    // Dolaczenie do pamieci wspoldzielonej
     Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
     if (stan_ula == (void*)-1) {
         perror("[PSZCZELARZ] shmat");
         return 1;
     }
 
-    if (semop(sem_id, &lock, 1) == -1) {
-        perror("[PSZCZELARZ] semop lock (początek)");
-    }
+    printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
 
-    int stan_poczatkowy = stan_ula->stan_poczatkowy;
+    // Flagi sterujące
+    int zwiekszono_pojemnosc = 0;
 
-    if (semop(sem_id, &unlock, 1) == -1) {
-        perror("[PSZCZELARZ] semop unlock (początek)");
-    }
+    // Monitorowanie wejścia
+    fd_set read_fds;
+    struct timeval timeout;
 
-    int obecna_liczba_pszczol;
-    int obecna_ilosc_ramek = 1;
+    while (1) {
+        // deskryptory plikow do monitorowania
+        FD_ZERO(&read_fds);
+        FD_SET(STDIN_FILENO, &read_fds);
 
-    while (1)
-    {
-        if (semop(sem_id, &lock, 1) == -1) {
-            perror("[PSZCZELARZ] semop lock (odczyt)");
+        // ustawiamy timeouty
+        timeout.tv_sec = 5;  //czekamy max 5s
+        timeout.tv_usec = 0;
+
+        printf("[PSZCZELARZ] Czekam na dane wejsciowe...\n");
+        int ret = select(STDIN_FILENO + 1, &read_fds, NULL, NULL, &timeout);
+
+        if (ret == -1) {
+            perror("[PSZCZELARZ] select error");
             break;
+        } else if (ret == 0) {
+            printf("[PSZCZELARZ] Brak danych wejsciowych (timeout).\n");
+            continue;
         }
 
-        obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-        //maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-        //liczba_w_ulu               = stan_ula->obecna_liczba_pszczol_ul;
-
-        if (semop(sem_id, &unlock, 1) == -1) {
-            perror("[PSZCZELARZ] semop unlock (odczyt)");
-            break;
-        }
-
-        if(obecna_ilosc_ramek < MAKSYMALNA_ILOSC_RAMEK && obecna_liczba_pszczol == stan_poczatkowy * obecna_ilosc_ramek)
-        {
-            //printf("Stan poczatkowy: %d i obecna liczba pszczol: %d\n", stan_poczatkowy, obecna_liczba_pszczol);
-            obecna_ilosc_ramek++;
-            kill(pid_ul, SIGUSR1);
-        }
-
-        if(obecna_ilosc_ramek == MAKSYMALNA_ILOSC_RAMEK&& obecna_liczba_pszczol == stan_poczatkowy * obecna_ilosc_ramek)
-        {
-            obecna_ilosc_ramek--;
-            kill(pid_ul, SIGUSR2);
-        }
-
-        licznik++;
-
-        if(licznik % 2000000 == 0)
-        {
-            kill(pid_ul, SIGUSR2); 
+        // jesli mamy cos na wejsciu
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+            char input[10] = {0};
+            if (fgets(input, sizeof(input), stdin)) {
+                if (strcmp(input, "1\n") == 0 && zwiekszono_pojemnosc != 1) {
+                    zwiekszono_pojemnosc = 1;
+                    kill(pid_ul, SIGUSR1);
+                    printf("[PSZCZELARZ] Wyslano SIGUSR1 (zwiekszenie pojemnosci ula).\n");
+                } else if (strcmp(input, "2\n") == 0 && stan_ula->depopulacja_flaga != 1) {
+                    semop(sem_id, &lock, 1);
+                    stan_ula->depopulacja_flaga = 1;
+                    semop(sem_id, &unlock, 1);
+                    kill(pid_ul, SIGUSR2);
+                    printf("[PSZCZELARZ] Wyslano SIGUSR2 (zdepopulowanie ula).\n");
+                } else {
+                    printf("[PSZCZELARZ] Nieprawidlowa komenda.\n");
+                }
+            }
         }
     }
 
     //sprzatanie
-    /*
     if (shmdt(stan_ula) == -1) {
         perror("[PSZCZELARZ] shmdt");
         return 1;
     }
-
-    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
-        perror("[PSZCZELARZ] shmctl");
-        return 1;
-    }
-    */
 
     return 0;
 }

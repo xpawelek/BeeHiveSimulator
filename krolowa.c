@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    printf("[KROLOWA] Obecna - %d\n Obecna ul - %d\n, Maks - %d\n, Stan poczatkowy - %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul, stan_ula->maksymalna_ilosc_osobnikow, stan_ula->stan_poczatkowy);
+
     //printf("[KROLOWA] Otrzymane sem_id: %d, fd_pipe: %d, shm_id: %d\n", sem_id, pipe_fd, shm_id);
     srand(time(NULL));
 
@@ -43,6 +45,7 @@ int main(int argc, char* argv[])
     int obecna_liczba_pszczol;
     int maksymalna_ilosc_osobnikow;
     int obecna_liczba_osobnikow_ul;
+    int depopulacja_flaga;
 
     while (1) {        
         if (semop(sem_id, &lock, 1) == -1) {
@@ -53,6 +56,7 @@ int main(int argc, char* argv[])
         obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
         maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
         obecna_liczba_osobnikow_ul = stan_ula->obecna_liczba_pszczol_ul;
+        depopulacja_flaga = stan_ula->depopulacja_flaga;
 
         if (semop(sem_id, &unlock, 1) == -1) {
             perror("[Krolowa] semop unlock (odczyt)");
@@ -81,9 +85,14 @@ int main(int argc, char* argv[])
         */
         //printf("\033[5;34mPszczola wyliczyla potencjalnie %d\033[0m\n", liczba_zlozonych_jaj);
        // printf("[KROLOWA]  obecna l.pszczol - %d\n, liczba w ulu - %d\n maks pojemnosc ula : %d\n",obecna_liczba_pszczol, obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow);
-
+       // printf("Krolowa znioslby %d jaj, ale flaga depopulacja = %d\n", liczba_zlozonych_jaj, depopulacja_flaga);
+       if(depopulacja_flaga == 1)
+       {
+        printf("Depopulacja jest przeprowadzana! Nie moge znosic jaj!\n");
+       }
          if (obecna_liczba_pszczol + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow 
-             && obecna_liczba_osobnikow_ul + liczba_zlozonych_jaj <= pojemnosc_poczatkowa) 
+             && obecna_liczba_osobnikow_ul + liczba_zlozonych_jaj <= pojemnosc_poczatkowa
+             && depopulacja_flaga  != 1) 
         {
             printf("[Krolowa] Zniesie jaja -  %d\n", liczba_zlozonych_jaj);
             if (semop(sem_id, &lock, 1) == -1) {
@@ -104,7 +113,7 @@ int main(int argc, char* argv[])
         
         //printf("[KROLOWA] Probuje zniesc %d jaj\n", liczba_zlozonych_jaj);
         //sleep(rand() % 2 + 2);
-        usleep(50000);
+        sleep(1);
     }
 
     

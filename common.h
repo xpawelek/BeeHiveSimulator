@@ -35,6 +35,7 @@ typedef struct {
     int maksymalna_ilosc_osobnikow;
     int obecna_liczba_pszczol_ul;
     int stan_poczatkowy;
+    int depopulacja_flaga;
 } Stan_Ula;
 
 typedef struct {
