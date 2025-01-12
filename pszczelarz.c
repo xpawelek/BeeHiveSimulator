@@ -8,8 +8,6 @@
 #include <signal.h>
 #include <time.h>
 
-#define MAKSYMALNA_ILOSC_RAMEK 2
-
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -48,10 +46,9 @@ int main(int argc, char* argv[]) {
 
     printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
 
-    // Flagi sterujące
-    int zwiekszono_pojemnosc = 0;
 
-    // Monitorowanie wejścia
+    int zwiekszono_pojemnosc = 0;
+    // Monitorowanie wejscia
     fd_set read_fds;
     struct timeval timeout;
 

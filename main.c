@@ -39,6 +39,18 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
+    key_t klucz_kolejka = ftok("./kolejka_komunikatow_jaja.txt", MSG_QUEUE_PROJECT_ID);
+    if (klucz_kolejka == -1) {
+        perror("[MAIN] ftok error");
+        exit(EXIT_FAILURE);
+    }
+
+    int msqid = msgget(klucz_kolejka, IPC_CREAT | 0666);
+    if (msqid == -1) {
+        perror("[main] msgget error");
+        exit(EXIT_FAILURE);
+    }
+
 
     semop(sem_id, &lock, 1);
     stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
@@ -86,12 +98,13 @@ int main(int argc, char* argv[])
     if (pid_ul == 0) 
     {
         close(pipe_skladanie_jaj[1]);
-        char fd_buf[16], shm_buf[16], sem_buf[16];
+        char fd_buf[16], shm_buf[16], sem_buf[16], msqid_buf[16];
         snprintf(fd_buf,  sizeof(fd_buf),  "%d", pipe_skladanie_jaj[0]); // fd do odczytu
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
+        snprintf(msqid_buf, sizeof(msqid), "%d", msqid);
 
-        execl("./ul", "./ul", fd_buf, shm_buf, sem_buf,(char*)NULL);
+        execl("./ul", "./ul", fd_buf, shm_buf, sem_buf, msqid_buf, (char*)NULL);
         perror("[MAIN] execl ul");
         exit(EXIT_FAILURE);
     }
@@ -109,12 +122,13 @@ int main(int argc, char* argv[])
     if (pid_krolowa == 0) 
     {
         close(pipe_skladanie_jaj[0]);
-        char sem_buf[16], fd_buf2[16], shm_buf[16];
+        char sem_buf[16], fd_buf2[16], shm_buf[16], msqid_buf[16];
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
         snprintf(fd_buf2,  sizeof(fd_buf2),  "%d", pipe_skladanie_jaj[1]); 
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
+        snprintf(msqid_buf, sizeof(msqid), "%d", msqid);
 
-        execl("./krolowa", "./krolowa", sem_buf, fd_buf2, shm_buf, (char*)NULL);
+        execl("./krolowa", "./krolowa", sem_buf, fd_buf2, shm_buf, msqid_buf, (char*)NULL);
         perror("[MAIN] execl krolowa");
         exit(EXIT_FAILURE);
     }
@@ -136,6 +150,9 @@ int main(int argc, char* argv[])
     if (semctl(sem_id, 0, IPC_RMID) == -1) {
         perror("[MAIN] semctl IPC_RMID");
     }
+
+    //sprzatamy kolejke
+    msgctl(msqid, IPC_RMID, NULL);
 
     printf("[MAIN] Koniec programu.\n");
     return 0;

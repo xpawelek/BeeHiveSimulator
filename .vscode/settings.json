@@ -4,6 +4,7 @@
         "signal.h": "c",
         "unistd.h": "c",
         "common.h": "c",
-        "sem.h": "c"
+        "sem.h": "c",
+        "fcntl.h": "c"
     }
 }

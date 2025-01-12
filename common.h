@@ -3,6 +3,7 @@
 
 #define _DEFAULT_SOURCE
 #define _XOPEN_SOURCE 700
+#define MESSAGE_DEFS_H
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,19 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <stdbool.h>
+#include <sys/msg.h>
+#include <sys/types.h>
 
 
 #define POCZATKOWA_ILOSC_PSZCZOL 100
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
+#define MSG_QUEUE_PROJECT_ID 'A'       
+#define MSG_TYPE_EGGS 1
+
+typedef struct msgbuf {
+    long mtype;  // musi byc typu long (SysV wymaganie)
+    int eggs;    // tu przechowujemy liczbe jaj
+} msgbuf;
 
 typedef struct {
     int licznik_odwiedzen;
