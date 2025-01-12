@@ -153,6 +153,21 @@ void* robotnica(void* arg)
                     perror("[ROBOTNICA] semop unlock (śmierć)");
                 }
 
+                if (stan_ula_dzielony->depopulacja_flaga == 1)
+                {
+                    pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+                    licznik_zredukowanych++;
+                    pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+                    printf("cos");
+                    pthread_mutex_lock(&liczba_pszczol_ul_mutex);
+                    if(licznik_zredukowanych >= liczebnosc_do_zredukowania && stan_ula_dzielony->obecna_liczba_pszczol == 0)
+                    {
+                        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
+                        stan_ula_dzielony->depopulacja_flaga = 0; // Wylacz depopulacje, gdy osiągnięto limit
+                        licznik_zredukowanych = 0;
+                    }
+                }
+
                 free(pszczola);
                 free(argumenty_watku);
                 pthread_exit(NULL);
@@ -399,9 +414,10 @@ int main(int argc, char* argv[])
             pthread_create(&nowe_robotnice[i], NULL, robotnica, (void*)args);
         }
         free(nowe_robotnice);
-
+        // usleep(200000); //wyleganie
+            
         printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
-        sleep(1);
+        sleep(500000);
     }
 
     for (int i = 0; i < liczba_poczatek; i++) 
