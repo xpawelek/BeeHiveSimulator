@@ -128,9 +128,8 @@ int main(int argc, char* argv[])
             }
             */
         }
-        
-        sleep(500000);
-    }
+        sleep(1);
+    }   
 
     
     if (shmdt(stan_ula) == -1) {

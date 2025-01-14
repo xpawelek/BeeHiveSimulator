@@ -51,6 +51,11 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
+    FILE* plik_logi = fopen("plik_logi.txt","w");
+    if (plik_logi == NULL){
+        perror("Blad otwrcia pliku");
+        exit(EXIT_FAILURE);
+    }
 
     semop(sem_id, &lock, 1);
     stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
@@ -79,7 +84,6 @@ int main(int argc, char* argv[])
         char shm_buf[16];
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
-
         execl("./pszczelarz", "./pszczelarz", sem_buf, shm_buf, (char*)NULL);
         perror("[MAIN] execl pszczelarz");
         exit(EXIT_FAILURE);

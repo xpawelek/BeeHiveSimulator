@@ -22,12 +22,15 @@
 #include <stdbool.h>
 #include <sys/msg.h>
 #include <sys/types.h>
+#include <sys/file.h>
+#include <sys/time.h>
 
 
 #define POCZATKOWA_ILOSC_PSZCZOL 100
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
 #define MSG_QUEUE_PROJECT_ID 'A'       
 #define MSG_TYPE_EGGS 1
+
 
 typedef struct msgbuf {
     long mtype;  // musi byc typu long (SysV wymaganie)
@@ -46,6 +49,7 @@ typedef struct {
     int obecna_liczba_pszczol_ul;
     int stan_poczatkowy;
     int depopulacja_flaga;
+    int logi_wskaznik;
 } Stan_Ula;
 
 typedef struct {
@@ -59,5 +63,24 @@ struct sembuf unlock = {0,  1, 0};
 
 
 void obsluga_sygnalu(int sig);
+
+void aktualizacja_logow(char* wiadomosc){
+    printf("%s", wiadomosc);
+    FILE* plik_logi = fopen("plik_logi.txt","a");
+    if (plik_logi == NULL){
+        perror("Blad otwarcia pliku.");
+        exit(EXIT_FAILURE);
+    }
+     struct timeval tv;
+    gettimeofday(&tv, NULL);
+    time_t now = tv.tv_sec;
+    struct tm* obecny_czas = localtime(&now);
+    char czas_str[30];
+    strftime(czas_str, sizeof(czas_str), "%Y-%m-%d %H:%M:%S", obecny_czas);
+    snprintf(czas_str + strlen(czas_str), sizeof(czas_str) - strlen(czas_str), ".%03ld", tv.tv_usec / 1000);
+    fprintf(plik_logi, "[%s] %s", czas_str, wiadomosc);
+    fflush(plik_logi);
+    fclose(plik_logi);
+}
 
 #endif 

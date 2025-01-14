@@ -40,7 +40,7 @@ void* robotnica(void* arg)
         
         if (stan_ula_dzielony->depopulacja_flaga == 1) {
             licznik_zredukowanych++;
-            printf("Zredukowano %d\n", licznik_zredukowanych);
+            printf("Zredukowano nr %d o id %lu\n", licznik_zredukowanych, (unsigned long)pthread_self());
             semop(sem_id, &lock, 1);
             stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_dzielony->obecna_liczba_pszczol - 1;
             semop(sem_id, &unlock, 1);
@@ -54,10 +54,11 @@ void* robotnica(void* arg)
                 semop(sem_id, &unlock, 1);
                 licznik_zredukowanych = 0;
             }
-
             pthread_mutex_unlock(&depopulacja_mutex);
 
+
             //printf("Z powodu depopulacji zredukowano: %lu\n", (unsigned long)pthread_self());
+            printf("Zredukowano - nie powinno %d\n", licznik_zredukowanych);
             pthread_exit(NULL);
         } 
         else 
@@ -137,7 +138,8 @@ void* robotnica(void* arg)
             pszczola->licznik_odwiedzen++;
             //printf("[ROBOTNICA] Pszczoła %lu odwiedziła ul %d razy.\n", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen);
             
-            if (pszczola->licznik_odwiedzen >= pszczola->liczba_cykli) 
+            //semop(sem_id, &lock, 1);
+            if (pszczola->licznik_odwiedzen >= pszczola->liczba_cykli && stan_ula_dzielony->depopulacja_flaga != 1) 
             {
                 printf("\033[13;31m[ROBOTNICA] Pszczoła %lu umiera (liczba odwiedzin %d).\033[0m\n", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen);
 
@@ -148,25 +150,12 @@ void* robotnica(void* arg)
 
                 stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_dzielony->obecna_liczba_pszczol - 1;
                 printf("Po smierci obecna liczba pszczol: %d\n", stan_ula_dzielony->obecna_liczba_pszczol);
+
                 if (semop(sem_id, &unlock, 1) == -1) 
                 {
                     perror("[ROBOTNICA] semop unlock (śmierć)");
                 }
 
-                if (stan_ula_dzielony->depopulacja_flaga == 1)
-                {
-                    pthread_mutex_lock(&liczba_pszczol_ul_mutex);
-                    licznik_zredukowanych++;
-                    pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
-                    printf("cos");
-                    pthread_mutex_lock(&liczba_pszczol_ul_mutex);
-                    if(licznik_zredukowanych >= liczebnosc_do_zredukowania && stan_ula_dzielony->obecna_liczba_pszczol == 0)
-                    {
-                        pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
-                        stan_ula_dzielony->depopulacja_flaga = 0; // Wylacz depopulacje, gdy osiągnięto limit
-                        licznik_zredukowanych = 0;
-                    }
-                }
 
                 free(pszczola);
                 free(argumenty_watku);
@@ -183,7 +172,7 @@ void* robotnica(void* arg)
 
 void obsluga_sygnalu(int sig)
 {
-    if (!stan_ula_dzielony) return;
+        if (!stan_ula_dzielony) return;
     if (sig == SIGUSR1) 
     {
         printf("\n\033[1;35m[UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!\033[0m\n");
@@ -198,7 +187,7 @@ void obsluga_sygnalu(int sig)
         liczebnosc_do_zredukowania = stan_ula_dzielony->obecna_liczba_pszczol / 2;
         //printf("po depopulacji bedzie: %d\n", stan_ula_local->obecna_liczba_pszczol);
         }
-        
+         
 }
 
 int main(int argc, char* argv[])
@@ -347,9 +336,7 @@ int main(int argc, char* argv[])
         args->stan_ula_do_przekazania   = stan_ula_dzielony;
 
         pthread_create(&robotnice_tab[i], NULL, robotnica, (void*) args);
-        printf("Stworzono %d\n", i+1);
-        usleep(10000);
-    }
+        printf("Stworzono %d\n", i+1);    }
 
     while (1) {
 
@@ -417,7 +404,7 @@ int main(int argc, char* argv[])
         // usleep(200000); //wyleganie
             
         printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
-        sleep(500000);
+        //sleep(500000);
     }
 
     for (int i = 0; i < liczba_poczatek; i++) 

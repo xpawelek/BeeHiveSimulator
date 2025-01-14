@@ -8,6 +8,20 @@
 #include <signal.h>
 #include <time.h>
 
+void write_with_lock(int fd, const char *message) {
+    if (flock(fd, LOCK_EX) == -1) {
+        perror("flock");
+        return;
+    }
+    if (write(fd, message, strlen(message)) == -1) {
+        perror("write");
+    }
+    if (flock(fd, LOCK_UN) == -1) {
+        perror("flock");
+    }
+    close(fd);
+}
+
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -43,6 +57,9 @@ int main(int argc, char* argv[]) {
         perror("[PSZCZELARZ] shmat");
         return 1;
     }
+
+    aktualizacja_logow("oooolaaa amigo!!");
+
 
     printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
 
