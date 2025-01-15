@@ -63,6 +63,7 @@ struct sembuf unlock = {0,  1, 0};
 
 
 void obsluga_sygnalu(int sig);
+void obsluga_sigint(int sig);
 
 void aktualizacja_logow(char* wiadomosc){
     printf("%s", wiadomosc);
@@ -82,5 +83,7 @@ void aktualizacja_logow(char* wiadomosc){
     fflush(plik_logi);
     fclose(plik_logi);
 }
+
+    struct sigaction sa;
 
 #endif 

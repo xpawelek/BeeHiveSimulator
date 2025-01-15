@@ -17,6 +17,7 @@ int licznik_zredukowanych = 0;
 static Stan_Ula* stan_ula_local = NULL; // wskaznik na lokalną kopie stanu ula (ten proc)
 Stan_Ula *stan_ula_dzielony = NULL;
 int sem_id;
+int zakonczenie_programu = 0;
 
 void* robotnica(void* arg)
 {
@@ -172,7 +173,7 @@ void* robotnica(void* arg)
 
 void obsluga_sygnalu(int sig)
 {
-        if (!stan_ula_dzielony) return;
+    if (!stan_ula_dzielony) return;
     if (sig == SIGUSR1) 
     {
         printf("\n\033[1;35m[UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!\033[0m\n");
@@ -187,6 +188,15 @@ void obsluga_sygnalu(int sig)
         liczebnosc_do_zredukowania = stan_ula_dzielony->obecna_liczba_pszczol / 2;
         //printf("po depopulacji bedzie: %d\n", stan_ula_local->obecna_liczba_pszczol);
         }
+    else if(sig == SIGINT)
+    {
+        semop(sem_id, &lock, 1);
+        stan_ula_dzielony->depopulacja_flaga = 1;
+        liczebnosc_do_zredukowania = stan_ula_dzielony->obecna_liczba_pszczol;
+        semop(sem_id, &unlock, 1);
+        zakonczenie_programu = 1;
+    }
+
          
 }
 
@@ -277,12 +287,12 @@ int main(int argc, char* argv[])
     }
 
     // sygnaly od pszczelarza
-    struct sigaction sa;
     sa.sa_handler = obsluga_sygnalu;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
     sigaction(SIGUSR1, &sa, NULL);
     sigaction(SIGUSR2, &sa, NULL);
+    sigaction(SIGINT, &sa, NULL);
     
 
 
@@ -338,7 +348,7 @@ int main(int argc, char* argv[])
         pthread_create(&robotnice_tab[i], NULL, robotnica, (void*) args);
         printf("Stworzono %d\n", i+1);    }
 
-    while (1) {
+    while (!zakonczenie_programu) {
 
         printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
 
@@ -353,6 +363,9 @@ int main(int argc, char* argv[])
 
         if (msgrcv(msqid, &otrzymana_ilosc_jaj, sizeof(msgbuf) - sizeof(long), MSG_TYPE_EGGS, 0) == -1) {
         if (errno == EINTR) {
+            if (zakonczenie_programu) {
+            break; // Przerwij pętlę, jeśli otrzymano SIGINT
+            }
             printf("[UL] msgrcv przerwano sygnalem, retrying...\n");
             continue;
         }

@@ -1,9 +1,21 @@
 #include "common.h"
 
-int main(int argc, char* argv[])
+void obsluga_sigint(int sig)
 {
+    while(wait(NULL) > 0);
+    sleep(1);
+}
+
+int main(int argc, char* argv[])
+{   
+    printf("Enter 1 for doubling population of bees - you can do it just once!\nEnter 2 for population reduction!\nEnter CTRL+C for closing simulation properly!\n");
+    sleep(1);
     srand(time(NULL));
 
+    if (mkfifo(FIFO_PATH, 0600) == -1  && errno != EEXIST) {
+        perror("mkfifo fifo_path");
+        exit(EXIT_FAILURE);
+    }
     // potok (krolowa -> ul)
     int pipe_skladanie_jaj[2];
     if (pipe(pipe_skladanie_jaj) == -1) {
@@ -12,7 +24,7 @@ int main(int argc, char* argv[])
     }
 
     // tworzymy pam. dzielona
-    key_t klucz = ftok("./unikalny_klucz.txt", 65);
+    key_t klucz = ftok("unikalny_klucz.txt", 65);
     if (klucz == -1) {
         perror("[MAIN] ftok");
         exit(EXIT_FAILURE);
@@ -32,6 +44,12 @@ int main(int argc, char* argv[])
 
     memset(stan_ula_do_przekazania, 0, 1024);
 
+    struct sigaction sa;
+    sa.sa_handler = obsluga_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGINT, &sa, NULL);
+
     // zestaw semforow V, ustawiamy a 1
     int sem_id = semget(klucz, 1, IPC_CREAT | 0666);
     if (sem_id == -1) {
@@ -39,7 +57,7 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    key_t klucz_kolejka = ftok("./kolejka_komunikatow_jaja.txt", MSG_QUEUE_PROJECT_ID);
+    key_t klucz_kolejka = ftok("kolejka_komunikatow_jaja.txt", MSG_QUEUE_PROJECT_ID);
     if (klucz_kolejka == -1) {
         perror("[MAIN] ftok error");
         exit(EXIT_FAILURE);
@@ -51,11 +69,6 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    FILE* plik_logi = fopen("plik_logi.txt","w");
-    if (plik_logi == NULL){
-        perror("Blad otwrcia pliku");
-        exit(EXIT_FAILURE);
-    }
 
     semop(sem_id, &lock, 1);
     stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
@@ -157,6 +170,7 @@ int main(int argc, char* argv[])
 
     //sprzatamy kolejke
     msgctl(msqid, IPC_RMID, NULL);
+    unlink(FIFO_PATH);
 
     printf("[MAIN] Koniec programu.\n");
     return 0;

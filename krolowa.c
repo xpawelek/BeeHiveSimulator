@@ -7,6 +7,13 @@
 #include <sys/sem.h>
 #include <time.h>
 
+int zakonczenie_programu = 0;
+
+void obsluga_sigint(int sig)
+{
+    zakonczenie_programu = 1;
+}
+
 int main(int argc, char* argv[])
 {
     if (argc < 5) 
@@ -31,6 +38,10 @@ int main(int argc, char* argv[])
 
     printf("[KROLOWA] Obecna - %d\n Obecna ul - %d\n, Maks - %d\n, Stan poczatkowy - %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul, stan_ula->maksymalna_ilosc_osobnikow, stan_ula->stan_poczatkowy);
 
+    sa.sa_handler = obsluga_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGINT, &sa, NULL);
 
     if (semop(sem_id, &lock, 1) == -1){
         perror("[Krolowa] semop lock (odczyt)");
@@ -49,7 +60,8 @@ int main(int argc, char* argv[])
     msgbuf zlozona_ilosc_jaj;
     zlozona_ilosc_jaj.mtype = MSG_TYPE_EGGS;
 
-    while (1) {        
+
+    while (!zakonczenie_programu) {        
         if (semop(sem_id, &lock, 1) == -1) {
             perror("[Krolowa] semop lock (odczyt)");
             break;

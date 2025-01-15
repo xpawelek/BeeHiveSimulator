@@ -8,18 +8,11 @@
 #include <signal.h>
 #include <time.h>
 
-void write_with_lock(int fd, const char *message) {
-    if (flock(fd, LOCK_EX) == -1) {
-        perror("flock");
-        return;
-    }
-    if (write(fd, message, strlen(message)) == -1) {
-        perror("write");
-    }
-    if (flock(fd, LOCK_UN) == -1) {
-        perror("flock");
-    }
-    close(fd);
+int zakonczenie_programu = 0;
+
+void obsluga_sigint(int sig)
+{
+    zakonczenie_programu = 1;
 }
 
 
@@ -32,6 +25,12 @@ int main(int argc, char* argv[]) {
 
     int sem_id = atoi(argv[1]);
     int shm_id = atoi(argv[2]);
+
+    sa.sa_handler = obsluga_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGINT, &sa, NULL);
+
 
     // Odbieranie PID ula
     int fd = open(FIFO_PATH, O_RDONLY);
@@ -58,7 +57,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    aktualizacja_logow("oooolaaa amigo!!");
+    //aktualizacja_logow("oooolaaa amigo!!");
 
 
     printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
@@ -69,7 +68,7 @@ int main(int argc, char* argv[]) {
     fd_set read_fds;
     struct timeval timeout;
 
-    while (1) {
+    while (!zakonczenie_programu) {
         // deskryptory plikow do monitorowania
         FD_ZERO(&read_fds);
         FD_SET(STDIN_FILENO, &read_fds);
@@ -82,6 +81,9 @@ int main(int argc, char* argv[]) {
         int ret = select(STDIN_FILENO + 1, &read_fds, NULL, NULL, &timeout);
 
         if (ret == -1) {
+            if (zakonczenie_programu) {
+                break;  // Exit if SIGINT was received
+            }
             perror("[PSZCZELARZ] select error");
             break;
         } else if (ret == 0) {
@@ -115,6 +117,8 @@ int main(int argc, char* argv[]) {
         perror("[PSZCZELARZ] shmdt");
         return 1;
     }
+
+    printf("Pszczelarz konczy prace\n");
 
     return 0;
 }
