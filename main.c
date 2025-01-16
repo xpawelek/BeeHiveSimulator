@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
     }
 
     // uruchamiamy pszelarza
-    printf("\033[1;45m[MAIN] Uruchamiam proces pszczelarz...\033[0m\n");
+    aktualizacja_logow("[MAIN] Uruchamiam proces pszczelarz...", 45, 1);
     pid_t pid_pszczelarz = fork();
     if (pid_pszczelarz == -1) {
         perror("[MAIN] fork pszczelarz");
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     // uruchamiamy proces ul
     usleep(500000);
-    printf("\033[1;46m[MAIN] Uruchamiam proces ul...\033[0m\n");
+    aktualizacja_logow("[MAIN] Uruchamiam proces ul...", 46, 1);
     pid_t pid_ul = fork();
     if (pid_ul == -1) 
     {
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 
     usleep(500000);
     // uruchamiamy proces krolowa
-    printf("\033[1;43m[MAIN] Uruchamiam proces krolowa...\033[0m\n");
+    aktualizacja_logow("[MAIN] Uruchamiam proces krolowa...", 43, 1);
     pid_t pid_krolowa = fork();
     if (pid_krolowa == -1)
     {
@@ -179,6 +179,6 @@ int main(int argc, char* argv[])
     msgctl(msqid, IPC_RMID, NULL);
     unlink(FIFO_PATH);
 
-    printf("[MAIN] Koniec programu.\n");
+    aktualizacja_logow("[MAIN] Koniec programu.", 41, 1);
     return 0;
 }

@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/time.h>
+#include <stdarg.h>
 
 
 #define POCZATKOWA_ILOSC_PSZCZOL 100
@@ -65,6 +66,27 @@ struct sembuf unlock = {0,  1, 0};
 void obsluga_sygnalu(int sig);
 void obsluga_sigint(int sig);
 
+char* stworz_wiadomosc(const char* mess, ...)
+{
+    va_list args;
+    va_start(args, mess);
+
+    int size = vsnprintf(NULL, 0, mess, args) + 1;
+
+    va_end(args);
+
+    char* buf = (char*)malloc(size);
+    if (buf == NULL) {
+        return NULL; // Allocation failed
+    }
+
+    va_start(args, mess);
+    vsnprintf(buf, size, mess, args);
+    va_end(args);
+
+    return buf;
+}
+
 void aktualizacja_logow(char* wiadomosc, int color, int style){
     char color_str[20]; 
     char style_str[20];   
@@ -77,14 +99,14 @@ void aktualizacja_logow(char* wiadomosc, int color, int style){
         perror("Blad otwarcia pliku.");
         exit(EXIT_FAILURE);
     }
-     struct timeval tv;
+    struct timeval tv;
     gettimeofday(&tv, NULL);
     time_t now = tv.tv_sec;
     struct tm* obecny_czas = localtime(&now);
     char czas_str[30];
     strftime(czas_str, sizeof(czas_str), "%Y-%m-%d %H:%M:%S", obecny_czas);
     snprintf(czas_str + strlen(czas_str), sizeof(czas_str) - strlen(czas_str), ".%03ld", tv.tv_usec / 1000);
-    fprintf(plik_logi, "[%s] %s", czas_str, wiadomosc);
+    fprintf(plik_logi, "[%s] %s\n", czas_str, wiadomosc);
     fflush(plik_logi);
     fclose(plik_logi);
 }

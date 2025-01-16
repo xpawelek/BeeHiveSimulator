@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
             }
             */
         }
-        sleep(1);
+        //sleep(1);
     }   
 
     
@@ -148,7 +148,6 @@ int main(int argc, char* argv[])
         perror("[KRÓLOWA] shmdt");
     }
     
-    printf("[KRÓLOWA] Kończę pracę.\n");
-
+    aktualizacja_logow("[KRÓLOWA] Kończę pracę.", 41, 1);
     return 0;
 }
