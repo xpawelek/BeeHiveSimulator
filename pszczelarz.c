@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    //aktualizacja_logow("oooolaaa amigo!!");
+    aktualizacja_logow("OOOOllaa amigo", 5, 32);
 
 
     printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    printf("Pszczelarz konczy prace\n");
+    aktualizacja_logow("[Pszczelarz] Kończę pracę.", 41, 1);
 
     return 0;
 }

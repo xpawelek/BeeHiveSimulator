@@ -8,6 +8,13 @@ void obsluga_sigint(int sig)
 
 int main(int argc, char* argv[])
 {   
+    pid_t console_pid = tcgetpgrp(STDOUT_FILENO);
+    pid_t my_pid = getpgrp();
+    if(console_pid == my_pid)
+        printf("process foregrounded\n");
+    else
+        printf("process backgrounded\n");
+
     printf("Enter 1 for doubling population of bees - you can do it just once!\nEnter 2 for population reduction!\nEnter CTRL+C for closing simulation properly!\n");
     sleep(1);
     srand(time(NULL));

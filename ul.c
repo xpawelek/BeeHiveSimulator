@@ -374,7 +374,12 @@ int main(int argc, char* argv[])
         
         //tworzenie nowych robotnic - odbieranie informacji o probie zlozenia jaj
         
-        printf("\033[1;33mKrolowa zniosla %d jaj\033[0m\n", otrzymana_ilosc_jaj.eggs);
+        //printf("\033[1;33mKrolowa zniosla %d jaj\033[0m\n", otrzymana_ilosc_jaj.eggs);
+       // char* mess = "Krolowa zniosla %d jaj.", otrzymana_ilosc_jaj.eggs;
+         const char *template = "Krolowa zniosla %d jaj.";
+         char mess[100];
+         snprintf(mess, sizeof(mess), template, otrzymana_ilosc_jaj);
+        aktualizacja_logow(mess, 33, 1);
         kontrola_pojemnosci_ula+=otrzymana_ilosc_jaj.eggs;
 
         pthread_t* nowe_robotnice = (pthread_t*) calloc(otrzymana_ilosc_jaj.eggs, sizeof(pthread_t));
@@ -439,6 +444,7 @@ int main(int argc, char* argv[])
     pthread_mutex_destroy(&liczba_pszczol_ul_mutex);
     pthread_cond_destroy(&cond_dostepne_miejsce);
     pthread_mutex_destroy(&depopulacja_mutex);
-    printf("[UL] Koncze proces ula.\n");
+
+    aktualizacja_logow("[Ul] Kończę pracę.", 41, 1);
     return 0;
 }

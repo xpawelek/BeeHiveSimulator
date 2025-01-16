@@ -65,8 +65,13 @@ struct sembuf unlock = {0,  1, 0};
 void obsluga_sygnalu(int sig);
 void obsluga_sigint(int sig);
 
-void aktualizacja_logow(char* wiadomosc){
-    printf("%s", wiadomosc);
+void aktualizacja_logow(char* wiadomosc, int color, int style){
+    char color_str[20]; 
+    char style_str[20];   
+    sprintf(color_str, "%d", color);
+    sprintf(style_str, "%d", style);
+
+    printf("\033[%s;%sm%s\033[0m\n", style_str, color_str, wiadomosc);
     FILE* plik_logi = fopen("plik_logi.txt","a");
     if (plik_logi == NULL){
         perror("Blad otwarcia pliku.");
