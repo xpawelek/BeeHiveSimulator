@@ -41,8 +41,7 @@ void* robotnica(void* arg)
         
         if (stan_ula_dzielony->depopulacja_flaga == 1) {
             licznik_zredukowanych++;
-            //printf("Zredukowano pszczole %d z kolei o numerze: %lu\n", licznik_zredukowanych, (unsigned long)pthread_self());
-            aktualizacja_logow(stworz_wiadomosc("Zredukowano pszczole %d z kolei o numerze:", licznik_zredukowanych, (unsigned long)pthread_self()), 37, 1);
+            aktualizacja_logow(stworz_wiadomosc("Zredukowano pszczole %d z kolei o numerze: %lu", licznik_zredukowanych, (unsigned long)pthread_self()), 37, 1);
             semop(sem_id, &lock, 1);
             stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_dzielony->obecna_liczba_pszczol - 1;
             semop(sem_id, &unlock, 1);
@@ -60,7 +59,7 @@ void* robotnica(void* arg)
 
 
             //printf("Z powodu depopulacji zredukowano: %lu\n", (unsigned long)pthread_self());
-            printf("Zredukowano - nie powinno %d\n", licznik_zredukowanych);
+            //printf("Zredukowano - nie powinno %d\n", licznik_zredukowanych);
             pthread_exit(NULL);
         } 
         else 
@@ -98,7 +97,6 @@ void* robotnica(void* arg)
             pthread_mutex_lock(&liczba_pszczol_ul_mutex);
             kontrola_pojemnosci_ula++; //nowy mutex do tego?
             aktualizacja_logow(stworz_wiadomosc("Stan: %d/%d, %s, id: %lu", kontrola_pojemnosci_ula, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self()), 32, 5);
-            //printf("Stan: %d/%d, %s, id: %lu", kontrola_pojemnosci_ula, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self());
             pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
             pszczola->pszczola_jest_w_ulu = 1;
@@ -127,10 +125,7 @@ void* robotnica(void* arg)
 
             pthread_mutex_lock(&liczba_pszczol_ul_mutex);
             kontrola_pojemnosci_ula--;
-            //printf("%d/%d, \033[4;34m%s, id: %lu\033[0m\n", kontrola_pojemnosci_ula, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self());
-            aktualizacja_logow(stworz_wiadomosc("Stan: %d/%d, %s, id: %lu", kontrola_pojemnosci_ula, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self()), 34, 4);
-
-            
+             aktualizacja_logow(stworz_wiadomosc("Stan: %d/%d, %s, id: %lu", kontrola_pojemnosci_ula, POCZATKOWA_ILOSC_PSZCZOL/2, info, (unsigned long)pthread_self()), 34, 4);
             pthread_mutex_unlock(&liczba_pszczol_ul_mutex);
 
             pszczola->pszczola_jest_w_ulu = 0;
@@ -147,8 +142,7 @@ void* robotnica(void* arg)
             //semop(sem_id, &lock, 1);
             if (pszczola->licznik_odwiedzen >= pszczola->liczba_cykli && stan_ula_dzielony->depopulacja_flaga != 1) 
             {
-                //printf("\033[3;31m[ROBOTNICA] Pszczoła %lu umiera (liczba odwiedzin %d).\033[0m\n", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen);
-                aktualizacja_logow(stworz_wiadomosc("[ROBOTNICA] Pszczoła o numerze %lu umiera (liczba odwiedzin %d).", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen), 31, 3);
+               aktualizacja_logow(stworz_wiadomosc("[ROBOTNICA] Pszczoła o numerze %lu umiera (liczba odwiedzin %d).", (unsigned long)pthread_self(), pszczola->licznik_odwiedzen), 31, 3);
 
                 if (semop(sem_id, &lock, 1) == -1)
                 {
@@ -156,7 +150,7 @@ void* robotnica(void* arg)
                 }
 
                 stan_ula_dzielony->obecna_liczba_pszczol = stan_ula_dzielony->obecna_liczba_pszczol - 1;
-                //printf("Po smierci obecna liczba pszczol: %d\n", stan_ula_dzielony->obecna_liczba_pszczol);
+                printf("Po smierci obecna liczba pszczol: %d\n", stan_ula_dzielony->obecna_liczba_pszczol);
 
                 if (semop(sem_id, &unlock, 1) == -1) 
                 {
@@ -182,7 +176,6 @@ void obsluga_sygnalu(int sig)
     if (!stan_ula_dzielony) return;
     if (sig == SIGUSR1) 
     {
-        //printf("\n\033[1;35m[UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!\033[0m\n");
         aktualizacja_logow("[UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!", 35, 1);
         semop(sem_id, &lock, 1);
         stan_ula_dzielony->maksymalna_ilosc_osobnikow = stan_ula_dzielony->maksymalna_ilosc_osobnikow * 2;
@@ -190,7 +183,6 @@ void obsluga_sygnalu(int sig)
     }
     else if (sig == SIGUSR2) 
     {
-        //printf("\n\033[1;35m[UL] Otrzymano SIGUSR2 -> zmniejszamy populacje!\033[0m\n");
         aktualizacja_logow("[UL] Otrzymano SIGUSR2 -> zmniejszamy populacje!", 35, 1);
         //printf("przed flaga_depopulacja: %d\n", stan_ula_local->obecna_liczba_pszczol);
         liczebnosc_do_zredukowania = stan_ula_dzielony->obecna_liczba_pszczol / 2;
@@ -354,14 +346,12 @@ int main(int argc, char* argv[])
         args->stan_ula_do_przekazania   = stan_ula_dzielony;
 
         pthread_create(&robotnice_tab[i], NULL, robotnica, (void*) args);
-        //printf("Stworzono %d\n", i+1);    
-        }
+        pthread_detach(robotnice_tab[i]);
+        printf("Stworzono %d\n", i+1);    }
 
     while (!zakonczenie_programu) {
 
-        //printf("[UL] Stan -> obecna liczba poszczol = %d, obecnie w ulu = %d, maksymalnie = %d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
-        //aktualizacja_logow(stworz_wiadomosc("[UL] Stan -> obecna liczba poszczol = %d, obecnie w ulu = %d, maksymalnie = %d", stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow), 37, 1);
-
+        aktualizacja_logow(stworz_wiadomosc("[UL] Stan -> obecna liczba poszczol = %d, obecnie w ulu = %d, maksymalnie = %d", stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow), 37, 1);
         /*
         ssize_t count = read(pipe_fd, &otrzymana_ilosc_jaj, sizeof(int));
         if (count <= 0) 
@@ -384,8 +374,6 @@ int main(int argc, char* argv[])
         
         //tworzenie nowych robotnic - odbieranie informacji o probie zlozenia jaj
         
-        //printf("\033[1;33mKrolowa zniosla %d jaj\033[0m\n", otrzymana_ilosc_jaj.eggs);
-        //stworz_wiadomosc(mess, otrzymana_ilosc_jaj);
         aktualizacja_logow(stworz_wiadomosc("Krolowa zniosla %d jaj.", otrzymana_ilosc_jaj.eggs), 33, 1);
         kontrola_pojemnosci_ula+=otrzymana_ilosc_jaj.eggs;
 
@@ -424,19 +412,25 @@ int main(int argc, char* argv[])
 
             //wyleganie tutaj
             pthread_create(&nowe_robotnice[i], NULL, robotnica, (void*)args);
+            pthread_detach(nowe_robotnice[i]);
         }
         free(nowe_robotnice);
         // usleep(200000); //wyleganie
             
-        //printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
+        printf("[UL] Stan: obecna=%d, w_ulu=%d, max=%d\n",stan_ula_dzielony->obecna_liczba_pszczol,stan_ula_dzielony->obecna_liczba_pszczol_ul,stan_ula_dzielony->maksymalna_ilosc_osobnikow);
         //sleep(500000);
     }
 
-    for (int i = 0; i < liczba_poczatek; i++) 
+    usleep(1);
+
+    while(1)
     {
-        pthread_join(robotnice_tab[i], NULL);
+        if(stan_ula_dzielony->obecna_liczba_pszczol == 0)
+        {
+            printf("Zakonczono, obecna l.pszczol: %d\n", stan_ula_dzielony->obecna_liczba_pszczol);
+            break;            
+        }
     }
-    free(robotnice_tab);
 
     // sprzatenie
     if (shmdt(stan_ula_dzielony) == -1) 
@@ -451,7 +445,6 @@ int main(int argc, char* argv[])
     pthread_mutex_destroy(&liczba_pszczol_ul_mutex);
     pthread_cond_destroy(&cond_dostepne_miejsce);
     pthread_mutex_destroy(&depopulacja_mutex);
-
     aktualizacja_logow("[Ul] Kończę pracę.", 41, 1);
     return 0;
 }

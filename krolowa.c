@@ -149,5 +149,6 @@ int main(int argc, char* argv[])
     }
     
     aktualizacja_logow("[KRÓLOWA] Kończę pracę.", 41, 1);
+
     return 0;
 }

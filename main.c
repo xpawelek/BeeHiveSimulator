@@ -3,18 +3,10 @@
 void obsluga_sigint(int sig)
 {
     while(wait(NULL) > 0);
-    sleep(1);
 }
 
 int main(int argc, char* argv[])
 {   
-    pid_t console_pid = tcgetpgrp(STDOUT_FILENO);
-    pid_t my_pid = getpgrp();
-    if(console_pid == my_pid)
-        printf("process foregrounded\n");
-    else
-        printf("process backgrounded\n");
-
     printf("Enter 1 for doubling population of bees - you can do it just once!\nEnter 2 for population reduction!\nEnter CTRL+C for closing simulation properly!\n");
     sleep(1);
     srand(time(NULL));
@@ -110,7 +102,7 @@ int main(int argc, char* argv[])
     }
 
     // uruchamiamy proces ul
-    usleep(500000);
+    //usleep(500000);
     aktualizacja_logow("[MAIN] Uruchamiam proces ul...", 46, 1);
     pid_t pid_ul = fork();
     if (pid_ul == -1) 
@@ -133,7 +125,7 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    usleep(500000);
+    //usleep(500000);
     // uruchamiamy proces krolowa
     aktualizacja_logow("[MAIN] Uruchamiam proces krolowa...", 43, 1);
     pid_t pid_krolowa = fork();
