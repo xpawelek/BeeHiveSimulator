@@ -6,19 +6,55 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <time.h>
+#include <signal.h>
 
-int zakonczenie_programu = 0;
+int simulation_termination = 0;
 
-void obsluga_sigint(int sig)
+//sets termination flag
+void handle_sigint(int sig)
 {
-    zakonczenie_programu = 1;
+    simulation_termination = 1;
+}
+
+void setup_signal_handling(void)
+{
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("[KROLOWA] sigaction error");
+        exit(EXIT_FAILURE);
+    }
+}
+
+int sem_lock_safe(int sem_id)
+{
+    if (semop(sem_id, &lock, 1) == -1)
+    {
+        perror("[KRÓLOWA] semop lock error");
+        return -1;
+    }
+    return 0;
+}
+
+int sem_unlock_safe(int sem_id)
+{
+    if (semop(sem_id, &unlock, 1) == -1)
+    {
+        perror("[KRÓLOWA] semop unlock error");
+        return -1;
+    }
+    return 0;
 }
 
 int main(int argc, char* argv[])
 {
     if (argc < 5) 
     {
-        fprintf(stderr, "[KRÓLOWA] Sposób użycia: %s <sem_id> <fd_pipe> <shm_id>\n", argv[0]);
+        fprintf(stderr, "[KRÓLOWA] Sposób użycia: %s <sem_id> <fd_pipe> <shm_id> <msqid>\n", argv[0]);
         return 1;
     }
 
@@ -28,127 +64,104 @@ int main(int argc, char* argv[])
     //int pipe_fd = atoi(argv[2]);  
     int shm_id = atoi(argv[3]);
     int msqid = atoi(argv[4]);
-    int pojemnosc_poczatkowa;
+    int hive_capacity;
 
-    Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    if (stan_ula == (void*) -1) {
+    Hive* shared_hive_state = (Hive*) shmat(shm_id, NULL, 0);
+    if (shared_hive_state == (void*) -1) 
+    {
         perror("[KRÓLOWA] shmat");
         return 1;
     }
 
-    printf("[KROLOWA] Obecna - %d\n Obecna ul - %d\n, Maks - %d\n, Stan poczatkowy - %d\n", stan_ula->obecna_liczba_pszczol, stan_ula->obecna_liczba_pszczol_ul, stan_ula->maksymalna_ilosc_osobnikow, stan_ula->stan_poczatkowy);
+    setup_signal_handling();
 
-    sa.sa_handler = obsluga_sigint;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa, NULL);
+    //max capacity of hive
+    hive_capacity = BEG_QUANTITY / 2;
 
-    if (semop(sem_id, &lock, 1) == -1){
-        perror("[Krolowa] semop lock (odczyt)");
-    }
+    //message queue struct to keep info about eggs
+    msgbuf laid_eggs;
+    laid_eggs.mtype = MSG_TYPE_EGGS;
+    while (!simulation_termination) 
+    {
+        int laid_eggs_rand = rand() % 10 + 1;
 
-    pojemnosc_poczatkowa = stan_ula->stan_poczatkowy / 2;
+        /* 
+          int ograniczenie_ula = pojemnosc_poczatkowa - obecna_liczba_osobnikow_ul;
+          int ograniczenie_populacji = maksymalna_ilosc_osobnikow - obecna_liczba_pszczol;
+          if (ograniczenie_ula < ograniczenie_populacji) 
+          {
+              liczba_zlozonych_jaj = rand() % ograniczenie_ula + 1;
+          } 
+          else if (ograniczenie_populacji < ograniczenie_ula)
+          {
+              liczba_zlozonych_jaj = rand() % ograniczenie_populacji + 1;
+          } 
+          else 
+          {
+              liczba_zlozonych_jaj = rand() % 3 + 1; // Bardzo ograniczone miejsce
+          }
+         */
 
-    if (semop(sem_id, &unlock, 1) == -1) {
-        perror("[Krolowa] semop unlock (odczyt)");
-    }
-
-    int obecna_liczba_pszczol;
-    int maksymalna_ilosc_osobnikow;
-    int obecna_liczba_osobnikow_ul;
-    int depopulacja_flaga;
-    msgbuf zlozona_ilosc_jaj;
-    zlozona_ilosc_jaj.mtype = MSG_TYPE_EGGS;
-
-
-    while (!zakonczenie_programu) {        
-        if (semop(sem_id, &lock, 1) == -1) {
-            perror("[Krolowa] semop lock (odczyt)");
+        //if there is space in hive, population and depopulation flag not set - lay eggs
+        if(sem_lock_safe(sem_id) == -1)
+        {
             break;
         }
 
-        obecna_liczba_pszczol = stan_ula->obecna_liczba_pszczol;
-        maksymalna_ilosc_osobnikow = stan_ula->maksymalna_ilosc_osobnikow;
-        obecna_liczba_osobnikow_ul = stan_ula->obecna_liczba_pszczol_ul;
-        depopulacja_flaga = stan_ula->depopulacja_flaga;
-
-        if (semop(sem_id, &unlock, 1) == -1) {
-            perror("[Krolowa] semop unlock (odczyt)");
-            break;
-        }
-
-        int liczba_zlozonych_jaj = rand() % 10 + 3;
-
-        /*
-        int ograniczenie_ula = pojemnosc_poczatkowa - obecna_liczba_osobnikow_ul;
-        int ograniczenie_populacji = maksymalna_ilosc_osobnikow - obecna_liczba_pszczol;
-        //printf("\033[1;37m[KROLOWA]  obecna l.pszczol - %d\n, liczba w ulu - %d\n maks pojemnosc ula : %d\033[0m\n Potencjalny limit 1 - %d\noraz 2 - %d\n",obecna_liczba_pszczol, obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow, potencjalny_limit_jaj_1, potencjalny_limit_jaj_2);
-
-
-        if (ograniczenie_ula < ograniczenie_populacji) 
+        if (shared_hive_state->current_bees + laid_eggs_rand <= shared_hive_state->max_bees
+            && shared_hive_state->current_bees_hive + laid_eggs_rand <= hive_capacity
+            && shared_hive_state->depopulation_flag != 1
+            && shared_hive_state->start_simulation == 1)
         {
-            liczba_zlozonych_jaj = rand() % ograniczenie_ula + 1;
-        } 
-        else if (ograniczenie_populacji < ograniczenie_ula)
-        {
-            liczba_zlozonych_jaj = rand() % ograniczenie_populacji + 1;
-        } 
-        else 
-        {
-            liczba_zlozonych_jaj = rand() % 3 + 1; // Brak miejsca na jaja
-        }
-        */
-        //printf("\033[5;34mPszczola wyliczyla potencjalnie %d\033[0m\n", liczba_zlozonych_jaj);
-       // printf("[KROLOWA]  obecna l.pszczol - %d\n, liczba w ulu - %d\n maks pojemnosc ula : %d\n",obecna_liczba_pszczol, obecna_liczba_osobnikow_ul, maksymalna_ilosc_osobnikow);
-       // printf("Krolowa znioslby %d jaj, ale flaga depopulacja = %d\n", liczba_zlozonych_jaj, depopulacja_flaga);
+            //take up space for eggs
+            shared_hive_state->current_bees += laid_eggs_rand;
+            shared_hive_state->current_bees_hive += laid_eggs_rand;
+            shared_hive_state->capacity_control += laid_eggs_rand;
 
-    /*
-       if(depopulacja_flaga == 1)
-       {
-            printf("Depopulacja jest przeprowadzana! Nie moge znosic jaj!\n");
-       }
-       */
+            update_logs(create_mess("[KROLOWA] Obecna - %d | Obecna ul - %d | Maks - %d | Stan początkowy - %d\n",
+            shared_hive_state->current_bees,
+            shared_hive_state->capacity_control,
+            shared_hive_state->max_bees,
+            hive_capacity), 1, 1);
 
-        if (obecna_liczba_pszczol + liczba_zlozonych_jaj <= maksymalna_ilosc_osobnikow 
-             && obecna_liczba_osobnikow_ul + liczba_zlozonych_jaj <= pojemnosc_poczatkowa
-             && depopulacja_flaga  != 1) 
-        {
-            if (semop(sem_id, &lock, 1) == -1) {
-            perror("[Krolowa] semop lock (odczyt)");
-            break;
-            }
-
-            stan_ula->obecna_liczba_pszczol_ul += liczba_zlozonych_jaj;
-            stan_ula->obecna_liczba_pszczol += liczba_zlozonych_jaj;
-
-            if (semop(sem_id, &unlock, 1) == -1) {
-            perror("[Krolowa] semop lock (odczyt)");
-            break;
-            }
-
-            zlozona_ilosc_jaj.eggs = liczba_zlozonych_jaj;
-
-            if (msgsnd(msqid, &zlozona_ilosc_jaj, sizeof(int), 0) == -1) 
+            if (sem_unlock_safe(sem_id) == -1) 
             {
-            perror("[KROLOWA] msgsnd error");
+                break;
             }
 
-            /*
-            if (write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int)) == -1) {
-                    perror("[KROLOWA] zapisuje - pipe error");
-                    break;
+            laid_eggs.eggs_num = laid_eggs_rand;
+
+            //send message
+            if (msgsnd(msqid, &laid_eggs, sizeof(int), 0) == -1) 
+            {
+                perror("[KRÓLOWA] msgsnd error");
             }
+
+            /* // old sending by pipe
+             if (write(pipe_fd, &liczba_zlozonych_jaj, sizeof(int)) == -1) {
+                 perror("[KRÓLOWA] zapis pipe_fd error");
+                 break;
+              }
             */
         }
-        //sleep(1);
-    }   
+        else
+        {
+            if(sem_lock_safe(sem_id) == -1)
+            {
+                break;
+            }
+        }
 
-    
-    if (shmdt(stan_ula) == -1) {
-        perror("[KRÓLOWA] shmdt");
+        usleep(30000);
     }
-    
-    aktualizacja_logow("[KRÓLOWA] Kończę pracę.", 41, 1);
+
+    if (shmdt(shared_hive_state) == -1) 
+    {
+        perror("[KROLOWA] shmdt");
+    }
+
+
+    update_logs("[KROLOWA] Koncze prace.", 41, 1);
 
     return 0;
 }

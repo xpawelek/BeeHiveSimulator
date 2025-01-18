@@ -7,118 +7,183 @@
 #include <sys/sem.h>
 #include <signal.h>
 #include <time.h>
+#include <string.h>
+#include <fcntl.h>
 
-int zakonczenie_programu = 0;
 
-void obsluga_sigint(int sig)
+int simulation_termination = 0;
+
+//handle signal to termination
+void handle_sigint(int sig)
 {
-    zakonczenie_programu = 1;
+    simulation_termination = 1;
+}
+
+void setup_signal_handling(void)
+{
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART; 
+
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("[PSZCZELARZ] sigaction error");
+        exit(EXIT_FAILURE);
+    }
+}
+
+//reading hive pid to be able to send signal
+int read_hive_pid(void)
+{
+    int fd = open(FIFO_PATH, O_RDONLY);
+    if (fd == -1) 
+    {
+        perror("[PSZCZELARZ] open FIFO for reading");
+        return -1;
+    }
+
+    char buffer[100] = {0};
+    ssize_t bytes_read = read(fd, buffer, sizeof(buffer));
+    if (bytes_read == -1) 
+    {
+        perror("[PSZCZELARZ] Błąd odczytu z FIFO");
+        close(fd);
+        return -1;
+    }
+
+    close(fd);
+
+    int hive_pid = atoi(buffer);
+    return hive_pid;
 }
 
 
-int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        fprintf(stderr, "[PSZCZELARZ] Sposób użycia: %s <sem_id> <shm_id> \n", argv[0]);
+int main(int argc, char* argv[]) 
+{
+    if (argc < 3) 
+    {
+        fprintf(stderr, "[PSZCZELARZ] Sposób użycia: %s <sem_id> <shm_id>\n", argv[0]);
         return 1;
     }
+
     srand(time(NULL));
 
     int sem_id = atoi(argv[1]);
     int shm_id = atoi(argv[2]);
 
-    sa.sa_handler = obsluga_sigint;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa, NULL);
+    //sigint handle registration
+    setup_signal_handling();
 
-
-    // Odbieranie PID ula
-    int fd = open(FIFO_PATH, O_RDONLY);
-    if (fd == -1) {
-        perror("open FIFO for reading");
+    
+    int hive_pid = read_hive_pid();
+    if (hive_pid == -1)
+    {
         exit(EXIT_FAILURE);
     }
+    printf("[PSZCZELARZ] Odebrano PID ula: %d\n", hive_pid);
 
-    char buffer[100] = {0};
-    if (read(fd, buffer, sizeof(buffer)) == -1) {
-        perror("Blad odczytu z FIFO");
-        close(fd);
-        exit(EXIT_FAILURE);
-    }
-    close(fd);
-
-    int pid_ul = atoi(buffer);
-    printf("[PSZCZELARZ] Odebrano PID ula: %d\n", pid_ul);
-
-    // Dolaczenie do pamieci wspoldzielonej
-    Stan_Ula* stan_ula = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    if (stan_ula == (void*)-1) {
+    Hive* shared_hive_state = (Hive*) shmat(shm_id, NULL, 0);
+    if (shared_hive_state == (void*) -1) 
+    {
         perror("[PSZCZELARZ] shmat");
         return 1;
     }
 
-    //aktualizacja_logow("oooolaaa amigo!!");
+    printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", shared_hive_state->current_bees);
 
+    //flag to check if population has been already incremented
+    int incremented_population = 0;
 
-    printf("[PSZCZELARZ] Obecna liczba pszczół: %d\n", stan_ula->obecna_liczba_pszczol);
-
-
-    int zwiekszono_pojemnosc = 0;
-    // Monitorowanie wejscia
     fd_set read_fds;
     struct timeval timeout;
 
-    while (!zakonczenie_programu) {
-        // deskryptory plikow do monitorowania
+    //loop which waits to commands from stdin
+    while (!simulation_termination) 
+    {
+        //descriptor to read
         FD_ZERO(&read_fds);
         FD_SET(STDIN_FILENO, &read_fds);
 
-        // ustawiamy timeouty
-        timeout.tv_sec = 5;  //czekamy max 5s
+        timeout.tv_sec = 5;
         timeout.tv_usec = 0;
 
-        printf("[PSZCZELARZ] Czekam na dane wejsciowe...\n");
+        printf("[PSZCZELARZ] Czekam na dane wejsciowe (1 lub 2)...\n");
         int ret = select(STDIN_FILENO + 1, &read_fds, NULL, NULL, &timeout);
 
-        if (ret == -1) {
-            if (zakonczenie_programu) {
-                break;  // Exit if SIGINT was received
+        if (ret == -1) 
+        {
+            if (!simulation_termination) 
+            {
+                perror("[PSZCZELARZ] select error");
             }
-            perror("[PSZCZELARZ] select error");
             break;
-        } else if (ret == 0) {
+        } 
+        else if (ret == 0) 
+        {
+            //if timeout has passed
             printf("[PSZCZELARZ] Brak danych wejsciowych (timeout).\n");
             continue;
         }
 
-        // jesli mamy cos na wejsciu
-        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+        //check if data has been entered
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) 
+        {
             char input[10] = {0};
-            if (fgets(input, sizeof(input), stdin)) {
-                if (strcmp(input, "1\n") == 0 && zwiekszono_pojemnosc != 1) {
-                    zwiekszono_pojemnosc = 1;
-                    kill(pid_ul, SIGUSR1);
-                    printf("[PSZCZELARZ] Wyslano SIGUSR1 (zwiekszenie pojemnosci ula).\n");
-                } else if (strcmp(input, "2\n") == 0 && stan_ula->depopulacja_flaga != 1) {
-                    semop(sem_id, &lock, 1);
-                    stan_ula->depopulacja_flaga = 1;
-                    semop(sem_id, &unlock, 1);
-                    kill(pid_ul, SIGUSR2);
-                    printf("[PSZCZELARZ] Wyslano SIGUSR2 (zdepopulowanie ula).\n");
-                } else {
+            if (fgets(input, sizeof(input), stdin)) 
+            {
+                //if 1 - sigusr1, increment
+                if (strcmp(input, "1\n") == 0 && incremented_population != 1) 
+                {
+                    incremented_population = 1;
+                    if (kill(hive_pid, SIGUSR1) == -1)
+                    {
+                        perror("[PSZCZELARZ] kill(SIGUSR1) error");
+                    }
+                    else
+                    {
+                        printf("[PSZCZELARZ] Wyslano SIGUSR1 (zwiekszenie pojemnosci ula).\n");
+                    }
+                } 
+                // 2 - sigusr2, decrement
+                else if (strcmp(input, "2\n") == 0 && shared_hive_state->depopulation_flag != 1) 
+                {
+                    if (semop(sem_id, &lock, 1) == -1)
+                    {
+                        perror("[PSZCZELARZ] semop lock error");
+                        break;
+                    }
+                    shared_hive_state->depopulation_flag = 1; //set depopulation 
+                    if (semop(sem_id, &unlock, 1) == -1)
+                    {
+                        perror("[PSZCZELARZ] semop unlock error");
+                        break;
+                    }
+
+                    if (kill(hive_pid, SIGUSR2) == -1)
+                    {
+                        perror("[PSZCZELARZ] kill(SIGUSR2) error");
+                    }
+                    else
+                    {
+                        printf("[PSZCZELARZ] Wyslano SIGUSR2 (zdepopulowanie ula).\n");
+                    }
+                } 
+                else 
+                {
                     printf("[PSZCZELARZ] Nieprawidlowa komenda.\n");
                 }
             }
         }
     }
 
-    //sprzatanie
-    if (shmdt(stan_ula) == -1) {
+    if (shmdt(shared_hive_state) == -1) 
+    {
         perror("[PSZCZELARZ] shmdt");
         return 1;
     }
-
-     aktualizacja_logow("[Pszczelarz] Kończę pracę.", 41, 1);
+    
+    update_logs("[PSZCZELARZ] Kończę pracę.", 41, 1);
 
     return 0;
 }

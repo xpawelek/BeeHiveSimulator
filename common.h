@@ -4,6 +4,7 @@
 #define _DEFAULT_SOURCE
 #define _XOPEN_SOURCE 700
 #define MESSAGE_DEFS_H
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,47 +27,53 @@
 #include <sys/time.h>
 #include <stdarg.h>
 
-
-#define POCZATKOWA_ILOSC_PSZCZOL 100
+// paths and constants
+#define BEG_QUANTITY 100
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
-#define MSG_QUEUE_PROJECT_ID 'A'       
-#define MSG_TYPE_EGGS 1
+#define MSG_QUEUE_PROJECT_ID 'A'
+#define MSG_TYPE_EGGS 1  
 
-
+// structure of message in message queue
 typedef struct msgbuf {
-    long mtype;  // musi byc typu long (SysV wymaganie)
-    int eggs;    // tu przechowujemy liczbe jaj
+    long mtype;  
+    int eggs_num;    
 } msgbuf;
 
+// struct for bee - visits counter, life length, information if bee is in hive
 typedef struct {
-    int licznik_odwiedzen;
-    int liczba_cykli;
-    int pszczola_jest_w_ulu;
-} Pszczola;
+    int visits_counter;
+    int life_cycles;
+    int in_hive;
+} Bee;
 
+// struct for shared memory, how many bees is currently in hive and in general, max quantity of bees, quantity of bees at beggining, depopulation flag
 typedef struct {
-    int obecna_liczba_pszczol;
-    int maksymalna_ilosc_osobnikow;
-    int obecna_liczba_pszczol_ul;
-    int stan_poczatkowy;
-    int depopulacja_flaga;
-    int logi_wskaznik;
-} Stan_Ula;
+    int current_bees;      
+    int max_bees; 
+    int current_bees_hive;         
+    int capacity_control;
+    int start_simulation;    
+    int depopulation_flag;        
+} Hive;
 
+// structure for arguments which will be sent to workers bees
 typedef struct {
-    Pszczola* pszczola;
+    Bee* bee;
     int sem_id;
-    Stan_Ula* stan_ula_do_przekazania;
-} Argumenty_Watku;
+    Hive* shared_hive_state;
+} Thread_Args;
 
-struct sembuf lock   = {0, -1, 0};
-struct sembuf unlock = {0,  1, 0};
+// sem operations - lock, unlock
+struct sembuf lock;
+struct sembuf unlock;
 
 
-void obsluga_sygnalu(int sig);
-void obsluga_sigint(int sig);
+//prototypes for signals
+void signal_handle(int sig);
+void handle_sigint(int sig);
 
-char* stworz_wiadomosc(const char* mess, ...)
+//functions for creating messages
+char* create_mess(const char* mess, ...)
 {
     va_list args;
     va_start(args, mess);
@@ -87,30 +94,33 @@ char* stworz_wiadomosc(const char* mess, ...)
     return buf;
 }
 
-void aktualizacja_logow(char* wiadomosc, int color, int style){
+//function for logs
+void update_logs(char* mess, int color, int style)
+{
     char color_str[20]; 
     char style_str[20];   
     sprintf(color_str, "%d", color);
     sprintf(style_str, "%d", style);
 
-    printf("\033[%s;%sm%s\033[0m\n", style_str, color_str, wiadomosc);
+    printf("\033[%s;%sm%s\033[0m\n", style_str, color_str, mess);
     FILE* plik_logi = fopen("plik_logi.txt","a");
     if (plik_logi == NULL){
-        perror("Blad otwarcia pliku.");
+        perror("File opening error.");
         exit(EXIT_FAILURE);
     }
     struct timeval tv;
     gettimeofday(&tv, NULL);
     time_t now = tv.tv_sec;
-    struct tm* obecny_czas = localtime(&now);
-    char czas_str[30];
-    strftime(czas_str, sizeof(czas_str), "%Y-%m-%d %H:%M:%S", obecny_czas);
-    snprintf(czas_str + strlen(czas_str), sizeof(czas_str) - strlen(czas_str), ".%03ld", tv.tv_usec / 1000);
-    fprintf(plik_logi, "[%s] %s\n", czas_str, wiadomosc);
+    struct tm* cur_time = localtime(&now);
+    char time_str[30];
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", cur_time);
+    snprintf(time_str + strlen(time_str), sizeof(time_str) - strlen(time_str), ".%03ld", tv.tv_usec / 1000);
+    fprintf(plik_logi, "[%s] %s\n", time_str, mess);
     fflush(plik_logi);
     fclose(plik_logi);
 }
 
-    struct sigaction sa;
+//struct for defining signals
+struct sigaction sa;
 
-#endif 
+#endif

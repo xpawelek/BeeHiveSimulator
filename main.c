@@ -1,96 +1,211 @@
 #include "common.h"
 
-void obsluga_sigint(int sig)
+//sigint - finish children exec
+void handle_sigint(int sig)
 {
-    while(wait(NULL) > 0);
+    while (wait(NULL) > 0);
 }
 
-int main(int argc, char* argv[])
-{   
-    printf("Enter 1 for doubling population of bees - you can do it just once!\nEnter 2 for population reduction!\nEnter CTRL+C for closing simulation properly!\n");
-    sleep(1);
-    srand(time(NULL));
+//sigint init
+void setup_signal_handling(void)
+{
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("[MAIN] sigaction");
+        exit(EXIT_FAILURE);
+    }
+}
 
-    if (mkfifo(FIFO_PATH, 0600) == -1  && errno != EEXIST) {
+//fifo creationg
+void create_fifo(void)
+{
+    if (mkfifo(FIFO_PATH, 0600) == -1 && errno != EEXIST) 
+    {
         perror("mkfifo fifo_path");
         exit(EXIT_FAILURE);
     }
-    // potok (krolowa -> ul)
-    int pipe_skladanie_jaj[2];
-    if (pipe(pipe_skladanie_jaj) == -1) {
+}
+
+//fifo deletion
+void remove_fifo(void)
+{
+    if (unlink(FIFO_PATH) == -1 && errno != ENOENT)
+    {
+        perror("[MAIN] unlink FIFO_PATH");
+    }
+}
+
+//creation shared memory segment
+int create_shared_memory(key_t key, size_t size)
+{
+    int shm_id = shmget(key, size, 0666 | IPC_CREAT);
+    if (shm_id == -1) 
+    {
+        perror("[MAIN] shmget");
+        exit(EXIT_FAILURE);
+    }
+    return shm_id;
+}
+
+//unlink and delete shared memory
+void remove_shared_memory(Hive* ptr, int shm_id)
+{
+    if (ptr != (void*) -1 && shmdt(ptr) == -1)
+    {
+        perror("[MAIN] shmdt");
+    }
+    if (shmctl(shm_id, IPC_RMID, NULL) == -1)
+    {
+        perror("[MAIN] shmctl IPC_RMID");
+    }
+}
+
+//semaphore creation
+int create_semaphore(key_t key)
+{
+    int sem_id = semget(key, 1, IPC_CREAT | 0666);
+    if (sem_id == -1) 
+    {
+        perror("[MAIN] semget");
+        exit(EXIT_FAILURE);
+    }
+    return sem_id;
+}
+
+//sets semaphore value to 1
+void set_semaphore_value(int sem_id)
+{
+    if (semctl(sem_id, 0, SETVAL, 1) == -1) 
+    {
+        perror("[MAIN] semctl SETVAL");
+        exit(EXIT_FAILURE);
+    }
+}
+
+//deletes semaphore
+void remove_semaphore(int sem_id)
+{
+    if (semctl(sem_id, 0, IPC_RMID) == -1) 
+    {
+        perror("[MAIN] semctl IPC_RMID");
+    }
+}
+
+//create message queue
+int create_message_queue(key_t key)
+{
+    int msqid = msgget(key, IPC_CREAT | 0666);
+    if (msqid == -1) 
+    {
+        perror("[main] msgget error");
+        exit(EXIT_FAILURE);
+    }
+    return msqid;
+}
+
+//removes message queue
+void remove_message_queue(int msqid)
+{
+    if (msgctl(msqid, IPC_RMID, NULL) == -1)
+    {
+        perror("[MAIN] msgctl IPC_RMID");
+    }
+}
+
+//clean resources
+void cleanup(Hive* shared_hive_state, int shm_id, int sem_id, int msqid)
+{
+    remove_shared_memory(shared_hive_state, shm_id);
+    remove_semaphore(sem_id);
+    remove_message_queue(msqid);
+    remove_fifo();
+    update_logs("[MAIN] Koniec programu.", 41, 1);
+}
+
+int main(int argc, char* argv[])
+{  
+    printf("Enter 1 for doubling population of bees - you can do it just once!\n");
+    printf("Enter 2 for population reduction!\n");
+    printf("Enter CTRL+C for closing simulation properly!\n");
+    sleep(1);  
+    srand(time(NULL));
+
+    setup_signal_handling();
+    create_fifo();
+
+    int pipe_lay_eggs[2];
+    if (pipe(pipe_lay_eggs) == -1) 
+    {
         perror("[MAIN] pipe");
         exit(EXIT_FAILURE);
     }
 
-    // tworzymy pam. dzielona
     key_t klucz = ftok("unikalny_klucz.txt", 65);
-    if (klucz == -1) {
+    if (klucz == -1) 
+    {
         perror("[MAIN] ftok");
         exit(EXIT_FAILURE);
     }
 
-    int shm_id = shmget(klucz, 1024, 0666 | IPC_CREAT);
-    if (shm_id == -1) {
-        perror("[MAIN] shmget");
-        exit(EXIT_FAILURE);
-    }
+    int shm_id = create_shared_memory(klucz, 1024);
 
-    Stan_Ula* stan_ula_do_przekazania = (Stan_Ula*) shmat(shm_id, NULL, 0);
-    if (stan_ula_do_przekazania == (void*) -1) {
+    Hive* shared_hive_state = (Hive*) shmat(shm_id, NULL, 0);
+    if (shared_hive_state == (void*) -1) 
+    {
         perror("[MAIN] shmat");
+        if (shmctl(shm_id, IPC_RMID, NULL) == -1)
+        {
+            perror("[MAIN] shmctl IPC_RMID");
+        }
         exit(EXIT_FAILURE);
     }
 
-    memset(stan_ula_do_przekazania, 0, 1024);
+    memset(shared_hive_state, 0, 1024);
 
-    struct sigaction sa;
-    sa.sa_handler = obsluga_sigint;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa, NULL);
+    int sem_id = create_semaphore(klucz);
 
-    // zestaw semforow V, ustawiamy a 1
-    int sem_id = semget(klucz, 1, IPC_CREAT | 0666);
-    if (sem_id == -1) {
-        perror("[MAIN] semget");
-        exit(EXIT_FAILURE);
-    }
-
-    key_t klucz_kolejka = ftok("kolejka_komunikatow_jaja.txt", MSG_QUEUE_PROJECT_ID);
-    if (klucz_kolejka == -1) {
+    key_t queue_key = ftok("kolejka_komunikatow_jaja.txt", MSG_QUEUE_PROJECT_ID);
+    if (queue_key == -1) 
+    {
         perror("[MAIN] ftok error");
+        cleanup(shared_hive_state, shm_id, sem_id, -1);
         exit(EXIT_FAILURE);
     }
 
-    int msqid = msgget(klucz_kolejka, IPC_CREAT | 0666);
-    if (msqid == -1) {
-        perror("[main] msgget error");
-        exit(EXIT_FAILURE);
-    }
+    int msqid = create_message_queue(queue_key);
 
-
+    //init hive state
     semop(sem_id, &lock, 1);
-    stan_ula_do_przekazania->obecna_liczba_pszczol = 0;
-    stan_ula_do_przekazania->obecna_liczba_pszczol_ul = 0;
-    stan_ula_do_przekazania->maksymalna_ilosc_osobnikow = POCZATKOWA_ILOSC_PSZCZOL;
-    stan_ula_do_przekazania->stan_poczatkowy = POCZATKOWA_ILOSC_PSZCZOL;
-    stan_ula_do_przekazania->depopulacja_flaga = 0;
+    shared_hive_state->current_bees = 0;
+    shared_hive_state->current_bees_hive = 0;
+    shared_hive_state->max_bees = BEG_QUANTITY;
+    shared_hive_state->depopulation_flag = 0;
+    shared_hive_state->capacity_control = 0;
+    shared_hive_state->start_simulation = 0;
     semop(sem_id, &unlock, 1);
 
-    if (semctl(sem_id, 0, SETVAL, 1) == -1) {
+    if (semctl(sem_id, 0, SETVAL, 1) == -1) 
+    {
         perror("[MAIN] semctl SETVAL");
+        cleanup(shared_hive_state, shm_id, sem_id, msqid);
         exit(EXIT_FAILURE);
     }
 
-    // uruchamiamy pszelarza
-    aktualizacja_logow("[MAIN] Uruchamiam proces pszczelarz...", 45, 1);
-    pid_t pid_pszczelarz = fork();
-    if (pid_pszczelarz == -1) {
+    // start beekepper
+    update_logs("[MAIN] Uruchamiam proces pszczelarz...", 45, 1);
+    pid_t beekepper = fork();
+    if (beekepper == -1) 
+    {
         perror("[MAIN] fork pszczelarz");
+        cleanup(shared_hive_state, shm_id, sem_id, msqid);
         exit(EXIT_FAILURE);
     }
 
-    if (pid_pszczelarz == 0) 
+    if (beekepper == 0) 
     {
         char sem_buf[16];
         char shm_buf[16];
@@ -101,76 +216,65 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    // uruchamiamy proces ul
-    //usleep(500000);
-    aktualizacja_logow("[MAIN] Uruchamiam proces ul...", 46, 1);
-    pid_t pid_ul = fork();
-    if (pid_ul == -1) 
+    // start hive
+    //usleep(50000);
+    update_logs("[MAIN] Uruchamiam proces ul...", 46, 1);
+    pid_t hive = fork();
+    if (hive == -1) 
     {
         perror("[MAIN] fork ul");
+        cleanup(shared_hive_state, shm_id, sem_id, msqid);
         exit(EXIT_FAILURE);
     }
 
-    if (pid_ul == 0) 
+    if (hive == 0) 
     {
-        close(pipe_skladanie_jaj[1]);
+        close(pipe_lay_eggs[1]);
         char fd_buf[16], shm_buf[16], sem_buf[16], msqid_buf[16];
-        snprintf(fd_buf,  sizeof(fd_buf),  "%d", pipe_skladanie_jaj[0]); // fd do odczytu
+        snprintf(fd_buf,  sizeof(fd_buf),  "%d", pipe_lay_eggs[0]); // fd do odczytu
         snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
         snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
-        snprintf(msqid_buf, sizeof(msqid), "%d", msqid);
+        snprintf(msqid_buf, sizeof(msqid_buf), "%d", msqid);
 
         execl("./ul", "./ul", fd_buf, shm_buf, sem_buf, msqid_buf, (char*)NULL);
         perror("[MAIN] execl ul");
         exit(EXIT_FAILURE);
     }
 
-    //usleep(500000);
-    // uruchamiamy proces krolowa
-    aktualizacja_logow("[MAIN] Uruchamiam proces krolowa...", 43, 1);
-    pid_t pid_krolowa = fork();
-    if (pid_krolowa == -1)
+    //usleep(50000);
+    // start queen
+    update_logs("[MAIN] Uruchamiam proces krolowa...", 43, 1);
+    pid_t queen = fork();
+    if (queen == -1)
     {
         perror("[MAIN] fork krolowa");
+        cleanup(shared_hive_state, shm_id, sem_id, msqid);
         exit(EXIT_FAILURE);
     }
 
-    if (pid_krolowa == 0) 
+    if (queen == 0) 
     {
-        close(pipe_skladanie_jaj[0]);
+        close(pipe_lay_eggs[0]);
         char sem_buf[16], fd_buf2[16], shm_buf[16], msqid_buf[16];
-        snprintf(sem_buf, sizeof(sem_buf), "%d", sem_id);
-        snprintf(fd_buf2,  sizeof(fd_buf2),  "%d", pipe_skladanie_jaj[1]); 
-        snprintf(shm_buf, sizeof(shm_buf), "%d", shm_id);
-        snprintf(msqid_buf, sizeof(msqid), "%d", msqid);
+        snprintf(sem_buf,   sizeof(sem_buf),   "%d", sem_id);
+        snprintf(fd_buf2,   sizeof(fd_buf2),   "%d", pipe_lay_eggs[1]); 
+        snprintf(shm_buf,   sizeof(shm_buf),   "%d", shm_id);
+        snprintf(msqid_buf, sizeof(msqid_buf), "%d", msqid);
 
         execl("./krolowa", "./krolowa", sem_buf, fd_buf2, shm_buf, msqid_buf, (char*)NULL);
         perror("[MAIN] execl krolowa");
         exit(EXIT_FAILURE);
     }
 
-    close(pipe_skladanie_jaj[0]);
-    close(pipe_skladanie_jaj[1]);
+    // close unused fd
+    close(pipe_lay_eggs[0]);
+    close(pipe_lay_eggs[1]);
 
-    while(wait(NULL) > 0);
+    //wait till all finishes
+    while (wait(NULL) > 0);
 
-    // sprzatamy pamiec dzielona
-    if (shmdt(stan_ula_do_przekazania) == -1) {
-        perror("[MAIN] shmdt");
-    }
-    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
-        perror("[MAIN] shmctl IPC_RMID");
-    }
+    //cleanup
+    cleanup(shared_hive_state, shm_id, sem_id, msqid);
 
-    // Usuwamy semafor
-    if (semctl(sem_id, 0, IPC_RMID) == -1) {
-        perror("[MAIN] semctl IPC_RMID");
-    }
-
-    //sprzatamy kolejke
-    msgctl(msqid, IPC_RMID, NULL);
-    unlink(FIFO_PATH);
-
-    aktualizacja_logow("[MAIN] Koniec programu.", 41, 1);
     return 0;
 }
