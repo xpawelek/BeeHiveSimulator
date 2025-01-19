@@ -33,8 +33,13 @@ void setup_signal_handling(void)
 
 int sem_lock_safe(int sem_id)
 {
-    if (semop(sem_id, &lock, 1) == -1)
+    while (semop(sem_id, &lock, 1) == -1)
     {
+        if (errno == EINTR) 
+        {
+            fprintf(stderr, "[KRÓLOWA] semop przerwane, ponawiam próbę...\n");
+            continue;
+        }
         perror("[KRÓLOWA] semop lock error");
         return -1;
     }
@@ -43,9 +48,14 @@ int sem_lock_safe(int sem_id)
 
 int sem_unlock_safe(int sem_id)
 {
-    if (semop(sem_id, &unlock, 1) == -1)
+    while (semop(sem_id, &unlock, 1) == -1)
     {
-        perror("[KRÓLOWA] semop unlock error");
+        if (errno == EINTR) 
+        {
+            fprintf(stderr, "[KRÓLOWA] semop przerwane, ponawiam próbę...\n");
+            continue;
+        }
+        perror("[KRÓLOWA] semop lock error");
         return -1;
     }
     return 0;

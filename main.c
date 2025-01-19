@@ -43,7 +43,7 @@ void remove_fifo(void)
 //creation shared memory segment
 int create_shared_memory(key_t key, size_t size)
 {
-    int shm_id = shmget(key, size, 0666 | IPC_CREAT);
+    int shm_id = shmget(key, size, 0600 | IPC_CREAT);
     if (shm_id == -1) 
     {
         perror("[MAIN] shmget");
@@ -68,7 +68,7 @@ void remove_shared_memory(Hive* ptr, int shm_id)
 //semaphore creation
 int create_semaphore(key_t key)
 {
-    int sem_id = semget(key, 1, IPC_CREAT | 0666);
+    int sem_id = semget(key, 1, IPC_CREAT | 0600);
     if (sem_id == -1) 
     {
         perror("[MAIN] semget");
@@ -99,7 +99,7 @@ void remove_semaphore(int sem_id)
 //create message queue
 int create_message_queue(key_t key)
 {
-    int msqid = msgget(key, IPC_CREAT | 0666);
+    int msqid = msgget(key, IPC_CREAT | 0600);
     if (msqid == -1) 
     {
         perror("[main] msgget error");
