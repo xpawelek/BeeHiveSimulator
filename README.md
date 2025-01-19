@@ -34,9 +34,11 @@ This project is a simulation of a bee colony, utilizing multithreading and proce
 
 1. Clone the code to a local repository.
 2. Compile and run using the `Makefile`:
+   
    ![image](https://github.com/user-attachments/assets/b5d110df-edbd-4141-a031-0bd93a3b7619)
 
-3. To clean up compiled files, use:
+4. To clean up compiled files, use:
+   
    ![image](https://github.com/user-attachments/assets/d98702e9-790a-485f-a07d-4ecabee70d82)
 
 
