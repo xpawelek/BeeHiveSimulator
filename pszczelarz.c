@@ -16,6 +16,7 @@ int simulation_termination = 0;
 //handle signal to termination
 void handle_sigint(int sig)
 {
+    (void)sig;
     simulation_termination = 1;
 }
 

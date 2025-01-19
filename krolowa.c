@@ -13,6 +13,7 @@ int simulation_termination = 0;
 //sets termination flag
 void handle_sigint(int sig)
 {
+    (void)sig;
     simulation_termination = 1;
 }
 

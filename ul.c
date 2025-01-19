@@ -60,7 +60,7 @@ void send_pid_to_beekepper(const char *fifo_path) {
 }
 
 //responsible to depopulation process
-void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf lock, struct sembuf unlock)
+void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf lock, struct sembuf unlock,Thread_Args* thread_args)
 {
     pthread_mutex_lock(&depopulation_mutex);
 
@@ -104,6 +104,8 @@ void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf loc
 
         pthread_mutex_unlock(&depopulation_mutex);
 
+        free(thread_args->bee);
+        free(thread_args);
         pthread_exit(NULL);
     } 
     else 
@@ -326,7 +328,7 @@ void* bee_worker_func(void* arg)
     while (1) 
     {
         // 1. check if depopulation
-        depopulation_handler(shared_hive_state, sem_id, lock, unlock);
+        depopulation_handler(shared_hive_state, sem_id, lock, unlock, thread_args);
 
         // 2. enters hive if beforehand was outside
         if (bee->in_hive == 0)
@@ -341,6 +343,8 @@ void* bee_worker_func(void* arg)
         }
     }
 
+    free(bee);
+    free(thread_args);
     pthread_exit(NULL);
 }
 
@@ -553,9 +557,9 @@ int main(int argc, char* argv[])
             if (semop(sem_id, &unlock, 1) == -1) {
                 perror("[UL] semop unlock (start_simulation)");
             }
-            free(bee_workers);
         }
     }
+    free(bee_workers);
 
     while (!simulation_termination) {
 
@@ -627,7 +631,7 @@ int main(int argc, char* argv[])
     }
 
     //closing all threads
-    usleep(100);
+    //usleep(100);
 
     while(1)
     {
@@ -636,6 +640,7 @@ int main(int argc, char* argv[])
             printf("Zakonczono, obecna l.pszczol: %d\n", shared_hive_state->current_bees);
             break;            
         }
+        usleep(10000);
     }
 
     //cleaning

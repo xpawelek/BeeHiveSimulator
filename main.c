@@ -3,6 +3,7 @@
 //sigint - finish children exec
 void handle_sigint(int sig)
 {
+    (void)sig;
     while (wait(NULL) > 0);
 }
 
@@ -128,6 +129,8 @@ void cleanup(Hive* shared_hive_state, int shm_id, int sem_id, int msqid)
 
 int main(int argc, char* argv[])
 {  
+    (void)argc;
+    (void)argv;
     printf("Enter 1 for doubling population of bees - you can do it just once!\n");
     printf("Enter 2 for population reduction!\n");
     printf("Enter CTRL+C for closing simulation properly!\n");
