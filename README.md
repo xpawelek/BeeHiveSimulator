@@ -21,7 +21,10 @@ This project is a simulation of a bee colony, utilizing multithreading and proce
 3. FIFO Mechanism:
    - Used to transfer the hive's PID to the beekeeper process.
 
-4. Logging:
+4. Message queue:
+   - Used to communicate the number of eggs laid by the queen to the hive process.
+
+6. Logging:
    - Colored logs make it easier to monitor the process:
      - Process start: Various background colors.
      - Process termination: Red background.
