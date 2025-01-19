@@ -51,7 +51,7 @@ This project is a simulation of a bee colony, utilizing multithreading and proce
 - Depopulation: Gradually decreases the number of bees when the hive exceeds its capacity or upon receiving a signal.
 - Signal Handling:
   - SIGUSR1: Increases the maximum number of bees (triggered by entering 1).
-  - SIGUSR2: Triggers hive depopulation (triggered by entering 2 in the beekeeper process).
+  - SIGUSR2: Triggers hive depopulation (triggered by entering 2).
   - SIGINT: Terminates all processes.
 
 This project demonstrates the practical use of synchronization mechanisms in operating systems and the handling of multiple processes and threads.
