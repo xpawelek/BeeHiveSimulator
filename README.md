@@ -53,6 +53,7 @@ This project is a simulation of a bee colony, utilizing multithreading and proce
   - SIGUSR1: Increases the maximum number of bees (triggered by entering 1).
   - SIGUSR2: Triggers hive depopulation (triggered by entering 2).
   - SIGINT: Terminates all processes.
+- Logs tracking: Keeping logs from simulation in logs file.
 
 This project demonstrates the practical use of synchronization mechanisms in operating systems and the handling of multiple processes and threads.
 
