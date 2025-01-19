@@ -5,7 +5,7 @@
 #define INSIDE_WORKING_TIME 5
 
 static sem_t hole_1, hole_2;
-static pthread_mutex_t bees_in_hive_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t hive_state_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t available_space_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t depopulation_mutex = PTHREAD_MUTEX_INITIALIZER;
 int to_reduce_num = 0;
@@ -60,64 +60,44 @@ void send_pid_to_beekepper(const char *fifo_path) {
 }
 
 //responsible to depopulation process
-void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf lock, struct sembuf unlock,Thread_Args* thread_args)
-{
-    pthread_mutex_lock(&depopulation_mutex);
-
-    if (shared_hive_state->depopulation_flag == 1) 
-    {
+void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf lock, struct sembuf unlock, Thread_Args* thread_args) {
+    pthread_mutex_lock(&hive_state_mutex);
+    semop(sem_id, &lock, 1);
+    if (shared_hive_state->depopulation_flag == 1) {
+        semop(sem_id, &unlock, 1);
         reduced_counter++;
         update_logs(create_mess("Zredukowano pszczole %d z kolei o numerze: %lu", reduced_counter, (unsigned long)pthread_self()), 
             37, 
             1
         );
 
-        if (semop(sem_id, &lock, 1) == -1) {
-            perror("[DEPOPULATION] semop lock");
-            pthread_mutex_unlock(&depopulation_mutex);
-            pthread_exit(NULL);
-        }
-        shared_hive_state->current_bees = shared_hive_state->current_bees - 1;
-        if (semop(sem_id, &unlock, 1) == -1) {
-            perror("[DEPOPULATION] semop unlock");
-            pthread_mutex_unlock(&depopulation_mutex);
-            pthread_exit(NULL);
-        }
+        semop(sem_id, &lock, 1);
+        shared_hive_state->current_bees--;
+        semop(sem_id, &unlock, 1);
+       // printf("[DEPOPULATION_HANDLER] After reduction: current_bees=%d, reduced_counter=%d\n", 
+               //shared_hive_state->current_bees, reduced_counter);
 
-        if (reduced_counter >= to_reduce_num) 
-        {
-            printf("KONIEC DEPOPULACJI!\n");
-
-            if (semop(sem_id, &lock, 1) == -1) {
-                perror("[DEPOPULATION] semop lock (reset depopulation)");
-                pthread_mutex_unlock(&depopulation_mutex);
-                pthread_exit(NULL);
-            }
-            shared_hive_state->depopulation_flag = 0; // turning off depopulation
-            if (semop(sem_id, &unlock, 1) == -1) {
-                perror("[DEPOPULATION] semop unlock (reset depopulation)");
-                pthread_mutex_unlock(&depopulation_mutex);
-                pthread_exit(NULL);
-            }
+        //check if depopulation finishes
+        if (reduced_counter >= to_reduce_num) {
+            printf("[DEPOPULATION_HANDLER] KONIEC DEPOPULACJI!\n");
+            shared_hive_state->depopulation_flag = 0; 
             reduced_counter = 0;
         }
 
-        pthread_mutex_unlock(&depopulation_mutex);
-
+        pthread_mutex_unlock(&hive_state_mutex); 
         free(thread_args->bee);
         free(thread_args);
-        pthread_exit(NULL);
-    } 
-    else 
-    {
-        pthread_mutex_unlock(&depopulation_mutex);
+        pthread_exit(NULL); 
+    } else {
+        semop(sem_id, &unlock, 1);
+        pthread_mutex_unlock(&hive_state_mutex); 
     }
 }
 
 //responsible for enterning hive
 void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct sembuf lock, struct sembuf unlock)
 {
-    int ret = pthread_mutex_lock(&bees_in_hive_mutex);
+    int ret = pthread_mutex_lock(&hive_state_mutex);
     if (ret != 0) {
         perror("[ENTRANCE] pthread_mutex_lock");
         pthread_exit(NULL);
@@ -126,10 +106,10 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
     while (shared_hive_state->current_bees_hive >= (BEG_QUANTITY / 2)) 
     {
         //wait till enough space
-        ret = pthread_cond_wait(&available_space_cond, &bees_in_hive_mutex);
+        ret = pthread_cond_wait(&available_space_cond, &hive_state_mutex);
         if (ret != 0) {
             perror("[ENTRANCE] pthread_cond_wait");
-            pthread_mutex_unlock(&bees_in_hive_mutex);
+            pthread_mutex_unlock(&hive_state_mutex);
             pthread_exit(NULL);
         }
     }
@@ -137,17 +117,17 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
     //take up space for bee
     if (semop(sem_id, &lock, 1) == -1) {
         perror("[ENTRANCE] semop lock (current_bees_hive++)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
     shared_hive_state->current_bees_hive = shared_hive_state->current_bees_hive + 1;
     if (semop(sem_id, &unlock, 1) == -1) {
         perror("[ENTRANCE] semop unlock (current_bees_hive++)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
 
-    pthread_mutex_unlock(&bees_in_hive_mutex);
+    pthread_mutex_unlock(&hive_state_mutex);
 
     char* info;
     int entrance = rand() % 2;
@@ -176,7 +156,7 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
         }
     }
 
-    ret = pthread_mutex_lock(&bees_in_hive_mutex);
+    ret = pthread_mutex_lock(&hive_state_mutex);
     if (ret != 0) {
         perror("[ENTRANCE] pthread_mutex_lock 2");
         pthread_exit(NULL);
@@ -185,13 +165,13 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
     //increase if bee entered
     if (semop(sem_id, &lock, 1) == -1) {
         perror("[ENTRANCE] semop lock (capacity_control++)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
     shared_hive_state->capacity_control += 1;
     if (semop(sem_id, &unlock, 1) == -1) {
         perror("[ENTRANCE] semop unlock (capacity_control++)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
 
@@ -200,7 +180,7 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
         32, 
         5
     );
-    pthread_mutex_unlock(&bees_in_hive_mutex);
+    pthread_mutex_unlock(&hive_state_mutex);
 
     bee->in_hive = 1;
 
@@ -241,7 +221,7 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
 
     bee->in_hive = 0;
 
-    int ret = pthread_mutex_lock(&bees_in_hive_mutex);
+    int ret = pthread_mutex_lock(&hive_state_mutex);
     if (ret != 0) {
         perror("[EXIT] pthread_mutex_lock");
         pthread_exit(NULL);
@@ -250,14 +230,14 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
     //reducing after hive exit
     if (semop(sem_id, &lock, 1) == -1) {
         perror("[EXIT] semop lock (current_bees_hive--)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
     shared_hive_state->current_bees_hive = shared_hive_state->current_bees_hive - 1;
     shared_hive_state->capacity_control -= 1;
     if (semop(sem_id, &unlock, 1) == -1) {
         perror("[EXIT] semop unlock (current_bees_hive--)");
-        pthread_mutex_unlock(&bees_in_hive_mutex);
+        pthread_mutex_unlock(&hive_state_mutex);
         pthread_exit(NULL);
     }
 
@@ -269,7 +249,7 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
 
     //send signal if bee left hive
     pthread_cond_signal(&available_space_cond);
-    pthread_mutex_unlock(&bees_in_hive_mutex);
+    pthread_mutex_unlock(&hive_state_mutex);
 
     bee->visits_counter++;
 
@@ -485,7 +465,7 @@ int main(int argc, char* argv[])
         }
         sem_destroy(&hole_1);
         sem_destroy(&hole_2);
-        pthread_mutex_destroy(&bees_in_hive_mutex);
+        pthread_mutex_destroy(&hive_state_mutex);
         pthread_cond_destroy(&available_space_cond);
         pthread_mutex_destroy(&depopulation_mutex);
         exit(EXIT_FAILURE);
@@ -657,8 +637,8 @@ int main(int argc, char* argv[])
         perror("[UL] sem_destroy(hole_2)");
     }
 
-    if (pthread_mutex_destroy(&bees_in_hive_mutex) != 0) {
-        perror("[UL] pthread_mutex_destroy(bees_in_hive_mutex)");
+    if (pthread_mutex_destroy(&hive_state_mutex) != 0) {
+        perror("[UL] pthread_mutex_destroy(hive_state_mutex)");
     }
 
     if (pthread_cond_destroy(&available_space_cond) != 0) {

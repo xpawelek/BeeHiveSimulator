@@ -1,0 +1,1026 @@
+[2025-01-19 15:58:12.596] [MAIN] Uruchamiam proces pszczelarz...
+[2025-01-19 15:58:12.597] [MAIN] Uruchamiam proces ul...
+[2025-01-19 15:58:12.597] [MAIN] Uruchamiam proces krolowa...
+[2025-01-19 15:58:12.598] Stan: 1/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286655956672
+[2025-01-19 15:58:12.598] Stworzono 1
+
+[2025-01-19 15:58:12.598] Stworzono 2
+
+[2025-01-19 15:58:12.599] Stan: 2/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:12.599] Stworzono 3
+
+[2025-01-19 15:58:12.599] Stan: 3/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:12.599] Stworzono 4
+
+[2025-01-19 15:58:12.599] Stan: 4/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286630778560
+[2025-01-19 15:58:12.599] Stworzono 5
+
+[2025-01-19 15:58:12.599] Stan: 5/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286622385856
+[2025-01-19 15:58:12.599] Stworzono 6
+
+[2025-01-19 15:58:12.599] Stan: 6/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286613993152
+[2025-01-19 15:58:12.599] Stworzono 7
+
+[2025-01-19 15:58:12.599] Stan: 7/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:12.599] Stworzono 8
+
+[2025-01-19 15:58:12.599] Stan: 8/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286597207744
+[2025-01-19 15:58:12.604] Stworzono 9
+
+[2025-01-19 15:58:12.604] Stan: 9/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286114133696
+[2025-01-19 15:58:12.604] Stworzono 10
+
+[2025-01-19 15:58:12.604] Stan: 10/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286105740992
+[2025-01-19 15:58:12.604] Stworzono 11
+
+[2025-01-19 15:58:12.605] Stan: 11/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286097348288
+[2025-01-19 15:58:12.605] Stworzono 12
+
+[2025-01-19 15:58:12.605] Stan: 12/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286088955584
+[2025-01-19 15:58:12.605] Stworzono 13
+
+[2025-01-19 15:58:12.605] Stan: 13/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:12.605] Stworzono 14
+
+[2025-01-19 15:58:12.605] Stan: 14/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286072170176
+[2025-01-19 15:58:12.605] Stworzono 15
+
+[2025-01-19 15:58:12.605] Stan: 15/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286063777472
+[2025-01-19 15:58:12.606] Stworzono 16
+
+[2025-01-19 15:58:12.606] Stan: 16/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285510153920
+[2025-01-19 15:58:12.606] Stworzono 17
+
+[2025-01-19 15:58:12.606] Stan: 17/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285501761216
+[2025-01-19 15:58:12.607] Stworzono 18
+
+[2025-01-19 15:58:12.607] Stan: 18/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:12.607] Stworzono 19
+
+[2025-01-19 15:58:12.607] Stan: 19/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285484975808
+[2025-01-19 15:58:12.607] Stworzono 20
+
+[2025-01-19 15:58:12.607] Stan: 20/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285476583104
+[2025-01-19 15:58:12.607] Stworzono 21
+
+[2025-01-19 15:58:12.607] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:12.607] Stworzono 22
+
+[2025-01-19 15:58:12.608] Stan: 22/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285459797696
+[2025-01-19 15:58:12.608] Stan: 23/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285107500736
+[2025-01-19 15:58:12.608] Stworzono 23
+
+[2025-01-19 15:58:12.608] Stworzono 24
+
+[2025-01-19 15:58:12.608] Stan: 24/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285099108032
+[2025-01-19 15:58:12.608] Stworzono 25
+
+[2025-01-19 15:58:12.609] Stan: 25/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285090715328
+[2025-01-19 15:58:12.609] Stworzono 26
+
+[2025-01-19 15:58:12.609] Stan: 26/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285082322624
+[2025-01-19 15:58:12.609] Stworzono 27
+
+[2025-01-19 15:58:12.609] Stan: 27/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:12.609] Stworzono 28
+
+[2025-01-19 15:58:12.609] Stan: 28/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285065537216
+[2025-01-19 15:58:12.609] Stworzono 29
+
+[2025-01-19 15:58:12.609] Stan: 29/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285057144512
+[2025-01-19 15:58:12.610] Stworzono 30
+
+[2025-01-19 15:58:12.610] Stan: 30/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284503520960
+[2025-01-19 15:58:12.611] Stworzono 31
+
+[2025-01-19 15:58:12.611] Stan: 31/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:12.611] Stworzono 32
+
+[2025-01-19 15:58:12.611] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284486735552
+[2025-01-19 15:58:12.611] Stworzono 33
+
+[2025-01-19 15:58:12.611] Stan: 33/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284478342848
+[2025-01-19 15:58:12.611] Stworzono 34
+
+[2025-01-19 15:58:12.611] Stan: 34/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284469950144
+[2025-01-19 15:58:12.611] Stworzono 35
+
+[2025-01-19 15:58:12.611] Stan: 35/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284461557440
+[2025-01-19 15:58:12.612] Stworzono 36
+
+[2025-01-19 15:58:12.612] Stan: 36/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284453164736
+[2025-01-19 15:58:12.612] Stworzono 37
+
+[2025-01-19 15:58:12.613] Stworzono 38
+
+[2025-01-19 15:58:12.613] Stan: 37/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284033758912
+[2025-01-19 15:58:12.613] Stworzono 39
+
+[2025-01-19 15:58:12.613] Stan: 38/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284016973504
+[2025-01-19 15:58:12.613] Stan: 39/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284025366208
+[2025-01-19 15:58:12.613] Stworzono 40
+
+[2025-01-19 15:58:12.613] Stworzono 41
+
+[2025-01-19 15:58:12.613] Stan: 40/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284008580800
+[2025-01-19 15:58:12.613] Stan: 41/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284000188096
+[2025-01-19 15:58:12.613] Stworzono 42
+
+[2025-01-19 15:58:12.613] Stan: 42/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283991795392
+[2025-01-19 15:58:12.614] Stworzono 43
+
+[2025-01-19 15:58:12.614] Stan: 43/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283983402688
+[2025-01-19 15:58:12.614] Stworzono 44
+
+[2025-01-19 15:58:12.615] Stan: 44/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283429779136
+[2025-01-19 15:58:12.615] Stworzono 45
+
+[2025-01-19 15:58:12.615] Stan: 45/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283421386432
+[2025-01-19 15:58:12.615] Stworzono 46
+
+[2025-01-19 15:58:12.615] Stan: 46/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:12.615] Stworzono 47
+
+[2025-01-19 15:58:12.615] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283404601024
+[2025-01-19 15:58:12.615] Stworzono 48
+
+[2025-01-19 15:58:12.615] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283396208320
+[2025-01-19 15:58:12.616] Stworzono 49
+
+[2025-01-19 15:58:12.616] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283387815616
+[2025-01-19 15:58:12.616] Stworzono 50
+
+[2025-01-19 15:58:12.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283379422912
+[2025-01-19 15:58:12.617] Stworzono 51
+
+[2025-01-19 15:58:12.617] Stworzono 52
+
+[2025-01-19 15:58:12.617] Stworzono 53
+
+[2025-01-19 15:58:12.617] Stworzono 54
+
+[2025-01-19 15:58:12.617] Stworzono 55
+
+[2025-01-19 15:58:12.617] Stworzono 56
+
+[2025-01-19 15:58:12.617] Stworzono 57
+
+[2025-01-19 15:58:12.618] Stworzono 58
+
+[2025-01-19 15:58:12.618] Stworzono 59
+
+[2025-01-19 15:58:12.618] Stworzono 60
+
+[2025-01-19 15:58:12.618] Stworzono 61
+
+[2025-01-19 15:58:12.619] Stworzono 62
+
+[2025-01-19 15:58:12.619] Stworzono 63
+
+[2025-01-19 15:58:12.619] Stworzono 64
+
+[2025-01-19 15:58:12.619] Stworzono 65
+
+[2025-01-19 15:58:12.619] Stworzono 66
+
+[2025-01-19 15:58:12.619] Stworzono 67
+
+[2025-01-19 15:58:12.620] Stworzono 68
+
+[2025-01-19 15:58:12.620] Stworzono 69
+
+[2025-01-19 15:58:12.620] Stworzono 70
+
+[2025-01-19 15:58:12.620] Stworzono 71
+
+[2025-01-19 15:58:12.620] Stworzono 72
+
+[2025-01-19 15:58:12.620] Stworzono 73
+
+[2025-01-19 15:58:12.621] Stworzono 74
+
+[2025-01-19 15:58:12.621] Stworzono 75
+
+[2025-01-19 15:58:12.621] Stworzono 76
+
+[2025-01-19 15:58:12.621] Stworzono 77
+
+[2025-01-19 15:58:12.621] Stworzono 78
+
+[2025-01-19 15:58:12.621] Stworzono 79
+
+[2025-01-19 15:58:12.622] Stworzono 80
+
+[2025-01-19 15:58:12.622] Stworzono 81
+
+[2025-01-19 15:58:12.622] Stworzono 82
+
+[2025-01-19 15:58:12.622] Stworzono 83
+
+[2025-01-19 15:58:12.622] Stworzono 84
+
+[2025-01-19 15:58:12.622] Stworzono 85
+
+[2025-01-19 15:58:12.622] Stworzono 86
+
+[2025-01-19 15:58:12.623] Stworzono 87
+
+[2025-01-19 15:58:12.623] Stworzono 88
+
+[2025-01-19 15:58:12.623] Stworzono 89
+
+[2025-01-19 15:58:12.623] Stworzono 90
+
+[2025-01-19 15:58:12.623] Stworzono 91
+
+[2025-01-19 15:58:12.623] Stworzono 92
+
+[2025-01-19 15:58:12.624] Stworzono 93
+
+[2025-01-19 15:58:12.624] Stworzono 94
+
+[2025-01-19 15:58:12.624] Stworzono 95
+
+[2025-01-19 15:58:12.624] Stworzono 96
+
+[2025-01-19 15:58:12.624] Stworzono 97
+
+[2025-01-19 15:58:12.624] Stworzono 98
+
+[2025-01-19 15:58:12.625] Stworzono 99
+
+[2025-01-19 15:58:12.625] Stworzono 100
+
+[2025-01-19 15:58:13.599] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:13.599] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282892908224
+[2025-01-19 15:58:13.600] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286630778560
+[2025-01-19 15:58:13.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282884515520
+[2025-01-19 15:58:13.605] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:13.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282876122816
+[2025-01-19 15:58:13.607] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:13.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282867730112
+[2025-01-19 15:58:13.607] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:13.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282859337408
+[2025-01-19 15:58:13.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:13.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282850944704
+[2025-01-19 15:58:13.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285484975808
+[2025-01-19 15:58:13.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282842552000
+[2025-01-19 15:58:13.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285099108032
+[2025-01-19 15:58:13.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282758690496
+[2025-01-19 15:58:13.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285082322624
+[2025-01-19 15:58:13.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282750297792
+[2025-01-19 15:58:13.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284008580800
+[2025-01-19 15:58:13.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282741905088
+[2025-01-19 15:58:13.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283983402688
+[2025-01-19 15:58:13.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:14.600] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286613993152
+[2025-01-19 15:58:14.600] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282892908224
+[2025-01-19 15:58:14.600] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282716726976
+[2025-01-19 15:58:14.600] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:14.601] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282708334272
+[2025-01-19 15:58:14.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282725119680
+[2025-01-19 15:58:14.605] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286105740992
+[2025-01-19 15:58:14.605] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286097348288
+[2025-01-19 15:58:14.605] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:14.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282699941568
+[2025-01-19 15:58:14.606] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285510153920
+[2025-01-19 15:58:14.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282683156160
+[2025-01-19 15:58:14.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:14.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282674763456
+[2025-01-19 15:58:14.611] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284478342848
+[2025-01-19 15:58:14.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282666370752
+[2025-01-19 15:58:14.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283421386432
+[2025-01-19 15:58:14.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:14.616] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283387815616
+[2025-01-19 15:58:14.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:14.616] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283379422912
+[2025-01-19 15:58:14.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282641192640
+[2025-01-19 15:58:15.600] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286597207744
+[2025-01-19 15:58:15.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282632799936
+[2025-01-19 15:58:15.601] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282708334272
+[2025-01-19 15:58:15.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282624407232
+[2025-01-19 15:58:15.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286072170176
+[2025-01-19 15:58:15.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282616014528
+[2025-01-19 15:58:15.607] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285501761216
+[2025-01-19 15:58:15.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282607621824
+[2025-01-19 15:58:15.607] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282867730112
+[2025-01-19 15:58:15.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282599229120
+[2025-01-19 15:58:15.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285090715328
+[2025-01-19 15:58:15.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282590836416
+[2025-01-19 15:58:15.610] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285057144512
+[2025-01-19 15:58:15.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282582443712
+[2025-01-19 15:58:15.610] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:15.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282574051008
+[2025-01-19 15:58:15.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:15.611] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:15.611] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282557265600
+[2025-01-19 15:58:15.611] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282565658304
+[2025-01-19 15:58:15.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284486735552
+[2025-01-19 15:58:15.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282548872896
+[2025-01-19 15:58:15.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284025366208
+[2025-01-19 15:58:15.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282540480192
+[2025-01-19 15:58:15.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283991795392
+[2025-01-19 15:58:15.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282532087488
+[2025-01-19 15:58:15.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283429779136
+[2025-01-19 15:58:15.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282523694784
+[2025-01-19 15:58:15.616] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:15.616] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:15.616] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282515302080
+[2025-01-19 15:58:15.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282506909376
+[2025-01-19 15:58:15.616] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283396208320
+[2025-01-19 15:58:15.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282498516672
+[2025-01-19 15:58:15.617] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:15.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282490123968
+[2025-01-19 15:58:16.599] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:16.599] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282481731264
+[2025-01-19 15:58:16.600] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282884515520
+[2025-01-19 15:58:16.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282473338560
+[2025-01-19 15:58:16.601] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282624407232
+[2025-01-19 15:58:16.602] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282464945856
+[2025-01-19 15:58:16.604] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286114133696
+[2025-01-19 15:58:16.605] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282456553152
+[2025-01-19 15:58:16.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286063777472
+[2025-01-19 15:58:16.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282448160448
+[2025-01-19 15:58:16.607] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282683156160
+[2025-01-19 15:58:16.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282439767744
+[2025-01-19 15:58:16.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285459797696
+[2025-01-19 15:58:16.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282431375040
+[2025-01-19 15:58:16.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282842552000
+[2025-01-19 15:58:16.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282422982336
+[2025-01-19 15:58:16.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:16.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282414589632
+[2025-01-19 15:58:16.610] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282582443712
+[2025-01-19 15:58:16.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282406196928
+[2025-01-19 15:58:16.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282565658304
+[2025-01-19 15:58:16.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285082322624
+[2025-01-19 15:58:16.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282666370752
+[2025-01-19 15:58:16.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286105740992
+[2025-01-19 15:58:16.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284033758912
+[2025-01-19 15:58:16.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286097348288
+[2025-01-19 15:58:16.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284000188096
+[2025-01-19 15:58:16.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286080562880
+[2025-01-19 15:58:16.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283404601024
+[2025-01-19 15:58:16.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284478342848
+[2025-01-19 15:58:16.616] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282523694784
+[2025-01-19 15:58:16.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283983402688
+[2025-01-19 15:58:16.617] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282641192640
+[2025-01-19 15:58:16.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286630778560
+[2025-01-19 15:58:16.617] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282498516672
+[2025-01-19 15:58:16.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286613993152
+[2025-01-19 15:58:16.756] [UL] Otrzymano SIGUSR1 -> zwiekszamy populacje!
+[2025-01-19 15:58:17.599] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286655956672
+[2025-01-19 15:58:17.599] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:17.600] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286622385856
+[2025-01-19 15:58:17.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285468190400
+[2025-01-19 15:58:17.605] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286088955584
+[2025-01-19 15:58:17.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285476583104
+[2025-01-19 15:58:17.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282691548864
+[2025-01-19 15:58:17.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285484975808
+[2025-01-19 15:58:17.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282699941568
+[2025-01-19 15:58:17.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283991795392
+[2025-01-19 15:58:17.607] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282448160448
+[2025-01-19 15:58:17.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283421386432
+[2025-01-19 15:58:17.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285107500736
+[2025-01-19 15:58:17.608] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282850944704
+[2025-01-19 15:58:17.609] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:17.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285459797696
+[2025-01-19 15:58:17.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282422982336
+[2025-01-19 15:58:17.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282892908224
+[2025-01-19 15:58:17.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282758690496
+[2025-01-19 15:58:17.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282884515520
+[2025-01-19 15:58:17.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284469950144
+[2025-01-19 15:58:17.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286597207744
+[2025-01-19 15:58:17.612] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284461557440
+[2025-01-19 15:58:17.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282708334272
+[2025-01-19 15:58:17.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284453164736
+[2025-01-19 15:58:17.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286114133696
+[2025-01-19 15:58:17.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:17.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286072170176
+[2025-01-19 15:58:17.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282540480192
+[2025-01-19 15:58:17.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285099108032
+[2025-01-19 15:58:18.600] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282481731264
+[2025-01-19 15:58:18.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:18.600] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285468190400
+[2025-01-19 15:58:18.601] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282632799936
+[2025-01-19 15:58:18.601] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283396208320
+[2025-01-19 15:58:18.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285090715328
+[2025-01-19 15:58:18.601] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282725119680
+[2025-01-19 15:58:18.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:18.605] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282456553152
+[2025-01-19 15:58:18.605] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284503520960
+[2025-01-19 15:58:18.606] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282876122816
+[2025-01-19 15:58:18.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284486735552
+[2025-01-19 15:58:18.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282859337408
+[2025-01-19 15:58:18.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282666370752
+[2025-01-19 15:58:18.608] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282599229120
+[2025-01-19 15:58:18.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283429779136
+[2025-01-19 15:58:18.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285459797696
+[2025-01-19 15:58:18.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283404601024
+[2025-01-19 15:58:18.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282750297792
+[2025-01-19 15:58:18.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283387815616
+[2025-01-19 15:58:18.612] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282708334272
+[2025-01-19 15:58:18.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:18.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286114133696
+[2025-01-19 15:58:18.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282624407232
+[2025-01-19 15:58:18.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282532087488
+[2025-01-19 15:58:18.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285510153920
+[2025-01-19 15:58:18.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282741905088
+[2025-01-19 15:58:18.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:18.615] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:18.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282758690496
+[2025-01-19 15:58:18.616] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282515302080
+[2025-01-19 15:58:18.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282582443712
+[2025-01-19 15:58:19.600] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282716726976
+[2025-01-19 15:58:19.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284025366208
+[2025-01-19 15:58:19.601] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285073929920
+[2025-01-19 15:58:19.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284008580800
+[2025-01-19 15:58:19.606] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:19.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:19.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285476583104
+[2025-01-19 15:58:19.606] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283379422912
+[2025-01-19 15:58:19.607] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282607621824
+[2025-01-19 15:58:19.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286622385856
+[2025-01-19 15:58:19.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282590836416
+[2025-01-19 15:58:19.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:19.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282884515520
+[2025-01-19 15:58:19.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:19.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286105740992
+[2025-01-19 15:58:19.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:19.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286097348288
+[2025-01-19 15:58:19.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282867730112
+[2025-01-19 15:58:19.617] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282506909376
+[2025-01-19 15:58:19.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282859337408
+[2025-01-19 15:58:19.617] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286630778560
+[2025-01-19 15:58:19.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285057144512
+[2025-01-19 15:58:20.601] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285090715328
+[2025-01-19 15:58:20.602] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284461557440
+[2025-01-19 15:58:20.602] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282464945856
+[2025-01-19 15:58:20.602] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282708334272
+[2025-01-19 15:58:20.606] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282616014528
+[2025-01-19 15:58:20.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:20.610] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282414589632
+[2025-01-19 15:58:20.610] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283387815616
+[2025-01-19 15:58:20.610] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282406196928
+[2025-01-19 15:58:20.611] Stan: 46/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282574051008
+[2025-01-19 15:58:20.611] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:20.611] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282540480192
+[2025-01-19 15:58:20.611] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282741905088
+[2025-01-19 15:58:20.611] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286114133696
+[2025-01-19 15:58:20.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282557265600
+[2025-01-19 15:58:20.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282649585344
+[2025-01-19 15:58:20.612] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282548872896
+[2025-01-19 15:58:20.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282481731264
+[2025-01-19 15:58:20.612] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285082322624
+[2025-01-19 15:58:20.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286063777472
+[2025-01-19 15:58:20.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:20.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:20.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285099108032
+[2025-01-19 15:58:20.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285501761216
+[2025-01-19 15:58:20.615] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:20.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:20.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282758690496
+[2025-01-19 15:58:20.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282850944704
+[2025-01-19 15:58:20.616] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283983402688
+[2025-01-19 15:58:20.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282842552000
+[2025-01-19 15:58:20.617] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282490123968
+[2025-01-19 15:58:20.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:20.618] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286613993152
+[2025-01-19 15:58:20.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282565658304
+[2025-01-19 15:58:21.600] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:21.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284033758912
+[2025-01-19 15:58:21.601] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282473338560
+[2025-01-19 15:58:21.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282632799936
+[2025-01-19 15:58:21.601] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283396208320
+[2025-01-19 15:58:21.601] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282523694784
+[2025-01-19 15:58:21.606] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:21.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282515302080
+[2025-01-19 15:58:21.607] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283991795392
+[2025-01-19 15:58:21.607] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282498516672
+[2025-01-19 15:58:21.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284486735552
+[2025-01-19 15:58:21.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284000188096
+[2025-01-19 15:58:21.608] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283379422912
+[2025-01-19 15:58:21.608] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282439767744
+[2025-01-19 15:58:21.608] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282699941568
+[2025-01-19 15:58:21.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286088955584
+[2025-01-19 15:58:21.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285484975808
+[2025-01-19 15:58:21.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282683156160
+[2025-01-19 15:58:21.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282431375040
+[2025-01-19 15:58:21.609] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282666370752
+[2025-01-19 15:58:21.610] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282422982336
+[2025-01-19 15:58:21.610] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282892908224
+[2025-01-19 15:58:21.610] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282750297792
+[2025-01-19 15:58:21.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282590836416
+[2025-01-19 15:58:21.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283412993728
+[2025-01-19 15:58:21.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284469950144
+[2025-01-19 15:58:21.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286063777472
+[2025-01-19 15:58:21.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285082322624
+[2025-01-19 15:58:21.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286647563968
+[2025-01-19 15:58:21.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284453164736
+[2025-01-19 15:58:21.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282624407232
+[2025-01-19 15:58:21.614] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:21.616] Stan: 47/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284478342848
+[2025-01-19 15:58:21.617] Stan: 46/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282842552000
+[2025-01-19 15:58:21.617] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282641192640
+[2025-01-19 15:58:21.618] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282490123968
+[2025-01-19 15:58:22.599] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286655956672
+[2025-01-19 15:58:22.601] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284033758912
+[2025-01-19 15:58:22.601] Zredukowano pszczole 1 z kolei o numerze: 140282716726976
+[2025-01-19 15:58:22.601] [UL] Otrzymano SIGUSR2 -> zmniejszamy populacje!
+[2025-01-19 15:58:22.607] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282448160448
+[2025-01-19 15:58:22.607] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:22.608] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282498516672
+[2025-01-19 15:58:22.608] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282439767744
+[2025-01-19 15:58:22.609] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285107500736
+[2025-01-19 15:58:22.609] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:22.609] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283429779136
+[2025-01-19 15:58:22.610] Stan: 46/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:22.610] Stan: 45/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282590836416
+[2025-01-19 15:58:22.610] Stan: 46/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283387815616
+[2025-01-19 15:58:22.611] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282884515520
+[2025-01-19 15:58:22.611] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282406196928
+[2025-01-19 15:58:22.612] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:22.612] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282523694784
+[2025-01-19 15:58:22.612] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282414589632
+[2025-01-19 15:58:22.613] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282741905088
+[2025-01-19 15:58:22.613] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286597207744
+[2025-01-19 15:58:22.613] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282548872896
+[2025-01-19 15:58:22.613] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282456553152
+[2025-01-19 15:58:22.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:22.613] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284453164736
+[2025-01-19 15:58:22.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282657978048
+[2025-01-19 15:58:22.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:22.614] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286072170176
+[2025-01-19 15:58:22.615] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285476583104
+[2025-01-19 15:58:22.616] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:22.616] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282758690496
+[2025-01-19 15:58:22.616] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284478342848
+[2025-01-19 15:58:22.617] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282859337408
+[2025-01-19 15:58:22.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282506909376
+[2025-01-19 15:58:22.618] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282641192640
+[2025-01-19 15:58:22.618] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285057144512
+[2025-01-19 15:58:23.601] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282473338560
+[2025-01-19 15:58:23.602] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284025366208
+[2025-01-19 15:58:23.602] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284461557440
+[2025-01-19 15:58:23.602] Stan: 46/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284008580800
+[2025-01-19 15:58:23.602] Stan: 45/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:23.603] Stan: 46/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282725119680
+[2025-01-19 15:58:23.603] Stan: 45/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282632799936
+[2025-01-19 15:58:23.606] Stan: 46/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282876122816
+[2025-01-19 15:58:23.607] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:23.607] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:23.608] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284486735552
+[2025-01-19 15:58:23.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282607621824
+[2025-01-19 15:58:23.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283404601024
+[2025-01-19 15:58:23.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283991795392
+[2025-01-19 15:58:23.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282649585344
+[2025-01-19 15:58:23.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282599229120
+[2025-01-19 15:58:23.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282548872896
+[2025-01-19 15:58:23.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285459797696
+[2025-01-19 15:58:23.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282867730112
+[2025-01-19 15:58:23.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282892908224
+[2025-01-19 15:58:23.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285510153920
+[2025-01-19 15:58:23.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282574051008
+[2025-01-19 15:58:23.616] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284478342848
+[2025-01-19 15:58:23.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286105740992
+[2025-01-19 15:58:23.617] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282582443712
+[2025-01-19 15:58:23.617] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282741905088
+[2025-01-19 15:58:23.618] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:23.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286097348288
+[2025-01-19 15:58:23.618] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282565658304
+[2025-01-19 15:58:23.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282532087488
+[2025-01-19 15:58:24.608] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:24.608] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282515302080
+[2025-01-19 15:58:24.608] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285099108032
+[2025-01-19 15:58:24.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:24.609] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286088955584
+[2025-01-19 15:58:24.609] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286622385856
+[2025-01-19 15:58:24.609] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:24.610] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282683156160
+[2025-01-19 15:58:24.610] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286639171264
+[2025-01-19 15:58:24.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:24.610] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282750297792
+[2025-01-19 15:58:24.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282674763456
+[2025-01-19 15:58:24.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286605600448
+[2025-01-19 15:58:24.611] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282464945856
+[2025-01-19 15:58:24.611] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282540480192
+[2025-01-19 15:58:24.611] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282431375040
+[2025-01-19 15:58:24.614] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282657978048
+[2025-01-19 15:58:24.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285484975808
+[2025-01-19 15:58:24.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285459797696
+[2025-01-19 15:58:24.615] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285501761216
+[2025-01-19 15:58:24.615] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282557265600
+[2025-01-19 15:58:24.615] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:24.618] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282506909376
+[2025-01-19 15:58:24.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:24.618] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282490123968
+[2025-01-19 15:58:24.618] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:25.600] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286655956672
+[2025-01-19 15:58:25.600] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286072170176
+[2025-01-19 15:58:25.602] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282473338560
+[2025-01-19 15:58:25.602] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285090715328
+[2025-01-19 15:58:25.602] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282708334272
+[2025-01-19 15:58:25.602] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283983402688
+[2025-01-19 15:58:25.607] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282448160448
+[2025-01-19 15:58:25.608] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286630778560
+[2025-01-19 15:58:25.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282699941568
+[2025-01-19 15:58:25.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284495128256
+[2025-01-19 15:58:25.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282439767744
+[2025-01-19 15:58:25.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284033758912
+[2025-01-19 15:58:25.609] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285099108032
+[2025-01-19 15:58:25.609] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282867730112
+[2025-01-19 15:58:25.610] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282422982336
+[2025-01-19 15:58:25.610] Stan: 48/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:25.610] Stan: 49/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282616014528
+[2025-01-19 15:58:25.610] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284461557440
+[2025-01-19 15:58:25.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286114133696
+[2025-01-19 15:58:25.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282515302080
+[2025-01-19 15:58:25.612] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282481731264
+[2025-01-19 15:58:25.612] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283429779136
+[2025-01-19 15:58:25.613] Stan: 49/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282414589632
+[2025-01-19 15:58:25.613] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283404601024
+[2025-01-19 15:58:25.614] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282892908224
+[2025-01-19 15:58:25.614] Stan: 50/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:25.615] Stan: 49/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285484975808
+[2025-01-19 15:58:25.615] Stan: 48/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283412993728
+[2025-01-19 15:58:25.616] Stan: 47/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282850944704
+[2025-01-19 15:58:25.617] Stan: 46/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282741905088
+[2025-01-19 15:58:25.618] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282859337408
+[2025-01-19 15:58:25.618] Stan: 48/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286613993152
+[2025-01-19 15:58:25.618] Stan: 47/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282532087488
+[2025-01-19 15:58:25.619] Stan: 46/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286080562880
+[2025-01-19 15:58:26.602] Stan: 47/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283396208320
+[2025-01-19 15:58:26.602] Zredukowano pszczole 1 z kolei o numerze: 140284025366208
+[2025-01-19 15:58:26.602] [UL] Otrzymano SIGUSR2 -> zmniejszamy populacje!
+[2025-01-19 15:58:26.602] Stan: 46/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285090715328
+[2025-01-19 15:58:26.603] Zredukowano pszczole 2 z kolei o numerze: 140282632799936
+[2025-01-19 15:58:26.608] Stan: 45/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284000188096
+[2025-01-19 15:58:26.608] Zredukowano pszczole 3 z kolei o numerze: 140283379422912
+[2025-01-19 15:58:26.609] Stan: 44/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284486735552
+[2025-01-19 15:58:26.609] Stan: 43/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284495128256
+[2025-01-19 15:58:26.610] Zredukowano pszczole 4 z kolei o numerze: 140282666370752
+[2025-01-19 15:58:26.610] Stan: 42/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:26.610] Zredukowano pszczole 5 z kolei o numerze: 140282422982336
+[2025-01-19 15:58:26.611] Zredukowano pszczole 6 z kolei o numerze: 140285468190400
+[2025-01-19 15:58:26.611] Zredukowano pszczole 7 z kolei o numerze: 140282590836416
+[2025-01-19 15:58:26.611] Stan: 41/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283387815616
+[2025-01-19 15:58:26.612] Zredukowano pszczole 8 z kolei o numerze: 140282540480192
+[2025-01-19 15:58:26.612] Stan: 40/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284469950144
+[2025-01-19 15:58:26.612] Stan: 39/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:26.613] Zredukowano pszczole 9 z kolei o numerze: 140282481731264
+[2025-01-19 15:58:26.613] Stan: 38/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282599229120
+[2025-01-19 15:58:26.613] Zredukowano pszczole 10 z kolei o numerze: 140282523694784
+[2025-01-19 15:58:26.613] Zredukowano pszczole 11 z kolei o numerze: 140286063777472
+[2025-01-19 15:58:26.613] Stan: 37/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285082322624
+[2025-01-19 15:58:26.613] Stan: 36/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282456553152
+[2025-01-19 15:58:26.614] Zredukowano pszczole 12 z kolei o numerze: 140282624407232
+[2025-01-19 15:58:26.615] Stan: 35/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:26.615] Stan: 34/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282574051008
+[2025-01-19 15:58:26.616] Stan: 33/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:26.617] Zredukowano pszczole 13 z kolei o numerze: 140282842552000
+[2025-01-19 15:58:26.617] Zredukowano pszczole 14 z kolei o numerze: 140282582443712
+[2025-01-19 15:58:26.618] Stan: 32/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286097348288
+[2025-01-19 15:58:26.618] Stan: 31/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286613993152
+[2025-01-19 15:58:26.618] Zredukowano pszczole 15 z kolei o numerze: 140285057144512
+[2025-01-19 15:58:27.602] Stan: 30/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283396208320
+[2025-01-19 15:58:27.603] Zredukowano pszczole 16 z kolei o numerze: 140284008580800
+[2025-01-19 15:58:27.603] Zredukowano pszczole 17 z kolei o numerze: 140285090715328
+[2025-01-19 15:58:27.603] Zredukowano pszczole 18 z kolei o numerze: 140282708334272
+[2025-01-19 15:58:27.603] Stan: 29/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283983402688
+[2025-01-19 15:58:27.603] Stan: 28/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282725119680
+[2025-01-19 15:58:27.607] Stan: 27/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282876122816
+[2025-01-19 15:58:27.608] Stan: 26/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286630778560
+[2025-01-19 15:58:27.608] Zredukowano pszczole 19 z kolei o numerze: 140282498516672
+[2025-01-19 15:58:27.609] Stan: 25/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282607621824
+[2025-01-19 15:58:27.609] Stan: 24/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285107500736
+[2025-01-19 15:58:27.609] Zredukowano pszczole 20 z kolei o numerze: 140284486735552
+[2025-01-19 15:58:27.609] Zredukowano pszczole 21 z kolei o numerze: 140286088955584
+[2025-01-19 15:58:27.610] Zredukowano pszczole 22 z kolei o numerze: 140285099108032
+[2025-01-19 15:58:27.610] Zredukowano pszczole 23 z kolei o numerze: 140282683156160
+[2025-01-19 15:58:27.610] Zredukowano pszczole 24 z kolei o numerze: 140286639171264
+[2025-01-19 15:58:27.611] Stan: 23/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284461557440
+[2025-01-19 15:58:27.611] Stan: 22/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282884515520
+[2025-01-19 15:58:27.611] Stan: 21/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282406196928
+[2025-01-19 15:58:27.611] Stan: 20/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282464945856
+[2025-01-19 15:58:27.612] Stan: 19/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282515302080
+[2025-01-19 15:58:27.613] Zredukowano pszczole 25 z kolei o numerze: 140282414589632
+[2025-01-19 15:58:27.613] Zredukowano pszczole 26 z kolei o numerze: 140286597207744
+[2025-01-19 15:58:27.614] Zredukowano pszczole 27 z kolei o numerze: 140284453164736
+[2025-01-19 15:58:27.614] Stan: 18/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:27.615] Zredukowano pszczole 28 z kolei o numerze: 140282892908224
+[2025-01-19 15:58:27.615] Zredukowano pszczole 29 z kolei o numerze: 140285459797696
+[2025-01-19 15:58:27.615] Stan: 17/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282557265600
+[2025-01-19 15:58:27.616] Stan: 16/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282758690496
+[2025-01-19 15:58:27.617] Zredukowano pszczole 30 z kolei o numerze: 140284478342848
+[2025-01-19 15:58:27.617] Stan: 15/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286105740992
+[2025-01-19 15:58:27.618] Stan: 14/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282859337408
+[2025-01-19 15:58:27.618] Zredukowano pszczole 31 z kolei o numerze: 140282641192640
+[2025-01-19 15:58:27.618] Zredukowano pszczole 32 z kolei o numerze: 140282506909376
+[2025-01-19 15:58:27.618] Stan: 13/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282649585344
+[2025-01-19 15:58:27.619] Zredukowano pszczole 33 z kolei o numerze: 140282565658304
+[2025-01-19 15:58:27.619] Zredukowano pszczole 34 z kolei o numerze: 140286080562880
+[2025-01-19 15:58:27.619] Zredukowano pszczole 35 z kolei o numerze: 140282490123968
+[2025-01-19 15:58:28.604] Zredukowano pszczole 36 z kolei o numerze: 140283983402688
+[2025-01-19 15:58:28.607] Stan: 12/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:28.608] Zredukowano pszczole 37 z kolei o numerze: 140282448160448
+[2025-01-19 15:58:28.608] Stan: 11/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:28.608] Zredukowano pszczole 38 z kolei o numerze: 140284000188096
+[2025-01-19 15:58:28.609] Zredukowano pszczole 39 z kolei o numerze: 140285107500736
+[2025-01-19 15:58:28.610] Stan: 10/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283991795392
+[2025-01-19 15:58:28.610] Zredukowano pszczole 40 z kolei o numerze: 140282750297792
+[2025-01-19 15:58:28.611] Stan: 9/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:28.611] Zredukowano pszczole 41 z kolei o numerze: 140284461557440
+[2025-01-19 15:58:28.612] Zredukowano pszczole 42 z kolei o numerze: 140286114133696
+[2025-01-19 15:58:28.613] Stan: 8/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283429779136
+[2025-01-19 15:58:28.613] Zredukowano pszczole 43 z kolei o numerze: 140282548872896
+[2025-01-19 15:58:28.615] Zredukowano pszczole 44 z kolei o numerze: 140285501761216
+[2025-01-19 15:58:28.615] Zredukowano pszczole 45 z kolei o numerze: 140285510153920
+[2025-01-19 15:58:28.615] Zredukowano pszczole 46 z kolei o numerze: 140285484975808
+[2025-01-19 15:58:28.618] Zredukowano pszczole 47 z kolei o numerze: 140282859337408
+[2025-01-19 15:58:28.618] Zredukowano pszczole 48 z kolei o numerze: 140286097348288
+[2025-01-19 15:58:29.600] Zredukowano pszczole 49 z kolei o numerze: 140286655956672
+[2025-01-19 15:58:29.608] Stan: 9/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284016973504
+[2025-01-19 15:58:29.608] Stan: 10/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:29.609] Stan: 11/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282607621824
+[2025-01-19 15:58:29.609] Stan: 10/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:29.609] Stan: 11/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:29.609] Stan: 12/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282439767744
+[2025-01-19 15:58:29.610] Stan: 11/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284033758912
+[2025-01-19 15:58:29.610] Stan: 12/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286622385856
+[2025-01-19 15:58:29.610] Stan: 11/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:29.610] [ROBOTNICA] Pszczoła o numerze 140285476583104 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:29.611] Stan: 12/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:29.611] Stan: 13/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282884515520
+[2025-01-19 15:58:29.612] Stan: 12/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282431375040
+[2025-01-19 15:58:29.613] Stan: 13/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282599229120
+[2025-01-19 15:58:29.614] Stan: 14/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282456553152
+[2025-01-19 15:58:29.614] Stan: 15/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:29.615] Stan: 16/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284503520960
+[2025-01-19 15:58:29.616] Stan: 17/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283412993728
+[2025-01-19 15:58:29.616] Stan: 18/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282850944704
+[2025-01-19 15:58:29.616] Stan: 19/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282733512384
+[2025-01-19 15:58:29.619] Stan: 20/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:29.619] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282532087488
+[2025-01-19 15:58:30.601] Stan: 20/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286072170176
+[2025-01-19 15:58:30.601] [KROLOWA] Obecna - 52 | Obecna ul - 23 | Maks - 200 | Stan początkowy - 50
+
+[2025-01-19 15:58:30.602] Stan: 24/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282473338560
+[2025-01-19 15:58:30.602] Krolowa zniosla 3 jaj.
+[2025-01-19 15:58:30.602] Stan: 23/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:30.603] [UL] Stan -> obecna liczba poszczol = 52, maksymalnie = 200
+[2025-01-19 15:58:30.603] Stan: 22/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286655956672
+[2025-01-19 15:58:30.603] Stan: 21/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286097348288
+[2025-01-19 15:58:30.608] Stan: 22/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282691548864
+[2025-01-19 15:58:30.608] Stan: 21/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:30.609] Stan: 20/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283421386432
+[2025-01-19 15:58:30.609] [ROBOTNICA] Pszczoła o numerze 140283421386432 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:30.609] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282699941568
+[2025-01-19 15:58:30.610] Stan: 20/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282867730112
+[2025-01-19 15:58:30.610] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283991795392
+[2025-01-19 15:58:30.611] Stan: 20/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282616014528
+[2025-01-19 15:58:30.611] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283387815616
+[2025-01-19 15:58:30.612] Stan: 22/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282431375040
+[2025-01-19 15:58:30.612] Stan: 23/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284469950144
+[2025-01-19 15:58:30.613] Stan: 22/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283404601024
+[2025-01-19 15:58:30.614] Stan: 23/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285082322624
+[2025-01-19 15:58:30.614] Stan: 22/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282456553152
+[2025-01-19 15:58:30.614] Stan: 21/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282657978048
+[2025-01-19 15:58:30.614] [ROBOTNICA] Pszczoła o numerze 140282657978048 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:30.616] Stan: 20/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:30.618] Stan: 21/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282741905088
+[2025-01-19 15:58:30.619] Stan: 22/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286613993152
+[2025-01-19 15:58:30.619] Stan: 21/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282649585344
+[2025-01-19 15:58:30.619] [ROBOTNICA] Pszczoła o numerze 140282649585344 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:31.603] Stan: 22/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283396208320
+[2025-01-19 15:58:31.603] [KROLOWA] Obecna - 58 | Obecna ul - 31 | Maks - 200 | Stan początkowy - 50
+
+[2025-01-19 15:58:31.604] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282725119680
+[2025-01-19 15:58:31.604] Krolowa zniosla 9 jaj.
+[2025-01-19 15:58:31.604] Stan: 31/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:31.604] Stan: 30/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282657978048
+[2025-01-19 15:58:31.605] Stan: 29/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:31.605] Stan: 28/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286639171264
+[2025-01-19 15:58:31.605] Stan: 27/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286597207744
+[2025-01-19 15:58:31.605] Stan: 26/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286088955584
+[2025-01-19 15:58:31.605] [UL] Stan -> obecna liczba poszczol = 58, maksymalnie = 200
+[2025-01-19 15:58:31.606] Stan: 25/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286114133696
+[2025-01-19 15:58:31.606] Stan: 24/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286080562880
+[2025-01-19 15:58:31.606] Stan: 23/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282859337408
+[2025-01-19 15:58:31.608] Stan: 24/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286630778560
+[2025-01-19 15:58:31.609] Stan: 25/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:31.609] Stan: 24/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282699941568
+[2025-01-19 15:58:31.610] Stan: 25/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285493368512
+[2025-01-19 15:58:31.611] Stan: 24/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286605600448
+[2025-01-19 15:58:31.611] Stan: 25/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282464945856
+[2025-01-19 15:58:31.612] Stan: 26/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282515302080
+[2025-01-19 15:58:31.613] Stan: 25/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284469950144
+[2025-01-19 15:58:31.613] Stan: 26/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:31.613] Stan: 27/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140283429779136
+[2025-01-19 15:58:31.615] Stan: 28/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282574051008
+[2025-01-19 15:58:31.616] Stan: 27/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282850944704
+[2025-01-19 15:58:31.616] Stan: 28/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282758690496
+[2025-01-19 15:58:31.617] Stan: 29/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282733512384
+[2025-01-19 15:58:31.617] Stan: 30/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286105740992
+[2025-01-19 15:58:31.618] Stan: 29/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282741905088
+[2025-01-19 15:58:31.618] [ROBOTNICA] Pszczoła o numerze 140282741905088 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:32.606] [KROLOWA] Obecna - 63 | Obecna ul - 36 | Maks - 200 | Stan początkowy - 50
+
+[2025-01-19 15:58:32.606] Stan: 30/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286114133696
+[2025-01-19 15:58:32.607] Krolowa zniosla 6 jaj.
+[2025-01-19 15:58:32.607] Stan: 37/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282876122816
+[2025-01-19 15:58:32.607] Stan: 36/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282741905088
+[2025-01-19 15:58:32.608] Stan: 35/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286063777472
+[2025-01-19 15:58:32.608] Stan: 34/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285510153920
+[2025-01-19 15:58:32.609] Stan: 33/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285484975808
+[2025-01-19 15:58:32.609] [UL] Stan -> obecna liczba poszczol = 63, maksymalnie = 200
+[2025-01-19 15:58:32.609] Stan: 32/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285501761216
+[2025-01-19 15:58:32.609] Stan: 31/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:32.609] Stan: 30/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282607621824
+[2025-01-19 15:58:32.609] Stan: 31/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285065537216
+[2025-01-19 15:58:32.610] Stan: 30/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282439767744
+[2025-01-19 15:58:32.610] Stan: 31/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284033758912
+[2025-01-19 15:58:32.611] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:32.611] Stan: 33/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282406196928
+[2025-01-19 15:58:32.611] Stan: 34/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:32.612] Stan: 33/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282464945856
+[2025-01-19 15:58:32.614] Stan: 34/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286647563968
+[2025-01-19 15:58:32.615] Stan: 35/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282557265600
+[2025-01-19 15:58:32.616] Stan: 34/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283412993728
+[2025-01-19 15:58:32.616] [ROBOTNICA] Pszczoła o numerze 140283412993728 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.601] [KROLOWA] Obecna - 71 | Obecna ul - 44 | Maks - 200 | Stan początkowy - 50
+
+[2025-01-19 15:58:33.601] Stan: 35/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286072170176
+[2025-01-19 15:58:33.603] Stan: 45/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:33.603] Krolowa zniosla 9 jaj.
+[2025-01-19 15:58:33.604] Stan: 44/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283412993728
+[2025-01-19 15:58:33.604] Stan: 43/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285459797696
+[2025-01-19 15:58:33.605] Stan: 44/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282649585344
+[2025-01-19 15:58:33.605] Stan: 45/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282657978048
+[2025-01-19 15:58:33.605] Stan: 44/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285099108032
+[2025-01-19 15:58:33.605] Stan: 43/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284478342848
+[2025-01-19 15:58:33.605] [UL] Stan -> obecna liczba poszczol = 71, maksymalnie = 200
+[2025-01-19 15:58:33.605] Stan: 42/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284461557440
+[2025-01-19 15:58:33.605] Stan: 41/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285057144512
+[2025-01-19 15:58:33.605] Stan: 40/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285090715328
+[2025-01-19 15:58:33.606] Stan: 39/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284486735552
+[2025-01-19 15:58:33.606] Stan: 38/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285107500736
+[2025-01-19 15:58:33.609] Stan: 39/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285510153920
+[2025-01-19 15:58:33.609] Stan: 38/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284016973504
+[2025-01-19 15:58:33.610] [ROBOTNICA] Pszczoła o numerze 140284016973504 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.610] Stan: 37/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284495128256
+[2025-01-19 15:58:33.610] [ROBOTNICA] Pszczoła o numerze 140284495128256 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.610] Stan: 36/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:33.610] [ROBOTNICA] Pszczoła o numerze 140285065537216 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.611] Stan: 37/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282867730112
+[2025-01-19 15:58:33.611] Stan: 36/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283991795392
+[2025-01-19 15:58:33.611] [ROBOTNICA] Pszczoła o numerze 140283991795392 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.611] Stan: 35/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286622385856
+[2025-01-19 15:58:33.611] Stan: 36/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282616014528
+[2025-01-19 15:58:33.612] Stan: 35/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283387815616
+[2025-01-19 15:58:33.612] [ROBOTNICA] Pszczoła o numerze 140283387815616 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.612] Stan: 34/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282431375040
+[2025-01-19 15:58:33.613] Stan: 33/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283429779136
+[2025-01-19 15:58:33.614] [ROBOTNICA] Pszczoła o numerze 140283429779136 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:33.615] Stan: 32/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284503520960
+[2025-01-19 15:58:33.616] [ROBOTNICA] Pszczoła o numerze 140284503520960 umiera (liczba odwiedzin 5).
+[2025-01-19 15:58:33.616] Stan: 31/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282574051008
+[2025-01-19 15:58:33.617] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140282850944704
+[2025-01-19 15:58:33.617] Stan: 31/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282758690496
+[2025-01-19 15:58:33.617] [ROBOTNICA] Pszczoła o numerze 140282758690496 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.602] [KROLOWA] Obecna - 70 | Obecna ul - 37 | Maks - 200 | Stan początkowy - 50
+
+[2025-01-19 15:58:34.602] Stan: 30/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286072170176
+[2025-01-19 15:58:34.602] [ROBOTNICA] Pszczoła o numerze 140286072170176 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.602] Krolowa zniosla 7 jaj.
+[2025-01-19 15:58:34.602] Stan: 36/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282473338560
+[2025-01-19 15:58:34.603] Stan: 35/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286072170176
+[2025-01-19 15:58:34.603] Stan: 34/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283429779136
+[2025-01-19 15:58:34.603] [UL] Stan -> obecna liczba poszczol = 69, maksymalnie = 200
+[2025-01-19 15:58:34.603] Stan: 33/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284503520960
+[2025-01-19 15:58:34.604] Stan: 32/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284495128256
+[2025-01-19 15:58:34.604] Stan: 31/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284453164736
+[2025-01-19 15:58:34.604] Stan: 30/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285065537216
+[2025-01-19 15:58:34.604] Stan: 29/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283396208320
+[2025-01-19 15:58:34.604] [ROBOTNICA] Pszczoła o numerze 140283396208320 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.604] Stan: 28/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282758690496
+[2025-01-19 15:58:34.604] Stan: 29/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:34.605] Stan: 28/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282657978048
+[2025-01-19 15:58:34.605] Stan: 29/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140283421386432
+[2025-01-19 15:58:34.605] Stan: 30/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284478342848
+[2025-01-19 15:58:34.605] Stan: 31/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140286639171264
+[2025-01-19 15:58:34.606] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140284461557440
+[2025-01-19 15:58:34.606] Stan: 33/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285107500736
+[2025-01-19 15:58:34.606] Stan: 34/50, [ROBOTNICA] Pszczoła weszła wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:34.607] Stan: 33/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282876122816
+[2025-01-19 15:58:34.608] Stan: 32/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282691548864
+[2025-01-19 15:58:34.608] [ROBOTNICA] Pszczoła o numerze 140282691548864 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.609] Stan: 31/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286630778560
+[2025-01-19 15:58:34.609] [ROBOTNICA] Pszczoła o numerze 140286630778560 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.609] Stan: 32/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285501761216
+[2025-01-19 15:58:34.609] Stan: 33/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140285468190400
+[2025-01-19 15:58:34.609] Stan: 32/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285510153920
+[2025-01-19 15:58:34.610] Stan: 33/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140282699941568
+[2025-01-19 15:58:34.610] Stan: 32/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140285493368512
+[2025-01-19 15:58:34.610] [ROBOTNICA] Pszczoła o numerze 140285493368512 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.611] Stan: 31/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282616014528
+[2025-01-19 15:58:34.611] Stan: 30/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282884515520
+[2025-01-19 15:58:34.612] [ROBOTNICA] Pszczoła o numerze 140282884515520 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.613] Stan: 31/50, [ROBOTNICA] Pszczoła weszła wejsciem 2, id: 140284469950144
+[2025-01-19 15:58:34.613] Stan: 30/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282599229120
+[2025-01-19 15:58:34.614] Stan: 29/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286647563968
+[2025-01-19 15:58:34.615] [ROBOTNICA] Pszczoła o numerze 140286647563968 umiera (liczba odwiedzin 4).
+[2025-01-19 15:58:34.619] Stan: 28/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282532087488
+[2025-01-19 15:58:34.999] [KROLOWA] Koncze prace.
+[2025-01-19 15:58:35.000] [PSZCZELARZ] Kończę pracę.
+[2025-01-19 15:58:35.603] Zredukowano pszczole 1 z kolei o numerze: 140282473338560
+[2025-01-19 15:58:35.603] Zredukowano pszczole 2 z kolei o numerze: 140286655956672
+[2025-01-19 15:58:35.604] Stan: 27/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285476583104
+[2025-01-19 15:58:35.604] Zredukowano pszczole 3 z kolei o numerze: 140286097348288
+[2025-01-19 15:58:35.604] Stan: 26/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282725119680
+[2025-01-19 15:58:35.604] Zredukowano pszczole 4 z kolei o numerze: 140285459797696
+[2025-01-19 15:58:35.605] Zredukowano pszczole 5 z kolei o numerze: 140284503520960
+[2025-01-19 15:58:35.605] Zredukowano pszczole 6 z kolei o numerze: 140284453164736
+[2025-01-19 15:58:35.605] Zredukowano pszczole 7 z kolei o numerze: 140285099108032
+[2025-01-19 15:58:35.605] Stan: 25/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140283421386432
+[2025-01-19 15:58:35.605] Stan: 24/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140284478342848
+[2025-01-19 15:58:35.606] Zredukowano pszczole 8 z kolei o numerze: 140284486735552
+[2025-01-19 15:58:35.606] Stan: 23/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286114133696
+[2025-01-19 15:58:35.606] Stan: 22/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286080562880
+[2025-01-19 15:58:35.608] Zredukowano pszczole 9 z kolei o numerze: 140286063777472
+[2025-01-19 15:58:35.609] Zredukowano pszczole 10 z kolei o numerze: 140285484975808
+[2025-01-19 15:58:35.610] Stan: 21/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285468190400
+[2025-01-19 15:58:35.611] Zredukowano pszczole 11 z kolei o numerze: 140286622385856
+[2025-01-19 15:58:35.612] Stan: 20/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282674763456
+[2025-01-19 15:58:35.612] Stan: 19/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282406196928
+[2025-01-19 15:58:35.612] Zredukowano pszczole 12 z kolei o numerze: 140282464945856
+[2025-01-19 15:58:35.612] Zredukowano pszczole 13 z kolei o numerze: 140282431375040
+[2025-01-19 15:58:35.613] Zredukowano pszczole 14 z kolei o numerze: 140283404601024
+[2025-01-19 15:58:35.614] Stan: 18/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285082322624
+[2025-01-19 15:58:35.614] Zredukowano pszczole 15 z kolei o numerze: 140282456553152
+[2025-01-19 15:58:35.616] Zredukowano pszczole 16 z kolei o numerze: 140282574051008
+[2025-01-19 15:58:35.619] Stan: 17/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286613993152
+[2025-01-19 15:58:35.620] Zredukowano pszczole 17 z kolei o numerze: 140282532087488
+[2025-01-19 15:58:36.603] Zredukowano pszczole 18 z kolei o numerze: 140286072170176
+[2025-01-19 15:58:36.604] Zredukowano pszczole 19 z kolei o numerze: 140283429779136
+[2025-01-19 15:58:36.604] Zredukowano pszczole 20 z kolei o numerze: 140285476583104
+[2025-01-19 15:58:36.604] Zredukowano pszczole 21 z kolei o numerze: 140285065537216
+[2025-01-19 15:58:36.605] Zredukowano pszczole 22 z kolei o numerze: 140282758690496
+[2025-01-19 15:58:36.606] Zredukowano pszczole 23 z kolei o numerze: 140286597207744
+[2025-01-19 15:58:36.606] Zredukowano pszczole 24 z kolei o numerze: 140286088955584
+[2025-01-19 15:58:36.606] Zredukowano pszczole 25 z kolei o numerze: 140285057144512
+[2025-01-19 15:58:36.607] Zredukowano pszczole 26 z kolei o numerze: 140282859337408
+[2025-01-19 15:58:36.608] Zredukowano pszczole 27 z kolei o numerze: 140282741905088
+[2025-01-19 15:58:36.610] Zredukowano pszczole 28 z kolei o numerze: 140282439767744
+[2025-01-19 15:58:36.613] Stan: 16/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282515302080
+[2025-01-19 15:58:36.613] Stan: 15/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285073929920
+[2025-01-19 15:58:36.617] Stan: 14/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282733512384
+[2025-01-19 15:58:36.617] Stan: 13/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286105740992
+[2025-01-19 15:58:37.605] Zredukowano pszczole 29 z kolei o numerze: 140282657978048
+[2025-01-19 15:58:37.606] Zredukowano pszczole 30 z kolei o numerze: 140284478342848
+[2025-01-19 15:58:37.608] Zredukowano pszczole 31 z kolei o numerze: 140282876122816
+[2025-01-19 15:58:37.609] Zredukowano pszczole 32 z kolei o numerze: 140282607621824
+[2025-01-19 15:58:37.610] Stan: 12/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284033758912
+[2025-01-19 15:58:37.612] Zredukowano pszczole 33 z kolei o numerze: 140282616014528
+[2025-01-19 15:58:37.612] Stan: 11/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140286605600448
+[2025-01-19 15:58:37.613] Stan: 10/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284469950144
+[2025-01-19 15:58:37.614] Zredukowano pszczole 34 z kolei o numerze: 140285082322624
+[2025-01-19 15:58:37.616] Stan: 9/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282557265600
+[2025-01-19 15:58:37.617] Stan: 8/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140282850944704
+[2025-01-19 15:58:38.604] Zredukowano pszczole 35 z kolei o numerze: 140284495128256
+[2025-01-19 15:58:38.605] Stan: 7/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140283412993728
+[2025-01-19 15:58:38.605] Stan: 6/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282649585344
+[2025-01-19 15:58:38.606] Zredukowano pszczole 36 z kolei o numerze: 140285090715328
+[2025-01-19 15:58:38.606] Stan: 5/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285107500736
+[2025-01-19 15:58:38.609] Stan: 4/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140285501761216
+[2025-01-19 15:58:38.610] Zredukowano pszczole 37 z kolei o numerze: 140285510153920
+[2025-01-19 15:58:38.610] Zredukowano pszczole 38 z kolei o numerze: 140284033758912
+[2025-01-19 15:58:38.611] Stan: 3/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282867730112
+[2025-01-19 15:58:38.612] Zredukowano pszczole 39 z kolei o numerze: 140282406196928
+[2025-01-19 15:58:38.619] Zredukowano pszczole 40 z kolei o numerze: 140286613993152
+[2025-01-19 15:58:39.604] Zredukowano pszczole 41 z kolei o numerze: 140282725119680
+[2025-01-19 15:58:39.605] Zredukowano pszczole 42 z kolei o numerze: 140283421386432
+[2025-01-19 15:58:39.606] Stan: 2/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140286639171264
+[2025-01-19 15:58:39.606] Stan: 1/50, [ROBOTNICA] Pszczolas wyszla wejsciem 2, id: 140284461557440
+[2025-01-19 15:58:39.610] Stan: 0/50, [ROBOTNICA] Pszczola wyszla wejsciem 1, id: 140282699941568
+[2025-01-19 15:58:39.614] Zredukowano pszczole 43 z kolei o numerze: 140282599229120
+[2025-01-19 15:58:39.614] Zredukowano pszczole 44 z kolei o numerze: 140285073929920
+[2025-01-19 15:58:39.614] Zredukowano pszczole 45 z kolei o numerze: 140284469950144
+[2025-01-19 15:58:39.618] Zredukowano pszczole 46 z kolei o numerze: 140286105740992
+[2025-01-19 15:58:40.605] Zredukowano pszczole 47 z kolei o numerze: 140283412993728
+[2025-01-19 15:58:40.607] Zredukowano pszczole 48 z kolei o numerze: 140286114133696
+[2025-01-19 15:58:40.607] Zredukowano pszczole 49 z kolei o numerze: 140286080562880
+[2025-01-19 15:58:40.610] Zredukowano pszczole 50 z kolei o numerze: 140285468190400
+[2025-01-19 15:58:40.611] Zredukowano pszczole 51 z kolei o numerze: 140282867730112
+[2025-01-19 15:58:40.612] Zredukowano pszczole 52 z kolei o numerze: 140282674763456
+[2025-01-19 15:58:41.606] Zredukowano pszczole 53 z kolei o numerze: 140286639171264
+[2025-01-19 15:58:41.613] Zredukowano pszczole 54 z kolei o numerze: 140282515302080
+[2025-01-19 15:58:41.617] Zredukowano pszczole 55 z kolei o numerze: 140282850944704
+[2025-01-19 15:58:41.618] Zredukowano pszczole 56 z kolei o numerze: 140282733512384
+[2025-01-19 15:58:42.605] Zredukowano pszczole 57 z kolei o numerze: 140282649585344
+[2025-01-19 15:58:42.607] Zredukowano pszczole 58 z kolei o numerze: 140285107500736
+[2025-01-19 15:58:42.612] Zredukowano pszczole 59 z kolei o numerze: 140286605600448
+[2025-01-19 15:58:42.616] Zredukowano pszczole 60 z kolei o numerze: 140282557265600
+[2025-01-19 15:58:43.606] Zredukowano pszczole 61 z kolei o numerze: 140284461557440
+[2025-01-19 15:58:43.610] Zredukowano pszczole 62 z kolei o numerze: 140285501761216
+[2025-01-19 15:58:44.610] Zredukowano pszczole 63 z kolei o numerze: 140282699941568
+[2025-01-19 15:58:44.617] [Ul] Kończę pracę.
+[2025-01-19 15:58:44.618] [MAIN] Koniec programu.

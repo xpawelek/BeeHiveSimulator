@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
         }
 
         if (shared_hive_state->current_bees + laid_eggs_rand <= shared_hive_state->max_bees
-            && shared_hive_state->current_bees_hive + laid_eggs_rand <= hive_capacity
+            && shared_hive_state->current_bees_hive + laid_eggs_rand + 1 <= hive_capacity
             && shared_hive_state->depopulation_flag != 1
             && shared_hive_state->start_simulation == 1)
         {
