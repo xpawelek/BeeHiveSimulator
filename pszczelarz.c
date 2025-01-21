@@ -10,10 +10,17 @@
 #include <string.h>
 #include <fcntl.h>
 
-
 int simulation_termination = 0;
 
 //handle signal to termination
+/**
+ * @brief Sets the simulation termination flag.
+ *
+ * This function handles the SIGINT signal by setting the termination flag so that
+ * the loops in the program can terminate.
+ *
+ * @param sig The received signal number.
+ */
 void handle_sigint(int sig)
 {
     (void)sig;
@@ -34,7 +41,14 @@ void setup_signal_handling(void)
     }
 }
 
-//reading hive pid to be able to send signal
+/**
+ * @brief Reads the hive PID to be able to send a signal.
+ *
+ * This function opens the FIFO defined by FIFO_PATH for reading, reads the PID 
+ * from it, and returns the PID as an integer.
+ *
+ * @return int Returns the hive PID read from FIFO, or -1 if an error occurs.
+ */
 int read_hive_pid(void)
 {
     int fd = open(FIFO_PATH, O_RDONLY);
@@ -59,7 +73,27 @@ int read_hive_pid(void)
     return hive_pid;
 }
 
-
+/**
+ * @brief Main function for the "pszczelarz" process.
+ *
+ * The main function:
+ * - Checks the correctness of the provided arguments.
+ * - Initializes the random number generator.
+ * - Registers the SIGINT signal handler.
+ * - Reads the hive PID from FIFO.
+ * - Attaches to shared memory.
+ * - Prints the current number of bees.
+ * - In a loop, waits for input commands from stdin:
+ *   - "1" sends SIGUSR1 for increasing the hive capacity (if not already increased 
+ *     and if the depopulation flag is not set).
+ *   - "2" sends SIGUSR2 for depopulating the hive.
+ *   - Any other command prints an error message.
+ * - When the simulation terminates, the shared memory is detached and a log message is recorded.
+ *
+ * @param argc The number of arguments.
+ * @param argv Array of arguments. Expected: <sem_id> <shm_id>.
+ * @return int Returns 0 on success, or 1 if an error occurs.
+ */
 int main(int argc, char* argv[]) 
 {
     if (argc < 3) 
@@ -134,7 +168,7 @@ int main(int argc, char* argv[])
             if (fgets(input, sizeof(input), stdin)) 
             {
                 //if 1 - sigusr1, increment
-                if (strcmp(input, "1\n") == 0 && incremented_population != 1) 
+                if (strcmp(input, "1\n") == 0 && incremented_population != 1 && shared_hive_state->depopulation_flag != 1) 
                 {
                     incremented_population = 1;
                     if (kill(hive_pid, SIGUSR1) == -1)

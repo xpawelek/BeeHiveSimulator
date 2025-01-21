@@ -14,8 +14,14 @@ Hive *shared_hive_state = NULL;
 int sem_id;
 int simulation_termination = 0;
 
-
-//send pid of hive to beekepper
+/**
+ * @brief Sends the hive PID to the beekeeper using FIFO.
+ *
+ * This function creates a FIFO (if it does not exist), opens it for writing, 
+ * retrieves the current process PID and writes it into the FIFO.
+ *
+ * @param fifo_path The path to the FIFO.
+ */
 void send_pid_to_beekepper(const char *fifo_path) {
     if (mkfifo(fifo_path, 0600) == -1) {
         if (errno != EEXIST) {
@@ -59,7 +65,19 @@ void send_pid_to_beekepper(const char *fifo_path) {
     printf("PID wysłany do FIFO: %s\n", pid_str);
 }
 
-//responsible to depopulation process
+/**
+ * @brief Handles the hive depopulation process.
+ *
+ * This function is responsible for reducing the number of bees in the hive during the depopulation process.
+ * If the depopulation flag is set, it decreases the bee counter and, when the target reduction is met,
+ * it ends the depopulation process by resetting the flag and the reduction counter.
+ *
+ * @param shared_hive_state Pointer to the shared hive state.
+ * @param sem_id Semaphore identifier.
+ * @param lock Semaphore operation structure for locking.
+ * @param unlock Semaphore operation structure for unlocking.
+ * @param thread_args Thread arguments.
+ */
 void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf lock, struct sembuf unlock, Thread_Args* thread_args) {
     pthread_mutex_lock(&hive_state_mutex);
     semop(sem_id, &lock, 1);
@@ -94,8 +112,23 @@ void depopulation_handler(Hive* shared_hive_state, int sem_id, struct sembuf loc
     }
 }
 
-//responsible for enterning hive
-void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct sembuf lock, struct sembuf unlock)
+/**
+ * @brief Handles a bee's entrance into the hive.
+ *
+ * This function synchronizes the bee's entrance into the hive by:
+ * - Waiting until there is enough space.
+ * - Reserving space for the bee.
+ * - Randomly choosing an entrance (hole_1 or hole_2).
+ * - Updating the hive state and logging the event.
+ * - Simulating work inside the hive.
+ *
+ * @param shared_hive_state Pointer to the shared hive state.
+ * @param bee Pointer to the bee structure.
+ * @param sem_id Semaphore identifier.
+ * @param lock Semaphore operation structure for locking.
+ * @param unlock Semaphore operation structure for unlocking.
+ */
+void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id, struct sembuf lock, struct sembuf unlock)
 {
     int ret = pthread_mutex_lock(&hive_state_mutex);
     if (ret != 0) {
@@ -187,10 +220,24 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
     //working in hive
     int ealier_leave = rand() % 3 + 1;
     sleep(INSIDE_WORKING_TIME - ealier_leave);
-    //usleep(3000 - rand() % 2000);
 }
 
-//responsible for exiting hive
+/**
+ * @brief Handles a bee's exit from the hive.
+ *
+ * This function synchronizes the bee's exit from the hive by:
+ * - Randomly choosing an exit (hole_1 or hole_2).
+ * - Updating the hive state and logging the event.
+ * - Signaling that space is available for other bees.
+ * - If the bee has reached its maximum life cycles, it dies and the population is reduced.
+ *
+ * @param shared_hive_state Pointer to the shared hive state.
+ * @param bee Pointer to the bee structure.
+ * @param thread_args Thread arguments.
+ * @param sem_id Semaphore identifier.
+ * @param lock Semaphore operation structure for locking.
+ * @param unlock Semaphore operation structure for unlocking.
+ */
 void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_args,int sem_id, struct sembuf lock, struct sembuf unlock)
 {
     char* info;
@@ -268,7 +315,7 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
             perror("[ROBOTNICA] semop lock (śmierć)");
         }
 
-        //reduce amount of bees after death + log how many bees left
+        // reduce amount of bees after death + log how many bees left
         shared_hive_state->current_bees = shared_hive_state->current_bees - 1;
         printf("[Robotnica] Po smierci pszczoly obecna liczba pszczol wynosi: %d\n", shared_hive_state->current_bees);
 
@@ -287,8 +334,15 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
      sleep(outside_hive_work);
 }
 
-
-//thread method
+/**
+ * @brief Thread function representing a bee.
+ *
+ * This function runs in a loop checking for depopulation signals, handles the bee's entrance and exit from the hive,
+ * and creates new bee threads or terminates the thread when the bee has reached its life cycle limit.
+ *
+ * @param arg Pointer to the thread arguments structure (Thread_Args).
+ * @return Returns NULL upon thread termination.
+ */
 void* bee_worker_func(void* arg)
 {
     Thread_Args* thread_args = (Thread_Args*) arg;
@@ -329,8 +383,16 @@ void* bee_worker_func(void* arg)
     pthread_exit(NULL);
 }
 
-
-//signals handling - sigusr1 -> for increasing population, sigusr2 -> for decreasing amount of bees, sigint -> for termination
+/**
+ * @brief Handles signals controlling the hive population.
+ *
+ * This function processes the following signals:
+ * - SIGUSR1: Increase the population (doubles the maximum number of bees).
+ * - SIGUSR2: Decrease the population (sets the target reduction number to half of population).
+ * - SIGINT: Terminates the simulation (sets the depopulation flag and reduction counter).
+ *
+ * @param sig The received signal number.
+ */
 void signal_handle(int sig)
 {
     if (!shared_hive_state) return;
@@ -387,7 +449,11 @@ void signal_handle(int sig)
     }
 }
 
-
+/**
+ * @brief Sets up signal handling for the simulation.
+ *
+ * This function configures the handling of SIGUSR1, SIGUSR2, and SIGINT signals using sigaction.
+ */
 void setup_signal_handling(void)
 {
     struct sigaction sa;
@@ -414,6 +480,22 @@ void setup_signal_handling(void)
     }
 }
 
+/**
+ * @brief Main function of the hive simulation.
+ *
+ * The main function:
+ * - Checks the input arguments.
+ * - Initializes the random number generator, semaphores, and shared memory.
+ * - Sends the hive PID to the beekeeper.
+ * - Creates the initial bee population (threads).
+ * - In a loop, receives messages about new eggs (new bees) and creates new threads.
+ * - Waits for the simulation to end.
+ * - Cleans up allocated resources and terminates.
+ *
+ * @param argc Number of arguments.
+ * @param argv Array of arguments.
+ * @return Returns 0 on successful termination.
+ */
 int main(int argc, char* argv[])
 {
     if (argc < 5) 
@@ -526,7 +608,7 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        update_logs(create_mess("Stworzono %d\n", i+1), 1, 1);
+        //update_logs(create_mess("Stworzono %d\n", i+1), 1, 1);
 
         //if static population has been created - start simulation
         if(i + 1 == BEG_QUANTITY)
@@ -554,6 +636,15 @@ int main(int argc, char* argv[])
             }
             perror("[UL] msgrcv error");
         }
+
+        /*
+        ssize_t count = read(pipe_fd, &eggs_obtained, sizeof(int));
+        if (count <= 0) 
+        {
+            perror("[UL] read (potok krolowej)");
+            break;
+        }
+        */
         
         //creating new bees - receiving info from queen
         update_logs(create_mess("Krolowa zniosla %d jaj.", eggs_obtained.eggs_num), 33, 1);

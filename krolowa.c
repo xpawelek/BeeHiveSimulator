@@ -10,13 +10,26 @@
 
 int simulation_termination = 0;
 
-//sets termination flag
+/**
+ * @brief Sets the simulation termination flag.
+ *
+ * This function handles the SIGINT signal by setting the termination flag so that
+ * the loops in the program can terminate.
+ *
+ * @param sig The received signal number.
+ */
 void handle_sigint(int sig)
 {
     (void)sig;
     simulation_termination = 1;
 }
 
+/**
+ * @brief Configures SIGINT signal handling.
+ *
+ * This function sets up a signal handler for SIGINT using the sigaction structure.
+ * In case of an error, the program terminates.
+ */
 void setup_signal_handling(void)
 {
     struct sigaction sa;
@@ -26,11 +39,21 @@ void setup_signal_handling(void)
 
     if (sigaction(SIGINT, &sa, NULL) == -1)
     {
-        perror("[KROLOWA] sigaction error");
+        perror("[KRÓLOWA] sigaction error");
         exit(EXIT_FAILURE);
     }
 }
 
+/**
+ * @brief Safely locks a semaphore.
+ *
+ * This function attempts to perform a lock operation on a semaphore.
+ * If the operation is interrupted by a signal (errno set to EINTR),
+ * it retries the operation.
+ *
+ * @param sem_id The semaphore identifier.
+ * @return Returns 0 on success, or -1 if an error occurs.
+ */
 int sem_lock_safe(int sem_id)
 {
     while (semop(sem_id, &lock, 1) == -1)
@@ -46,6 +69,16 @@ int sem_lock_safe(int sem_id)
     return 0;
 }
 
+/**
+ * @brief Safely unlocks a semaphore.
+ *
+ * This function attempts to perform an unlock operation on a semaphore.
+ * If the operation is interrupted by a signal (errno set to EINTR),
+ * it retries the operation.
+ *
+ * @param sem_id The semaphore identifier.
+ * @return Returns 0 on success, or -1 if an error occurs.
+ */
 int sem_unlock_safe(int sem_id)
 {
     while (semop(sem_id, &unlock, 1) == -1)
@@ -61,6 +94,23 @@ int sem_unlock_safe(int sem_id)
     return 0;
 }
 
+/**
+ * @brief Main function of the "krolowa" process.
+ *
+ * The main function:
+ * - Checks the correctness of the provided arguments.
+ * - Initializes the random number generator.
+ * - Attaches to the shared memory.
+ * - Configures signal handling.
+ * - In a loop, randomly determines the number of eggs to lay.
+ *   If there is space in the hive, the hive resources are updated and a message
+ *   (via message queue) about the laid eggs is sent.
+ * - Upon simulation termination, the shared memory is detached and a log message is recorded.
+ *
+ * @param argc Number of arguments.
+ * @param argv Array of arguments. The expected format is: <sem_id> <fd_pipe> <shm_id> <msqid>.
+ * @return Returns 0 on successful termination.
+ */
 int main(int argc, char* argv[])
 {
     if (argc < 5) 
@@ -129,7 +179,7 @@ int main(int argc, char* argv[])
             shared_hive_state->current_bees_hive += laid_eggs_rand;
             shared_hive_state->capacity_control += laid_eggs_rand;
 
-            update_logs(create_mess("[KROLOWA] Obecna - %d | Obecna ul - %d | Maks - %d | Stan początkowy - %d\n",
+            update_logs(create_mess("[KRÓLOWA] Obecna - %d | Obecna ul - %d | Maks - %d | Stan początkowy - %d\n",
             shared_hive_state->current_bees,
             shared_hive_state->capacity_control,
             shared_hive_state->max_bees,
@@ -168,11 +218,10 @@ int main(int argc, char* argv[])
 
     if (shmdt(shared_hive_state) == -1) 
     {
-        perror("[KROLOWA] shmdt");
+        perror("[KRÓLOWA] shmdt");
     }
 
-
-    update_logs("[KROLOWA] Koncze prace.", 41, 1);
+    update_logs("[KRÓLOWA] Koncze prace.", 41, 1);
 
     return 0;
 }
