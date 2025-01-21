@@ -28,7 +28,7 @@
 #include <stdarg.h>
 
 // paths and constants
-#define BEG_QUANTITY 100
+#define BEG_QUANTITY 200
 #define FIFO_PATH "/tmp/ul_do_pszczelarz_fifo"
 #define MSG_QUEUE_PROJECT_ID 'A'
 #define MSG_TYPE_EGGS 1  

@@ -1,8 +1,8 @@
 #include "common.h"
 #include <unistd.h>
 
-#define LIFE_CYCLE_NUM 4
-#define INSIDE_WORKING_TIME 5
+#define LIFE_CYCLE_NUM 5
+#define INSIDE_WORKING_TIME 6
 
 static sem_t hole_1, hole_2;
 static pthread_mutex_t hive_state_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -185,8 +185,9 @@ void handle_hive_entrance(Hive* shared_hive_state, Bee* bee, int sem_id,struct s
     bee->in_hive = 1;
 
     //working in hive
-    int ealier_leave = rand() % 5;
+    int ealier_leave = rand() % 3 + 1;
     sleep(INSIDE_WORKING_TIME - ealier_leave);
+    //usleep(3000 - rand() % 2000);
 }
 
 //responsible for exiting hive
@@ -254,7 +255,7 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
     bee->visits_counter++;
 
     // check if bee has reached its life cycle
-    if (bee->visits_counter >= bee->life_cycles && shared_hive_state->depopulation_flag != 1) 
+    if (bee->visits_counter >= bee->life_cycles && shared_hive_state->depopulation_flag != 1 && shared_hive_state->current_bees > 0) 
     {
         //log if dies
         update_logs(create_mess("[ROBOTNICA] Pszczoła o numerze %lu umiera (liczba odwiedzin %d).", (unsigned long)pthread_self(), bee->visits_counter),
@@ -282,8 +283,8 @@ void handle_hive_exit(Hive* shared_hive_state, Bee* bee, Thread_Args* thread_arg
     }
 
     //working outside hive
-    int outside_hive_work = rand() % 5 + 1;
-    sleep(outside_hive_work);
+     int outside_hive_work = rand() % 3 + 1;
+     sleep(outside_hive_work);
 }
 
 

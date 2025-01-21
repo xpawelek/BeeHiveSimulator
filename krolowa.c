@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     laid_eggs.mtype = MSG_TYPE_EGGS;
     while (!simulation_termination) 
     {
-        int laid_eggs_rand = rand() % 10 + 1;
+        int laid_eggs_rand = rand() % 25 + 5;
 
         /* 
           int ograniczenie_ula = pojemnosc_poczatkowa - obecna_liczba_osobnikow_ul;
