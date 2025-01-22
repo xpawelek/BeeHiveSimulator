@@ -179,11 +179,15 @@ int main(int argc, char* argv[])
             shared_hive_state->current_bees_hive += laid_eggs_rand;
             shared_hive_state->capacity_control += laid_eggs_rand;
 
+            update_logs(create_mess("Krolowa zniosla %d jaj.", laid_eggs_rand), 33, 1);
+
+            /*
             update_logs(create_mess("[KRÓLOWA] Obecna - %d | Obecna ul - %d | Maks - %d | Stan początkowy - %d\n",
             shared_hive_state->current_bees,
             shared_hive_state->capacity_control,
             shared_hive_state->max_bees,
             hive_capacity), 1, 1);
+            */
 
             if (sem_unlock_safe(sem_id) == -1) 
             {

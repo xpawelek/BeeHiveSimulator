@@ -647,7 +647,7 @@ int main(int argc, char* argv[])
         */
         
         //creating new bees - receiving info from queen
-        update_logs(create_mess("Krolowa zniosla %d jaj.", eggs_obtained.eggs_num), 33, 1);
+        //update_logs(create_mess("Krolowa zniosla %d jaj.", eggs_obtained.eggs_num), 33, 1);
 
         pthread_t* new_bees = (pthread_t*) calloc(eggs_obtained.eggs_num, sizeof(pthread_t));
         if (!new_bees) 
